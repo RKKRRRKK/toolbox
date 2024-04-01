@@ -1,8 +1,10 @@
 <template>
   <div id="wrapper">
     <div id="color-picker">
-      <label for="baseColor">Base Color HEX</label>
+      <label for="baseColor">Paste Color</label>
       <input type="text" id="baseColor" name="baseColor" maxlength="9" v-model="baseColor" />
+      <label for="pickColor">or Pick</label>
+      <input type="color" v-model="baseColor">
       <button @click="assignColor()">Confirm</button>
     </div>
 
@@ -101,9 +103,18 @@ function assignSaturationDiff() {
 
 <style scoped>
 
+
+#color-picker {
+  display: flex;
+  gap: 0.5rem;
+
+}
+
 #harmony {
     display: flex;
     flex-direction: column;
+    gap: 1rem;
+    
 }
 
 #comanal {
@@ -111,21 +122,27 @@ function assignSaturationDiff() {
     flex-direction: row;
     padding-top: 0.5rem;
     gap: 1rem;
+    justify-content: space-between;
+
+    
 }
 
 #mono_module {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    gap: 1rem;
+
 }
 
 #mono_l {
     display: flex;
-    flex-direction: column
+    flex-direction: row;
 }
 
 #mono_s {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+   
 }
 
 </style>

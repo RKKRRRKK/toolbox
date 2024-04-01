@@ -45,6 +45,5 @@ const getBarStyle = (index) => ({
   display: flex;
   flex-wrap: nowrap;
   gap: 0.5rem;
-  padding-top: 5rem;
 }
 </style>
