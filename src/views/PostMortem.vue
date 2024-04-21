@@ -14,7 +14,7 @@
 </div>
     <TheInput></TheInput>
 </div>
-<div class="result">results of the calculation</div>
+<TheResult></TheResult>
 <!-- <div class="chart">chart</div>> -->
 <TheChart></TheChart>
 </div>
@@ -27,6 +27,7 @@ import ThePlatform from "../components/PostMortemTool/ThePlatform.vue"
 import TheGenerate from "../components/PostMortemTool/TheGenerate.vue"
 import TheInput from "../components/PostMortemTool/TheInput.vue"
 import TheChart from "../components/PostMortemTool/TheChart.vue"
+import TheResult from "../components/PostMortemTool/TheCalculation.vue"
 </script>
 
 
@@ -77,12 +78,6 @@ import TheChart from "../components/PostMortemTool/TheChart.vue"
     gap: 1rem;
 }
 
-.result {
-    margin-top: 5rem;
-    width: 25rem;
-    height: 10rem;
-    margin-left: 2.5rem;
-}
 
 .chart {
     margin-top: 2.5rem;

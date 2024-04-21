@@ -34,8 +34,8 @@ function setstarttime() {
   timeAsFloat = timeAsFloat.toFixed(2)
   
   variablesStore.setstarttime(datePart);
-  variablesStore.setontime(timeAsFloat);
-  console.log("startime set", datePart, "ontime set", timeAsFloat);
+  variablesStore.setofftime(timeAsFloat);
+  console.log("startime set", datePart, "offtime set", timeAsFloat);
 }
 
 function setendtime() {
@@ -47,8 +47,8 @@ function setendtime() {
   timeAsFloat = timeAsFloat.toFixed(2)
 
   variablesStore.setendtime(datePart);
-  variablesStore.setofftime(timeAsFloat);
-  console.log("endtime set", datePart, "offtime set", timeAsFloat);
+  variablesStore.setontime(timeAsFloat);
+  console.log("endtime set", datePart, "ontime set", timeAsFloat);
 }
 </script>
 

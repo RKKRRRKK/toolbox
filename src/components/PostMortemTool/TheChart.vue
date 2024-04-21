@@ -16,6 +16,7 @@ const chartOption = ref({
     xAxis: {
         type: 'value',  // Changed to 'value' to handle numerical data correctly
         interval: 1,
+        max: 24,
     },
     yAxis: {
         type: 'value'
