@@ -4,6 +4,7 @@
       <nav>
         <router-link to="/texttool">TextTool</router-link>
         <router-link to="/colortool">ColorTool</router-link>
+        <router-link to="/postmortem">PostMortem</router-link>
       </nav>
     </header>
     <!-- Router View -->
@@ -51,5 +52,10 @@ nav {
 router-link {
   text-decoration: none;
   color: #333;
+}
+
+.start,.end, .storefront, .platform, .result,
+.chart {
+  background-color:lightgray;
 }
 </style>
