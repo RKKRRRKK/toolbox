@@ -104,8 +104,8 @@ EXTRACT(DAYOFWEEK FROM c.date_inserted) AS day_of_week_number
  FROM \`prod-data-engineering-real.hm_live.checkouts\`  c
  LEFT JOIN \`prod-data-engineering-real.hm_live.buy_event\` AS app ON app.id_pre_checkout = c.id_pre_checkout
 WHERE code_storefront = '${storefront}'
-AND c.date_inserted > '${start}'
-AND c.date_inserted < '${end}'
+AND c.date_inserted > '${start} 00:00:00 UTC'
+AND c.date_inserted < '${end} 23:59:59 UTC'
 AND IFNULL(app.source, 'web') = '${platform}'
 GROUP BY ALL
 ORDER BY date, hour ASC

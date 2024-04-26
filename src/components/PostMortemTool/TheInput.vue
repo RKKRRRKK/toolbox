@@ -42,14 +42,14 @@ function assignData() {
             const row = lines[i].split(',');
             if (row.length === 6) { // Ensure the row has the correct number of columns
                 // Convert hour from integer to time format "X:00"
-                const hourFormatted = `${parseInt(row[0].trim())}:00`;
-                data.hours.push(hourFormatted); // Store the formatted hour
-
-                data.actual_gmv.push(parseFloat(row[4].trim()));
+                // const hourFormatted = `${parseInt(row[0].trim())}:00`;
+                // data.hours.push(hourFormatted); // Store the formatted hour
+                data.hours.push(parseFloat(row[4].trim()));
+                data.actual_gmv.push(parseFloat(row[3].trim()));
                 data.dates.push(row[5].trim());
-                data.Q1.push(parseFloat(row[3].trim()));
-                data.Q3.push(parseFloat(row[2].trim()));
-                data.average_gmv.push(parseFloat(row[1].trim()));
+                data.Q1.push(parseFloat(row[2].trim()));
+                data.Q3.push(parseFloat(row[1].trim()));
+                data.average_gmv.push(parseFloat(row[0].trim()));
             }
         }
         variablesStore.setData(data);

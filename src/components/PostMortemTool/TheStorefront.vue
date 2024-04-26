@@ -5,10 +5,10 @@
   v-model="storefront"
   @change="setstorefront"
   >
-  <option value="cz">CZ</option>
-  <option value="sk">SK</option>
-  <option value="de">DE</option>
-  <option value="all">ALL</option>
+  <option value="CZ">CZ</option>
+  <option value="SK">SK</option>
+  <option value="DE">DE</option>
+  <option value="ALL">ALL</option>
 </select>
 </div>
 <!-- <div class="storefront">storefront</div>     -->
