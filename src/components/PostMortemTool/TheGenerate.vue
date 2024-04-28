@@ -1,6 +1,6 @@
 <template>
  <div>
-    <button @click="generateSQL" class="gen">generate and copy SQL</button>
+    <button @click="generateSQL" class="gen">Get SQL</button>
 </div>
 
 </template>
@@ -30,102 +30,136 @@
         \`prod-data-engineering-real.hm_live.buy_event\` AS app
         ON app.id_pre_checkout = c.id_pre_checkout
     WHERE
-        code_storefront = 'DE'
-        AND c.date_inserted BETWEEN '2023-02-10' AND '2024-02-11'
-        AND IFNULL(app.source, 'web') = 'web'
+        code_storefront = '${storefront}'
+        AND DATE(c.date_inserted) BETWEEN DATE_SUB('${start}', INTERVAL 28 DAY) AND DATE_SUB('${start}', INTERVAL 1 DAY)
+        AND IFNULL(app.source, 'web')  in (${platform})
         AND NOT (
-            DATE(c.date_inserted) BETWEEN DATE_SUB('2023-11-24', INTERVAL 7 DAY) AND DATE_ADD('2023-11-24', INTERVAL 7 DAY)
-            OR DATE(c.date_inserted) BETWEEN DATE_SUB('2023-12-07', INTERVAL 7 DAY) AND DATE_ADD('2023-12-24', INTERVAL 14 DAY)
-            OR DATE(c.date_inserted) BETWEEN DATE_SUB('2024-12-07', INTERVAL 7 DAY) AND DATE_ADD('2024-12-24', INTERVAL 14 DAY)
-           
-        )
+             DATE(c.date_inserted) IN ('2024-01-01','2024-01-06','2024-03-08','2024-03-29','2024-03-31','2024-04-01','2024-05-01','2024-05-09','2024-05-19','2024-05-20','2024-05-30','2024-08-15','2024-09-20','2024-10-03','2024-10-31','2024-11-01','2024-11-20','2024-12-25','2024-12-26') -- All holiday dates
+            )
     GROUP BY
         hour, date, day_of_week_number
+),
+
+TotalAverageGMVPerDate AS (
+    SELECT
+        date,
+        SUM(GMV) AS total_average_gmv
+    FROM
+        CTE1
+    GROUP BY
+        date
+),
+
+NormalizedCTE1 AS (
+    SELECT
+        CTE1.hour,
+        CTE1.day_of_week_number,
+        CTE1.date,
+        CTE1.GMV / TotalAverageGMVPerDate.total_average_gmv * 100 AS normalized_average_gmv,
+        CTE1.GMV
+    FROM
+        CTE1
+    JOIN
+        TotalAverageGMVPerDate ON CTE1.date = TotalAverageGMVPerDate.date
 ),
 
 CTE2 AS (
     SELECT
         hour,
         day_of_week_number,
-        APPROX_QUANTILES(GMV, 4)[OFFSET(1)] AS Q1,
-        APPROX_QUANTILES(GMV, 4)[OFFSET(3)] AS Q3
+        avg(normalized_average_gmv) average,
+        max(normalized_average_gmv) max,
+        min(normalized_average_gmv) min,
+        count(normalized_average_gmv) days_avg,
+        avg(gmv) average_gmv_euros,
     FROM
-        CTE1
+        NormalizedCTE1
     GROUP BY
         hour, day_of_week_number
 ),
 
 CTE3 AS (
     SELECT
-        hour,
-        day_of_week_number,
-        Q1,
-        Q3,
-        (Q3 - Q1) * 1.5 AS IQR
+        SUM(total_price / 100) AS actual_GMV,
+        EXTRACT(HOUR FROM c.date_inserted) AS hour,
+        DATE(c.date_inserted) AS date,
+        EXTRACT(DAYOFWEEK FROM c.date_inserted) AS day_of_week_number
     FROM
-        CTE2
+        \`prod-data-engineering-real.hm_live.checkouts\` c
+    LEFT JOIN
+        \`prod-data-engineering-real.hm_live.buy_event\` AS app
+        ON app.id_pre_checkout = c.id_pre_checkout
+    WHERE
+        code_storefront = '${storefront}'
+        AND DATE(c.date_inserted) = '${start}'
+    AND IFNULL(app.source, 'web') in (${platform})
+    GROUP BY
+        hour, date, day_of_week_number
 ),
 
-Filtered_GMV AS (
+TotalGMVOnDate AS (
+    SELECT
+        date,
+        SUM(actual_GMV) AS total_gmv
+    FROM
+        CTE3
+    GROUP BY
+        date
+),
+
+NormalizedCTE3 AS (
     SELECT
         a.hour,
         a.day_of_week_number,
-        a.GMV
+        a.date,
+        a.actual_GMV / b.total_gmv * 100 AS normalized_actual_gmv,
+        a.actual_GMV,
+        b.total_gmv as total_actual_gmv
     FROM
-        CTE1 a
+        CTE3 a
     JOIN
-        CTE3 b
-        ON a.hour = b.hour AND a.day_of_week_number = b.day_of_week_number
-    WHERE
-        a.GMV BETWEEN (b.Q1 - b.IQR) AND (b.Q3 + b.IQR)
+        TotalGMVOnDate b ON a.date = b.date
 ),
 
-Adjusted_Aggregates AS (
+CTE5 AS (
     SELECT
-        hour,
-        day_of_week_number,
-        AVG(GMV) AS adjusted_average_GMV,
-        APPROX_QUANTILES(GMV, 4)[OFFSET(3)] AS highest_non_outlier_value,
-        APPROX_QUANTILES(GMV, 4)[OFFSET(1)] AS lowest_non_outlier_value
+        a.date,
+        a.hour as hours,
+        a.day_of_week_number,
+        a.normalized_actual_gmv as actual_gmv,
+        b.average AS average_gmv,
+        b.max,
+        b.min,
+        b.days_avg as days_accounted,
+        ((b.average / a.normalized_actual_gmv) * a.actual_GMV) - a.actual_GMV as avg_loss,
+        ((b.max / a.normalized_actual_gmv) * a.actual_GMV) - a.actual_GMV as max_loss,
+        ((b.min / a.normalized_actual_gmv) * a.actual_GMV) - a.actual_GMV as min_loss,
+        a.actual_GMV as actual_gmv_euros,
+        ((b.average / a.normalized_actual_gmv) * a.actual_GMV) as average_gmv_euros,
+        total_actual_gmv
     FROM
-        Filtered_GMV
-    GROUP BY
-        hour, day_of_week_number
-),
-
-
-actual_cte as (
-    SELECT
-SUM(total_price / 100) as GMV,
-EXTRACT(HOUR FROM c.date_inserted) AS hour,
-DATE(c.date_inserted) as date,
-EXTRACT(DAYOFWEEK FROM c.date_inserted) AS day_of_week_number
-
- FROM \`prod-data-engineering-real.hm_live.checkouts\`  c
- LEFT JOIN \`prod-data-engineering-real.hm_live.buy_event\` AS app ON app.id_pre_checkout = c.id_pre_checkout
-WHERE code_storefront = '${storefront}'
-AND c.date_inserted > '${start} 00:00:00 UTC'
-AND c.date_inserted < '${end} 23:59:59 UTC'
-AND IFNULL(app.source, 'web') = '${platform}'
-GROUP BY ALL
-ORDER BY date, hour ASC
+        NormalizedCTE3 a
+    LEFT JOIN
+        CTE2 b ON a.hour = b.hour AND a.day_of_week_number = b.day_of_week_number
 )
 
 SELECT
-    adjusted_average_GMV as average_gmv,
-    highest_non_outlier_value as Q3,
-    lowest_non_outlier_value as Q1,
-    actual_cte.GMV as actual_gmv,
-    actual_cte.hour as hours,
-    actual_cte.date as dates,
-FROM
-    Adjusted_Aggregates aa
-LEFT JOIN
-    actual_cte USING (hour,day_of_week_number)
-WHERE actual_cte.GMV IS NOT NULL
+average_gmv,
+max,
+min,
+actual_gmv,
+hours,
+avg_loss,
+max_loss,
+min_loss,
+actual_gmv_euros,
+average_gmv_euros,
+total_actual_gmv / 100 as gmv_part,
+days_accounted,
 
-ORDER BY
-    hours;
+FROM CTE5
+ORDER BY hours ASC;
+
   `;
     
   console.log(sql); // Logging the SQL to the console
@@ -145,11 +179,35 @@ ORDER BY
     </script>
     
     <style scoped>
-    
+
     .gen {
-        width: 10rem;
-        height:5rem;
+        margin-top: 1rem;
+        width: 6rem;
+        height: 3rem;
         cursor: pointer;
+        background-color: #ca6161;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        font-size: 1rem;
+        font-weight: bold;
+        letter-spacing: 1px;
+        transition: background-color 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
     
+    .gen:hover {
+        background-color: #bb0808;
+    }
+    
+    .gen:active {
+        background-color: #630101;
+        box-shadow: none;
+        transform: translateY(1px);
+    }
     </style>
+
+<!-- WHERE code_storefront = '${storefront}'
+AND c.date_inserted > '${start} 00:00:00 UTC'
+AND c.date_inserted < '${end} 23:59:59 UTC'
+AND IFNULL(app.source, 'web') = '${platform}' -->  

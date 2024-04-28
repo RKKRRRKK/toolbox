@@ -5,10 +5,15 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, resolveDirective, watch } from 'vue';
 import { useVariablesStore } from '@/stores/PostMortem/variables'; 
 import ECharts from 'vue-echarts';
 import 'echarts';
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 
 const variablesStore = useVariablesStore();
 
@@ -31,16 +36,22 @@ function mapNormalizedToRealAvg(index) {
 
 const chartOption = ref({
     xAxis: {
-        type: 'value',  
-        interval: 1,
-        max: 23,
-    },
+    type: 'value',
+    interval: 1,
+    max: 23,
+    axisLabel: {
+        formatter: function (value) {
+            // Ensures the hour is always shown with two digits
+            return value < 10 ? `0${value}:00` : `${value}:00`;
+        }
+    }
+},
     yAxis: {
         type: 'value',
         axisLabel: {
             formatter: function (value) {
                 const factor = variablesStore.data && variablesStore.data.gmv_part ? variablesStore.data.gmv_part[1] : 1;
-                return `€${Math.round(value * factor)}`;
+                return `€${numberWithCommas(Math.round(value * factor))}`;
             }
         }
     },
@@ -51,19 +62,22 @@ const chartOption = ref({
             if (actualGmvPoint) {
                 const realValue = mapNormalizedToReal(actualGmvPoint.dataIndex);
                 const avgValue = mapNormalizedToRealAvg(actualGmvPoint.dataIndex);
-                return `Hour: ${actualGmvPoint.axisValue}<br>Actual GMV: €${realValue.toFixed(2)}
-                <br>Expected GMV: €${avgValue.toFixed(2)}`;
+                return `Hour: ${actualGmvPoint.axisValue}:00 UTC<br>Actual GMV: ${numberWithCommas(realValue.toFixed(0))}€
+                <br>Expected GMV: ${numberWithCommas(avgValue.toFixed(0))}€`;
             }
         }
     },
 
 
+
     legend: {
-        data: ['Average Expected GMV', 'Min', 'Max', 'Actual GMV'], 
+        data: ['Average Expected GMV', 'Min', 'Max', 'Actual GMV', 'Affected Timeframe'], 
         orient: 'horizontal',
-        top: 10, 
+        bottom: 10, 
         left: 'center' 
+        
     },
+    
 
     
     
@@ -123,30 +137,58 @@ const chartOption = ref({
             data: [], 
             type: 'line',
             lineStyle: {
-                color: 'red',
+                color: 'rgba(237, 150, 50, 1)',
                 width: 3
             },
             itemStyle: {
-                color: 'red'
-            },
-            markLine: {
-                silent: true,
-                data: []  // This will be set dynamically
+                color: 'rgba(237, 150, 50, 1)'
             }
-        }
-    ],
+        },
+        {
+      name: 'Affected Timeframe',
+      type: 'line',
+      markLine: {
+                silent: true,
+                symbol: ['none', 'none'],
+                data: [],
+                lineStyle: {
+                    color: 'rgba(200, 0, 0, 0.4)',
+                    width: 1.5
+                },
+                label: {
+        show: false  // Disables the display of values on the markLine
+    }
+            },
+      markArea: {
+        silent: true,
+        itemStyle: {
+                    color: 'rgba(255, 0, 0, 0.05)'
+                },
+        data: []  
+      },
+      tooltip: {
+        show: false
+      }
+    }
+  ],
 });
 
 const isDataLoaded = ref(false);
 
 // Function to update the markLine if ontime and offtime are available
 function updateMarkLine() {
-    if (variablesStore.ontime !== undefined && variablesStore.offtime !== undefined) {
-        chartOption.value.series[3].markLine.data = [
-            { xAxis: variablesStore.ontime },
-            { xAxis: variablesStore.offtime }
-        ];
-    }
+  if (variablesStore.ontime !== undefined && variablesStore.offtime !== undefined) {
+    chartOption.value.series[4].markLine.data = [
+      { xAxis: variablesStore.ontime },
+      { xAxis: variablesStore.offtime }
+    ];
+    chartOption.value.series[4].markArea.data = [
+      [
+        { xAxis: variablesStore.ontime },
+        { xAxis: variablesStore.offtime }
+      ]
+    ];
+  }
 }
 
 watch(() => variablesStore.data, (newData) => {
@@ -160,11 +202,16 @@ watch(() => variablesStore.data, (newData) => {
     }
 }, { immediate: true, deep: true });
 
+watch(() => variablesStore.isNegative, (newValue) => {
+    chartOption.value.series[4].markArea.itemStyle.color = newValue ? 'rgba(150, 0, 0, 0.05)' : 'rgba(0, 150, 0, 0.05)';
+    chartOption.value.series[4].markLine.lineStyle.color = newValue ? 'rgba(200, 0, 0, 0.4)' : 'rgba(0, 150, 0, 0.8)';
+});
+
 watch(() => [variablesStore.ontime, variablesStore.offtime], updateMarkLine, { immediate: true, deep: true });
 
 </script>
 
 
 <style>
-/* Style as needed */
+
 </style>

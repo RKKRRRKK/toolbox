@@ -1,15 +1,15 @@
 <template>
-  <div class="result">
+  <div v-if="accumulatedCalculations && accumulatedCalculations.totalGmvLoss !== 0" class="result">
     <div v-if="accumulatedCalculations && accumulatedCalculations.totalGmvLoss !== 0">
       <div class="lines">
-        <h3 :class="isNegative ? 'red' : 'green'">
-          Estimated GMV Impact: {{ Math.round(accumulatedCalculations.totalGmvLoss) }}€
+        <h3 :class="variablesStore.isNegative ? 'red' : 'green'">
+          Estimated GMV Impact: {{ numberWithCommas(Math.round(accumulatedCalculations.totalGmvLoss)) }}€
         </h3>
         <p>
-          (Range: {{ Math.round(accumulatedCalculations.totalRangeFrom) }}€ to
-          {{ Math.round(accumulatedCalculations.totalRangeTo) }}€)
+          (Range: {{ numberWithCommas(Math.round(accumulatedCalculations.totalRangeFrom)) }}€ to
+          {{ numberWithCommas(Math.round(accumulatedCalculations.totalRangeTo)) }}€)
         </p>
-        Based on {{ numberDays }} similar days
+        <p>Based on <b>{{ numberDays }}</b> similar days</p>
       </div>
     </div>
   </div>
@@ -22,6 +22,11 @@
   import { useVariablesStore } from '@/stores/PostMortem/variables'; 
   const variablesStore = useVariablesStore();
   const isNegative = ref(false);
+
+
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
   
   // Computed property to accumulate the values
 
@@ -58,7 +63,7 @@ const numberDays = computed(() => {
 
 
 watch(accumulatedCalculations, (newValue) => {
-  isNegative.value = newValue.totalGmvLoss < 0;
+  variablesStore.setNegative(newValue.totalGmvLoss < 0);
 });
 
 

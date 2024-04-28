@@ -54,8 +54,5 @@ router-link {
   color: #333;
 }
 
-.start,.end, .storefront, .platform,
-.chart {
-  background-color:lightgray;
-}
+
 </style>

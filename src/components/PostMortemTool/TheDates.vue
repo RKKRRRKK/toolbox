@@ -35,7 +35,7 @@ function setstarttime() {
   timeAsFloat = timeAsFloat.toFixed(2)
   
   variablesStore.setstarttime(datePart);
-  variablesStore.setofftime(timeAsFloat);
+  variablesStore.setofftime(Math.floor(timeAsFloat));  ///changed this floor for now 
   console.log("startime set", datePart, "offtime set", timeAsFloat);
 }
 
@@ -48,7 +48,7 @@ function setendtime() {
   timeAsFloat = timeAsFloat.toFixed(2)
 
   variablesStore.setendtime(datePart);
-  variablesStore.setontime(timeAsFloat);
+  variablesStore.setontime(Math.floor(timeAsFloat));  ///changed this floor for now 
   console.log("endtime set", datePart, "ontime set", timeAsFloat);
 }
 </script>

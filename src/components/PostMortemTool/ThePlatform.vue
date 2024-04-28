@@ -5,9 +5,9 @@
   v-model="platform"
   @change="setplatform"
   >
-  <option value="web">WEB</option>
-  <option value="app">APP</option>
-  <option value="all">ALL</option>
+  <option value="'web'">WEB</option>
+  <option value="'app'">APP</option>
+  <option value="'web','app'">ALL</option>
 </select>
 </div>
 

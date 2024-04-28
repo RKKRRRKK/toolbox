@@ -2,15 +2,15 @@
     <div class="input">
         <form class="input_form" @submit.prevent="assignData">
             <label for="csvFile">Upload a CSV file:</label>
-            <input type="file" id="csvFile" name="csvFile" accept=".csv" @change="storeFile">
-            <button type="submit">Upload</button>
+            <input type="file" id="csvFile" name="csvFile" accept=".csv" @change="storeFile" class="file-input">
+            <button type="submit" class="upload-button">Upload</button>
         </form>
     </div>
 </template>
-
 <script setup>
 import { ref } from 'vue'
 import { useVariablesStore } from '@/stores/PostMortem/variables.js'
+
 
 const variablesStore = useVariablesStore()
 const fileToRead = ref(null) // Store the file reference
@@ -81,4 +81,37 @@ function assignData() {
     display: flex;
     flex-direction: column;
 }
+
+.file-input {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 0.2rem;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.upload-button {
+    padding: 0.65rem 1.5rem;
+    background-color: #ca6161;
+    color: #fff;
+    border: none;
+    border-radius: 0.2rem;
+    font-size: 1rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer;
+}
+
+.upload-button:hover {
+    background-color: #bb0808;
+}
+
+.upload-button:active {
+        background-color: #630101;
+        box-shadow: none;
+        transform: translateY(1px);
+    }
+
+
+
 </style>

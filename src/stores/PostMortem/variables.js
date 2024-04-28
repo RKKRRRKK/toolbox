@@ -10,6 +10,7 @@ export const useVariablesStore = defineStore('variables', {
     platform: '',
     SQL: '',
     data:{},
+    isNegative: true,
     
   }),
   actions: {
@@ -46,6 +47,11 @@ export const useVariablesStore = defineStore('variables', {
       this.ontime = value
       console.log("typeof check ontime", typeof(value))
     },
+
+    setNegative(value) {
+      this.isNegative = value;
+    },
+
 
   }
 });

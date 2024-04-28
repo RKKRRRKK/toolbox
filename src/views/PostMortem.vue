@@ -1,20 +1,19 @@
 <template>
 <div class="container">
-
 <div class="horizontal-container">
 <div class="ho-basics">
 <div class="basics">
     <TheDates></TheDates>
 <div class="rest">
-    <TheStorefront class="storefront"></TheStorefront>
-    <ThePlatform class="platform"></ThePlatform>
+    <TheStorefront></TheStorefront>
+    <ThePlatform></ThePlatform>
 </div>
 </div>
-    <TheGenerate class="gen"></TheGenerate>
+    <TheGenerate></TheGenerate>
 </div>
     <TheInput></TheInput>
 </div>
-<TheResult></TheResult>
+<TheResult class="result"></TheResult>
 <!-- <div class="chart">chart</div>> -->
 <TheChart></TheChart>
 </div>
@@ -28,17 +27,23 @@ import TheGenerate from "../components/PostMortemTool/TheGenerate.vue"
 import TheInput from "../components/PostMortemTool/TheInput.vue"
 import TheChart from "../components/PostMortemTool/TheChart.vue"
 import TheResult from "../components/PostMortemTool/TheCalculation.vue"
+
 </script>
 
 
 <style scoped>
 
 .container {
-    width: 100%;
-    height: 100%;
+    padding-top: 2.5rem;
+    padding-left: 10rem;
+    width: 100vw;
+    height: 100vh;
     display: flex;
     gap: 1rem;
     flex-direction: column;
+    flex-grow: 3;
+    flex-shrink: 3;
+    flex-basis: 0%;
 }
 
 .basics {
@@ -46,15 +51,9 @@ import TheResult from "../components/PostMortemTool/TheCalculation.vue"
     flex-direction: column;
     gap: 0.5rem;
     margin-left: 2.5rem;
+    flex-shrink: 3;
+    flex-basis: 0%
 }
-
-
-
-
-.copy, .paste {
-    border:solid black;
-}
-
 
 
 .rest {
@@ -62,11 +61,16 @@ import TheResult from "../components/PostMortemTool/TheCalculation.vue"
     gap: 3rem;
     width: 13rem;
     height: 1rem;
+    flex-shrink: 3;
+    flex-basis: 0%
 }
 
 .ho-basics {
     display: flex;
     gap: 1rem;
+    margin-right: 2rem;
+    flex-shrink: 3;
+    flex-basis: 0%
 }
 
 
@@ -76,6 +80,9 @@ import TheResult from "../components/PostMortemTool/TheCalculation.vue"
     display: flex;
     width: 100%;
     gap: 1rem;
+    padding-left: 8rem;
+    flex-shrink: 3;
+    flex-basis: 0%
 }
 
 
@@ -85,7 +92,15 @@ import TheResult from "../components/PostMortemTool/TheCalculation.vue"
     align-self: center;
     justify-self: center;
     height: 100%;
+    flex-shrink: 3;
+    flex-basis: 0%
 }
 
+.result {
+    padding: 0.5rem;
+    margin-left: 11rem;
+    flex-shrink: 3;
+    flex-basis: 0%
+}
 
 </style>
