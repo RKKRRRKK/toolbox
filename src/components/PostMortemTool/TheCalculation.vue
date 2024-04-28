@@ -3,7 +3,7 @@
     <div v-if="accumulatedCalculations && accumulatedCalculations.totalGmvLoss !== 0">
       <div class="lines">
         <h3 :class="isNegative ? 'red' : 'green'">
-          Estimated GMV Impact: {{ Math.round(accumulatedCalculations.totalGmvLoss) }}€
+          Estimated GMV IMpact: {{ Math.round(accumulatedCalculations.totalGmvLoss) }}€
         </h3>
         <p>
           (Range: {{ Math.round(accumulatedCalculations.totalRangeFrom) }}€ to
