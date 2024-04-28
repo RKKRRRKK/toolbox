@@ -20,6 +20,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useVariablesStore } from '@/stores/PostMortem/variables.js'; 
+import date from '../PostMortemTool/DatePicker.vue';
 
 const variablesStore = useVariablesStore();
 const starttime = ref(variablesStore.start);

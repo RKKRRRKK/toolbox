@@ -29,27 +29,39 @@ function assignData() {
         const text = e.target.result;
         const lines = text.split('\n');
         const data = {
-            dates: [],
             hours: [],
             average_gmv: [],
             actual_gmv: [],
             Q1: [],
             Q3: [],
+            avg_loss: [],
+            max_loss: [],
+            min_loss: [],
+            actual_gmv_euros: [],
+            average_gmv_euros: [],
+            gmv_part: [],
+            days: [],
         };
 
-        // Skip the header, hence start from index 1
+        // Skip the header,  start from index 1
         for (let i = 1; i < lines.length; i++) {
             const row = lines[i].split(',');
-            if (row.length === 6) { // Ensure the row has the correct number of columns
+            if (row.length === 12) { // Ensure the row has the correct number of columns
                 // Convert hour from integer to time format "X:00"
                 // const hourFormatted = `${parseInt(row[0].trim())}:00`;
                 // data.hours.push(hourFormatted); // Store the formatted hour
-                data.hours.push(parseFloat(row[4].trim()));
-                data.actual_gmv.push(parseFloat(row[3].trim()));
-                data.dates.push(row[5].trim());
-                data.Q1.push(parseFloat(row[2].trim()));
-                data.Q3.push(parseFloat(row[1].trim()));
                 data.average_gmv.push(parseFloat(row[0].trim()));
+                data.Q3.push(parseFloat(row[1].trim()));
+                data.Q1.push(parseFloat(row[2].trim()));
+                data.actual_gmv.push(parseFloat(row[3].trim()));
+                data.hours.push(parseFloat(row[4].trim()));
+                data.avg_loss.push(parseFloat(row[5].trim()));
+                data.max_loss.push(parseFloat(row[6].trim()));
+                data.min_loss.push(parseFloat(row[7].trim()));
+                data.actual_gmv_euros.push(parseFloat(row[8].trim()));
+                data.average_gmv_euros.push(parseFloat(row[9].trim()));
+                data.gmv_part.push(parseFloat(row[10].trim()));
+                data.days.push(parseFloat(row[11].trim()))
             }
         }
         variablesStore.setData(data);

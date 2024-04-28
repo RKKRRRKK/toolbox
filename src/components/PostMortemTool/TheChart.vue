@@ -12,56 +12,110 @@ import 'echarts';
 
 const variablesStore = useVariablesStore();
 
+function mapNormalizedToReal(index) {
+    // This assumes 'actual_gmv_euros' is loaded and has the same length as the normalized 'actual_gmv'
+    if (variablesStore.data && variablesStore.data.actual_gmv_euros) {
+        return variablesStore.data.actual_gmv_euros[index];
+    }
+    return null;
+}
+
+function mapNormalizedToRealAvg(index) {
+    // This assumes 'actual_gmv_euros' is loaded and has the same length as the normalized 'actual_gmv'
+    if (variablesStore.data && variablesStore.data.average_gmv_euros) {
+        return variablesStore.data.average_gmv_euros[index];
+    }
+    return null;
+}
+
+
 const chartOption = ref({
     xAxis: {
-        type: 'value',  // Changed to 'value' to handle numerical data correctly
+        type: 'value',  
         interval: 1,
-        max: 24,
+        max: 23,
     },
     yAxis: {
-        type: 'value'
+        type: 'value',
+        axisLabel: {
+            formatter: function (value) {
+                const factor = variablesStore.data && variablesStore.data.gmv_part ? variablesStore.data.gmv_part[1] : 1;
+                return `€${Math.round(value * factor)}`;
+            }
+        }
     },
+    tooltip: {
+        trigger: 'axis',
+        formatter: function (params) {
+            const actualGmvPoint = params.find(p => p.seriesName === 'Actual GMV');
+            if (actualGmvPoint) {
+                const realValue = mapNormalizedToReal(actualGmvPoint.dataIndex);
+                const avgValue = mapNormalizedToRealAvg(actualGmvPoint.dataIndex);
+                return `Hour: ${actualGmvPoint.axisValue}<br>Actual GMV: €${realValue.toFixed(2)}
+                <br>Expected GMV: €${avgValue.toFixed(2)}`;
+            }
+        }
+    },
+
+
     legend: {
-        data: ['Average GMV', 'Q1', 'Q3', 'Actual GMV'], 
+        data: ['Average Expected GMV', 'Min', 'Max', 'Actual GMV'], 
         orient: 'horizontal',
-        bottom: 10, 
+        top: 10, 
         left: 'center' 
     },
+
+    
+    
+    
     series: [
         { 
-            name: 'Average GMV', 
+            name: 'Average Expected GMV', 
             data: [], 
             type: 'line',
             lineStyle: {
                 color: 'black',
-                width: 5
+                width: 2,
+                opacity: 0.35,
             },
             itemStyle: {
-                color: 'black'
-            }
-        },
-        { 
-            name: 'Q1', 
-            data: [], 
-            type: 'line',
-            lineStyle: {
                 color: 'black',
-                width: 5,
-                type: 'dashed',
-                opacity: 0.25
+                opacity: 0.35,
             },
             showSymbol: false
         },
         { 
-            name: 'Q3', 
+            name: 'Min', 
             data: [], 
             type: 'line',
             lineStyle: {
                 color: 'black',
-                width: 5,
+                width: 1,
                 type: 'dashed',
-                opacity: 0.25
+                opacity: 0.20
             },
+            
+            itemStyle: {
+                color: 'black',
+                opacity: 0.20,
+            },
+            showSymbol: false
+        },
+        { 
+            name: 'Max', 
+            data: [], 
+            type: 'line',
+            lineStyle: {
+                color: 'black',
+                width: 1,
+                type: 'dashed',
+                opacity: 0.20
+            },
+            itemStyle: {
+                color: 'black',
+                opacity: 0.20,
+            },
+            
             showSymbol: false
         },
         { 
@@ -70,7 +124,7 @@ const chartOption = ref({
             type: 'line',
             lineStyle: {
                 color: 'red',
-                width: 5
+                width: 3
             },
             itemStyle: {
                 color: 'red'

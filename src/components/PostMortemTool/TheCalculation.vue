@@ -1,22 +1,38 @@
 <template>
-    <div class="result">
-        <div v-if="accumulatedCalculations && accumulatedCalculations.totalGmvLoss !== 0">
-        <div>
-          Estimated GMV Loss: {{ Math.round(accumulatedCalculations.totalGmvLoss) }}
-          (Range: {{ Math.round(accumulatedCalculations.totalRangeFrom) }} to {{ Math.round(accumulatedCalculations.totalRangeTo) }}) 
-          Based on IQR
-        </div>
+  <div class="result">
+    <div v-if="accumulatedCalculations && accumulatedCalculations.totalGmvLoss !== 0">
+      <div class="lines">
+        <h3 :class="isNegative ? 'red' : 'green'">
+          Estimated GMV Impact: {{ Math.round(accumulatedCalculations.totalGmvLoss) }}€
+        </h3>
+        <p>
+          (Range: {{ Math.round(accumulatedCalculations.totalRangeFrom) }}€ to
+          {{ Math.round(accumulatedCalculations.totalRangeTo) }}€)
+        </p>
+        Based on {{ numberDays }} similar days
       </div>
     </div>
-  </template>
+  </div>
+</template>
+
   
   
   <script setup>
-  import { computed } from 'vue';
+  import { computed, ref, watch } from 'vue';
   import { useVariablesStore } from '@/stores/PostMortem/variables'; 
   const variablesStore = useVariablesStore();
+  const isNegative = ref(false);
   
   // Computed property to accumulate the values
+
+const numberDays = computed(() => {
+  const {data}  = variablesStore; 
+   if (!data) {
+    console.log("no day data")
+   }
+   return data.days[1]
+})
+
   const accumulatedCalculations = computed(() => {
   const { data, offtime, ontime } = variablesStore;
   if (!data || !Array.isArray(data.hours) || !Array.isArray(data.actual_gmv) ||
@@ -28,14 +44,24 @@
   let totalGmvLoss = 0, totalRangeTo = 0, totalRangeFrom = 0;
   for (let i = 0; i < data.hours.length; i++) {
     if (data.hours[i] >= offtime && data.hours[i] <= ontime) {
-      totalGmvLoss += (data.actual_gmv[i] - data.average_gmv[i]);
-      totalRangeTo += (data.actual_gmv[i] - data.Q3[i]);
-      totalRangeFrom += (data.actual_gmv[i] - data.Q1[i]);
+      totalGmvLoss -=  data.avg_loss[i];
+      totalRangeTo -= data.max_loss[i];
+      totalRangeFrom -= data.min_loss[i];
     }
   }
   console.log({ totalGmvLoss, totalRangeTo, totalRangeFrom }); // Debug output
   return { totalGmvLoss, totalRangeTo, totalRangeFrom };
 });
+
+
+
+
+
+watch(accumulatedCalculations, (newValue) => {
+  isNegative.value = newValue.totalGmvLoss < 0;
+});
+
+
   </script>
   
   
@@ -48,5 +74,25 @@
       margin-left: 2.5rem;
       border: 1px black solid;
   }
+
+  .lines {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.5rem; 
+}
+
+.red {
+  color: red;
+}
+
+.green {
+  color:green;
+}
+
+.lines h3, .lines p {
+  margin: 0; 
+  padding: 0.2rem 0;
+  line-height: 1.2; 
+}
   </style>
   
