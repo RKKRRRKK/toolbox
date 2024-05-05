@@ -11,7 +11,7 @@
         </p>
         <p @click="toggleDetails" class="based">Based on <b>{{ numberDays }}</b> similar days*</p>
         <div v-if="showDetails" class="detail-text">
-          <p>The calculation examines the average hourly GMV from corresponding weekdays over the past 28 days, excluding holidays. The loss/gain is calculated by deducting that average in the selected hours, from the actual generated GMV.</p>
+          <p>The calculation examines the normalized average hourly GMV from corresponding weekdays over the past 28 days, excluding holidays. The loss/gain is calculated by deducting that average in the selected hours, from the actual generated GMV.</p>
           <p>The calculation of range (max, min) substitutes deducting the average to deducting by the most or least profitable hours respectively</p>
         </div>
       </div>
