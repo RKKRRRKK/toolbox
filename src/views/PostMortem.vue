@@ -15,7 +15,10 @@
 </div>
 <TheResult class="result"></TheResult>
 <!-- <div class="chart">chart</div>> -->
+<div class="charts">
 <TheChart></TheChart>
+<TheScatter></TheScatter>
+</div>
 </div>
 </template>
 
@@ -27,6 +30,7 @@ import TheGenerate from "../components/PostMortemTool/TheGenerate.vue"
 import TheInput from "../components/PostMortemTool/TheInput.vue"
 import TheChart from "../components/PostMortemTool/TheChart.vue"
 import TheResult from "../components/PostMortemTool/TheCalculation.vue"
+import TheScatter from "../components/PostMortemTool/TheScatter.vue"
 
 </script>
 
@@ -86,7 +90,7 @@ import TheResult from "../components/PostMortemTool/TheCalculation.vue"
 }
 
 
-.chart {
+/* .chart {
     margin-top: 2.5rem;
     width: 95%;
     align-self: center;
@@ -94,7 +98,7 @@ import TheResult from "../components/PostMortemTool/TheCalculation.vue"
     height: 100%;
     flex-shrink: 3;
     flex-basis: 0%
-}
+} */
 
 .result {
     padding: 0.5rem;
@@ -103,4 +107,22 @@ import TheResult from "../components/PostMortemTool/TheCalculation.vue"
     flex-basis: 0%
 }
 
+.charts {
+    width: 100%; 
+    overflow: hidden; 
+}
+
+
+.charts > :first-child {
+    float: left; 
+    width: 85%; 
+    box-sizing: border-box; 
+}
+
+.charts > :last-child {
+    float: left; 
+    width: 15%; 
+    box-sizing: border-box; 
+    padding-right: 10rem;
+}
 </style>

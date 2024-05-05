@@ -76,7 +76,8 @@ function toggleDetails() {
     margin-top: 5rem;
     width: 25rem;
     margin-left: 2.5rem;
-    border: 1px black solid;
+    border: 2.5px solid #ccc;
+    border-radius: 0.5rem;
 }
 
 .lines {

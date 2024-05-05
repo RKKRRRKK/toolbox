@@ -18,6 +18,7 @@
 
   // Constructing the SQL query string
   const sql = `
+
   WITH CTE1 AS (
     SELECT
         SUM(o.total_price / 100) AS GMV,
@@ -66,16 +67,23 @@ NormalizedCTE1 AS (
 ),
 
 CTE2 AS (
+SELECT
+    hour,
+    day_of_week_number,
+    avg(normalized_average_gmv) AS average,
+    max(normalized_average_gmv) AS max,
+    min(normalized_average_gmv) AS min,
+    count(normalized_average_gmv) AS days_avg,
+    avg(gmv) AS average_gmv_euros,
+    ARRAY_AGG(ROUND(gmv)) AS array_gmv,
+    ARRAY_AGG(date) AS array_date,
+    ARRAY_AGG(row_number) AS array_order
+FROM (
     SELECT
-        hour,
-        day_of_week_number,
-        avg(normalized_average_gmv) average,
-        max(normalized_average_gmv) max,
-        min(normalized_average_gmv) min,
-        count(normalized_average_gmv) days_avg,
-        avg(gmv) average_gmv_euros,
-    FROM
-        NormalizedCTE1
+        *,
+        ROW_NUMBER() OVER (PARTITION BY day_of_week_number, hour ORDER BY date ASC) AS row_number
+    FROM NormalizedCTE1
+)
     GROUP BY
         hour, day_of_week_number
 ),
@@ -140,7 +148,10 @@ CTE5 AS (
         ((b.min / a.normalized_actual_gmv) * a.actual_GMV) - a.actual_GMV as min_loss,
         a.actual_GMV as actual_gmv_euros,
         ((b.average / a.normalized_actual_gmv) * a.actual_GMV) as average_gmv_euros,
-        total_actual_gmv
+        total_actual_gmv,
+        b.array_gmv,
+        b.array_date,
+        b.array_order
     FROM
         NormalizedCTE3 a
     LEFT JOIN
@@ -160,9 +171,14 @@ actual_gmv_euros,
 average_gmv_euros,
 total_actual_gmv / 100 as gmv_part,
 days_accounted,
+array_gmv,
+array_date,
+array_order,
 
 FROM CTE5
 ORDER BY hours ASC;
+
+  
 
   `;
     

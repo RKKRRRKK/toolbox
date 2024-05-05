@@ -66,4 +66,9 @@ function setendtime() {
     width: 50%;
 }
 
+.end,.start {
+    border: 1px solid #ccc;
+    border-radius: 0.2rem;
+}
+
 </style>

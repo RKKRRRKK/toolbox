@@ -1,7 +1,7 @@
 <template>
 <div class="field-container">
 <label for="storefronts">Storefront:</label>
-<select name="storefronts" id="storefronts"
+<select name="storefronts" id="storefronts" class="storefronts"
   v-model="storefront"
   @change="setstorefront"
   >
@@ -32,6 +32,9 @@
 
 <style scoped>
 
-
+.storefronts {
+  border: 1px solid #ccc;
+    border-radius: 0.2rem;
+}
 
 </style>

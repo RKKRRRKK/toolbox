@@ -1,7 +1,7 @@
 <template>
 <div class="field-container">
 <label for="platform">Platform:</label>
-<select name="platform" id="platform"
+<select name="platform" id="platform" class="select"
   v-model="platform"
   @change="setplatform"
   >
@@ -31,6 +31,9 @@
 
 <style scoped>
 
-
+.select {
+  border: 1px solid #ccc;
+    border-radius: 0.2rem;
+}
 
 </style>

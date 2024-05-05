@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-chart v-if="isDataLoaded" :option="chartOption" style="width: 90%; height: 550px;"></v-chart>
+        <v-chart v-if="isDataLoaded" :option="chartOption" style="height: 550px;"></v-chart>
     </div>
 </template>
 
