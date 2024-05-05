@@ -1,4 +1,5 @@
 <template>
+    <h1 class="title">Post-Mortem GMV Impact Estimation</h1>
 <div class="container">
 <div class="horizontal-container">
 <div class="ho-basics">
@@ -103,6 +104,7 @@ import TheScatter from "../components/PostMortemTool/TheScatter.vue"
 .result {
     padding: 0.5rem;
     margin-left: 11rem;
+    margin-bottom: 5rem;
     flex-shrink: 3;
     flex-basis: 0%
 }
@@ -124,5 +126,9 @@ import TheScatter from "../components/PostMortemTool/TheScatter.vue"
     width: 20%; 
     box-sizing: border-box;
     /* background-color: rgba(50,50,255, 0.5) */
+}
+
+.title {
+    color: #636060; /* Gray color for the text */
 }
 </style>

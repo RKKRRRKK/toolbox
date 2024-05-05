@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-chart v-if="isDataLoaded" :option="chartOption" style="height: 550px;"></v-chart>
+        <v-chart v-if="isDataLoaded" :option="chartOption" style="height: 650px;"></v-chart>
     </div>
 </template>
 
@@ -71,7 +71,7 @@ const chartOption = ref({
     grid: {
     left: '2%',  // Adjust this value as needed to provide enough space for labels
     right: '2%',
-    top: '5%',
+    top: '7%',
     bottom: '8%',
     containLabel: true
   },
@@ -79,7 +79,7 @@ const chartOption = ref({
 
 
     legend: {
-        data: ['Average Expected GMV', 'Min', 'Max', 'Actual GMV', 'Affected Timeframe'], 
+        data: ['Average (Expected) GMV', 'Min', 'Max', 'Actual GMV', 'Affected Timeframe'], 
         orient: 'horizontal',
         bottom: 10, 
         left: 'center' 
@@ -88,7 +88,7 @@ const chartOption = ref({
 
     title: {
         text: 'Hourly Comparison',
-        textAlign: 'left',
+        textAlign: 'middle',
         textStyle: {
             fontSize: 20,
         },
@@ -96,7 +96,7 @@ const chartOption = ref({
     0,  // up
     0, // right
     0,  // down
-    1050, // left
+    200, // left
 ]
     },
 
@@ -105,7 +105,7 @@ const chartOption = ref({
     
     series: [
         { 
-            name: 'Average Expected GMV', 
+            name: 'Average (Expected) GMV', 
             data: [], 
             type: 'line',
             lineStyle: {

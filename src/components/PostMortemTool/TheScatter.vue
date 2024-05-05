@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-chart v-if="isDataLoaded" :option="chartOption2" style="height: 550px;"></v-chart>
+        <v-chart v-if="isDataLoaded" :option="chartOption2" style="height: 650px;"></v-chart>
     </div>
 </template>
 
@@ -24,8 +24,8 @@ const chartOption2 = ref({
   },
   grid: {
     left: '5%',  // Adjust this value as needed to provide enough space for labels
-    right: '25%',
-    top: '5%',
+    right: '20%',
+    top: '7%',
     bottom: '8%',
     containLabel: true
   },
@@ -37,23 +37,36 @@ const chartOption2 = ref({
     axisLabel: {
       formatter: (value) => numberWithCommas(value / 1000000) + 'M €'
     },
+    max: 4500000,
+    interval: 500000,
   },
+
+  legend: {
+        data: ['Comparison Days', 'Outtage Day'], 
+        orient: 'horizontal',
+        bottom: 10, 
+        left: 'center' 
+        
+    },
 
   title: {
         text: 'Daily Comparison',
-        textAlign: 'left',
+        textAlign: 'midlde',
         textStyle: {
             fontSize: 20,
         },
+
         padding: [
     0,  // up
     0, // right
     0,  // down
-    150, // left
-]
+    65, // left
+],
+
     },
   series: [
     {
+      name: 'Comparison Days',
       data: [],
       type: 'scatter',
       symbolSize: 40,
@@ -83,6 +96,7 @@ const chartOption2 = ref({
 }
 ,
    {
+      name: 'Outtage Day',
       data: [],
       type: 'scatter',
       symbolSize: 40,
