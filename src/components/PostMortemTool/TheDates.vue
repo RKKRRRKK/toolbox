@@ -2,14 +2,14 @@
     <div class="dates">
         <div class="field-container">
             <label for="start">Start Time:</label>
-            <input type="datetime-local" id="start" class="start"
+            <input type="datetime-local" id="start" class="start" step="3600"
             v-model="starttime"
             @change="setstarttime"
             >
         </div>
         <div class="field-container">
             <label for="end">End Time:</label>
-            <input type="datetime-local" id="end" class="end"
+            <input type="datetime-local" id="end" class="end"  step="3600"
             v-model="endtime"
             @change="setendtime"
             >

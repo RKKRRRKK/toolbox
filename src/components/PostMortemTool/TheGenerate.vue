@@ -20,22 +20,24 @@
   const sql = `
   WITH CTE1 AS (
     SELECT
-        SUM(total_price / 100) AS GMV,
-        EXTRACT(HOUR FROM c.date_inserted) AS hour,
-        DATE(c.date_inserted) AS date,
-        EXTRACT(DAYOFWEEK FROM c.date_inserted) AS day_of_week_number
+        SUM(o.total_price / 100) AS GMV,
+        EXTRACT(HOUR FROM o.order_timestamp) AS hour,
+        DATE(o.order_timestamp) AS date,
+        EXTRACT(DAYOFWEEK FROM o.order_timestamp) AS day_of_week_number
     FROM
-        \`prod-data-engineering-real.hm_live.checkouts\` c
+        \`prod-data-engineering-real.hm_live.orders\` o
+    LEFT JOIN 
+         \`prod-data-engineering-real.hm_live.checkouts\` c ON c.id_checkout = o.id_checkout
     LEFT JOIN
         \`prod-data-engineering-real.hm_live.buy_event\` AS app
         ON app.id_pre_checkout = c.id_pre_checkout
+      
+     
     WHERE
-        code_storefront = '${storefront}'
-        AND DATE(c.date_inserted) BETWEEN DATE_SUB('${start}', INTERVAL 28 DAY) AND DATE_SUB('${start}', INTERVAL 1 DAY)
+        o.code_storefront = '${storefront}'
+        AND DATE(o.order_timestamp) BETWEEN DATE_SUB('${start}', INTERVAL 28 DAY) AND DATE_SUB('${start}', INTERVAL 1 DAY)
         AND IFNULL(app.source, 'web')  in (${platform})
-        AND NOT (
-             DATE(c.date_inserted) IN ('2024-01-01','2024-01-06','2024-03-08','2024-03-29','2024-03-31','2024-04-01','2024-05-01','2024-05-09','2024-05-19','2024-05-20','2024-05-30','2024-08-15','2024-09-20','2024-10-03','2024-10-31','2024-11-01','2024-11-20','2024-12-25','2024-12-26') -- All holiday dates
-            )
+        AND DATE(o.order_timestamp) NOT IN (SELECT date_holiday FROM  \`prod-data-engineering-real.business_intelligence.national_holidays_de\`)
     GROUP BY
         hour, date, day_of_week_number
 ),
@@ -80,18 +82,20 @@ CTE2 AS (
 
 CTE3 AS (
     SELECT
-        SUM(total_price / 100) AS actual_GMV,
-        EXTRACT(HOUR FROM c.date_inserted) AS hour,
-        DATE(c.date_inserted) AS date,
-        EXTRACT(DAYOFWEEK FROM c.date_inserted) AS day_of_week_number
+        SUM(o.total_price / 100) AS actual_GMV,
+        EXTRACT(HOUR FROM o.order_timestamp) AS hour,
+        DATE(o.order_timestamp) AS date,
+        EXTRACT(DAYOFWEEK FROM o.order_timestamp) AS day_of_week_number
     FROM
-        \`prod-data-engineering-real.hm_live.checkouts\` c
+        \`prod-data-engineering-real.hm_live.orders\` o
+    LEFT JOIN 
+         \`prod-data-engineering-real.hm_live.checkouts\` c ON c.id_checkout = o.id_checkout
     LEFT JOIN
         \`prod-data-engineering-real.hm_live.buy_event\` AS app
         ON app.id_pre_checkout = c.id_pre_checkout
     WHERE
-        code_storefront = '${storefront}'
-        AND DATE(c.date_inserted) = '${start}'
+        o.code_storefront = '${storefront}'
+        AND DATE(o.order_timestamp) = '${start}'
     AND IFNULL(app.source, 'web') in (${platform})
     GROUP BY
         hour, date, day_of_week_number
