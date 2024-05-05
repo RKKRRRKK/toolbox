@@ -205,7 +205,7 @@ ORDER BY hours ASC;
         width: 6rem;
         height: 3rem;
         cursor: pointer;
-        background-color: #ca6161;
+        background-color: #ccc;
         color: #fff;
         border: none;
         border-radius: 4px;
@@ -217,11 +217,11 @@ ORDER BY hours ASC;
     }
     
     .gen:hover {
-        background-color: #bb0808;
+        background-color: rgba(237, 150, 50, 1);
     }
     
     .gen:active {
-        background-color: #630101;
+        background-color: rgb(82, 50, 14);
         box-shadow: none;
         transform: translateY(1px);
     }

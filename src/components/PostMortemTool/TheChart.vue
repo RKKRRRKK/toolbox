@@ -68,6 +68,14 @@ const chartOption = ref({
         }
     },
 
+    grid: {
+    left: '2%',  // Adjust this value as needed to provide enough space for labels
+    right: '2%',
+    top: '5%',
+    bottom: '8%',
+    containLabel: true
+  },
+
 
 
     legend: {
@@ -77,7 +85,20 @@ const chartOption = ref({
         left: 'center' 
         
     },
-    
+
+    title: {
+        text: 'Hourly Comparison',
+        textAlign: 'left',
+        textStyle: {
+            fontSize: 20,
+        },
+        padding: [
+    0,  // up
+    0, // right
+    0,  // down
+    1050, // left
+]
+    },
 
     
     
@@ -198,7 +219,10 @@ watch(() => variablesStore.data, (newData) => {
         chartOption.value.series[2].data = newData.Q3 ? newData.Q3.map((value, index) => [index, value]) : [];
         chartOption.value.series[3].data = newData.actual_gmv ? newData.actual_gmv.map((value, index) => [index, value]) : [];
         updateMarkLine();  // Ensure markLine is updated alongside the data
-        isDataLoaded.value = true;
+        if (newData.actual_gmv) {
+            isDataLoaded.value = true;
+        }
+        console.log("updating is loaded value", isDataLoaded.value)
     }
 }, { immediate: true, deep: true });
 

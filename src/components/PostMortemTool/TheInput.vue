@@ -41,28 +41,36 @@ function assignData() {
             average_gmv_euros: [],
             gmv_part: [],
             days: [],
+            array_gmv: [],
+            array_date: [],
+            array_order: [],
         };
 
-        // Skip the header,  start from index 1
+        // Start processing from the second line to skip the header
         for (let i = 1; i < lines.length; i++) {
-            const row = lines[i].split(',');
-            if (row.length === 12) { // Ensure the row has the correct number of columns
-                // Convert hour from integer to time format "X:00"
-                // const hourFormatted = `${parseInt(row[0].trim())}:00`;
-                // data.hours.push(hourFormatted); // Store the formatted hour
-                data.average_gmv.push(parseFloat(row[0].trim()));
-                data.Q3.push(parseFloat(row[1].trim()));
-                data.Q1.push(parseFloat(row[2].trim()));
-                data.actual_gmv.push(parseFloat(row[3].trim()));
-                data.hours.push(parseFloat(row[4].trim()));
-                data.avg_loss.push(parseFloat(row[5].trim()));
-                data.max_loss.push(parseFloat(row[6].trim()));
-                data.min_loss.push(parseFloat(row[7].trim()));
-                data.actual_gmv_euros.push(parseFloat(row[8].trim()));
-                data.average_gmv_euros.push(parseFloat(row[9].trim()));
-                data.gmv_part.push(parseFloat(row[10].trim()));
-                data.days.push(parseFloat(row[11].trim()))
-            }
+            // Split line only on commas not inside quotes
+            const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+
+            if (row.length < 15) continue; // Skip lines that do not have a complete data set
+
+            // Parse individual fields
+            data.average_gmv.push(parseFloat(row[0].trim()));
+            data.Q3.push(parseFloat(row[1].trim()));
+            data.Q1.push(parseFloat(row[2].trim()));
+            data.actual_gmv.push(parseFloat(row[3].trim()));
+            data.hours.push(parseFloat(row[4].trim()));
+            data.avg_loss.push(parseFloat(row[5].trim()));
+            data.max_loss.push(parseFloat(row[6].trim()));
+            data.min_loss.push(parseFloat(row[7].trim()));
+            data.actual_gmv_euros.push(parseFloat(row[8].trim()));
+            data.average_gmv_euros.push(parseFloat(row[9].trim()));
+            data.gmv_part.push(parseFloat(row[10].trim()));
+            data.days.push(parseFloat(row[11].trim()));
+
+            // Parse JSON array fields directly
+            data.array_gmv.push(JSON.parse(row[12].trim()));
+            data.array_date.push(JSON.parse(row[13].trim()));
+            data.array_order.push(JSON.parse(row[14].trim()));
         }
         variablesStore.setData(data);
         console.log(data);
@@ -92,7 +100,7 @@ function assignData() {
 
 .upload-button {
     padding: 0.65rem 1.5rem;
-    background-color: #ca6161;
+    background-color: #ccc;
     color: #fff;
     border: none;
     border-radius: 0.2rem;
@@ -103,11 +111,11 @@ function assignData() {
 }
 
 .upload-button:hover {
-    background-color: #bb0808;
+    background-color: rgba(237, 150, 50, 1);
 }
 
 .upload-button:active {
-        background-color: #630101;
+        background-color: rgb(82, 50, 14);
         box-shadow: none;
         transform: translateY(1px);
     }

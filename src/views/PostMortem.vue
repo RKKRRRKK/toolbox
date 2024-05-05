@@ -108,21 +108,21 @@ import TheScatter from "../components/PostMortemTool/TheScatter.vue"
 }
 
 .charts {
-    width: 100%; 
     overflow: hidden; 
 }
 
 
 .charts > :first-child {
     float: left; 
-    width: 85%; 
+    width: 80%; 
     box-sizing: border-box; 
+    /* background-color: rgba(120,120,120,0.5) */
 }
 
 .charts > :last-child {
     float: left; 
-    width: 15%; 
-    box-sizing: border-box; 
-    padding-right: 10rem;
+    width: 20%; 
+    box-sizing: border-box;
+    /* background-color: rgba(50,50,255, 0.5) */
 }
 </style>

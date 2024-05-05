@@ -10,10 +10,12 @@
           {{ numberWithCommas(Math.round(accumulatedCalculations.totalRangeTo)) }}€)
         </p>
         <p @click="toggleDetails" class="based">Based on <b>{{ numberDays }}</b> similar days*</p>
+        <transition name="unfold">
         <div v-if="showDetails" class="detail-text">
           <p>The calculation examines the normalized average hourly GMV from corresponding weekdays over the past 28 days, excluding holidays. The loss/gain is calculated by deducting that average in the selected hours, from the actual generated GMV.</p>
           <p>The calculation of range (max, min) substitutes deducting the average to deducting by the most or least profitable hours respectively</p>
         </div>
+      </transition>
       </div>
     </div>
   </div>
@@ -109,5 +111,28 @@ function toggleDetails() {
 .based:hover {
   cursor: pointer;
 }
+
+/* Initial state of the entering element */
+.unfold-enter-from, .unfold-leave-to {
+  transform: scaleY(0);
+  transform-origin: top;
+  height: 0;
+  opacity: 0;
+}
+
+/* Target state of the entering element */
+.unfold-enter-to, .unfold-leave-from {
+  transform: scaleY(1);
+  transform-origin: top;
+  height: auto; /* Adjust this based on the content size or leave as 'auto' */
+  opacity: 1;
+}
+
+/* Active state of the animation */
+.unfold-enter-active, .unfold-leave-active {
+  transition: transform 0.1s ease, opacity 0.1s ease, height 0.5s ease;
+}
+
+
   </style>
   
