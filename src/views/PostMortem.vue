@@ -11,7 +11,7 @@
 </div>
 </div>
     <TheGenerate></TheGenerate>
-</div>
+</div class="input">
     <TheInput></TheInput>
 </div>
 <TheResult class="result"></TheResult>
@@ -75,7 +75,19 @@ import TheScatter from "../components/PostMortemTool/TheScatter.vue"
     gap: 1rem;
     margin-right: 2rem;
     flex-shrink: 3;
-    flex-basis: 0%
+    flex-basis: 0%;
+    border: 3px solid #ccc;
+    padding: 1rem;
+    padding-right: 2.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* subtle shadow for depth */
+    border-radius: 0.5rem;
+}
+
+.input {
+    border: 3px solid #ccc;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* lighter shadow for input fields */
+    border-radius: 0.5rem;
 }
 
 
@@ -85,9 +97,9 @@ import TheScatter from "../components/PostMortemTool/TheScatter.vue"
     display: flex;
     width: 100%;
     gap: 1rem;
-    padding-left: 8rem;
+    margin-left: 8rem;
     flex-shrink: 3;
-    flex-basis: 0%
+    flex-basis: 0%;
 }
 
 
@@ -106,7 +118,7 @@ import TheScatter from "../components/PostMortemTool/TheScatter.vue"
     margin-left: 11rem;
     margin-bottom: 5rem;
     flex-shrink: 3;
-    flex-basis: 0%
+    flex-basis: 0%;
 }
 
 .charts {

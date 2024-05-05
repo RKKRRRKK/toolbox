@@ -78,8 +78,9 @@ function toggleDetails() {
     margin-top: 5rem;
     width: 25rem;
     margin-left: 2.5rem;
-    border: 2.5px solid #ccc;
+    border: 3px solid #ccc;
     border-radius: 0.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* lighter shadow for input fields */
 }
 
 .lines {

@@ -53,7 +53,8 @@ const chartOption = ref({
                 const factor = variablesStore.data && variablesStore.data.gmv_part ? variablesStore.data.gmv_part[1] : 1;
                 return `€${numberWithCommas(Math.round(value * factor))}`;
             }
-        }
+        },
+        interval: 1
     },
     tooltip: {
         trigger: 'axis',
