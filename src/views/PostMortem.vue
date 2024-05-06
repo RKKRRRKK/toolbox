@@ -1,27 +1,30 @@
 <template>
     <h1 class="title">Post-Mortem GMV Impact Estimation</h1>
-<div class="container">
-<div class="horizontal-container">
-<div class="ho-basics">
-<div class="basics">
-    <TheDates></TheDates>
-<div class="rest">
-    <TheStorefront></TheStorefront>
-    <ThePlatform></ThePlatform>
-</div>
-</div>
-    <TheGenerate></TheGenerate>
-</div class="input">
-    <TheInput></TheInput>
-</div>
-<TheResult class="result"></TheResult>
-<!-- <div class="chart">chart</div>> -->
-<div class="charts">
-<TheChart></TheChart>
-<TheScatter></TheScatter>
-</div>
-</div>
+    <div class="container">
+        <div class="horizontal-container">
+            <div class="ho-basics">
+                <div class="basics">
+                    <TheDates></TheDates>
+                    <div class="rest">
+                        <TheStorefront></TheStorefront>
+                        <ThePlatform></ThePlatform>
+                    </div>
+                </div>
+                <TheGenerate></TheGenerate>
+            </div>
+            <div class="inputs">
+                <TheInput></TheInput>
+            </div>
+        </div>
+        <TheResult class="result"></TheResult>
+        <!-- <div class="chart">chart</div> --> <!-- Corrected malformed comment -->
+        <div class="charts">
+            <TheChart></TheChart>
+            <TheScatter></TheScatter>
+        </div>
+    </div>
 </template>
+
 
 <script setup>
 import TheDates from "../components/PostMortemTool/TheDates.vue"
@@ -63,7 +66,7 @@ import TheScatter from "../components/PostMortemTool/TheScatter.vue"
 
 .rest {
     display: flex;
-    gap: 3rem;
+    gap: 6.5rem;
     width: 13rem;
     height: 1rem;
     flex-shrink: 3;
@@ -76,15 +79,15 @@ import TheScatter from "../components/PostMortemTool/TheScatter.vue"
     margin-right: 2rem;
     flex-shrink: 3;
     flex-basis: 0%;
-    border: 3px solid #ccc;
+    border: 2px solid #ccc;
     padding: 1rem;
     padding-right: 2.5rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* subtle shadow for depth */
     border-radius: 0.5rem;
 }
 
-.input {
-    border: 3px solid #ccc;
+.inputs {
+    border: 2px solid #ccc;
     padding: 1rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* lighter shadow for input fields */
     border-radius: 0.5rem;
@@ -97,7 +100,7 @@ import TheScatter from "../components/PostMortemTool/TheScatter.vue"
     display: flex;
     width: 100%;
     gap: 1rem;
-    margin-left: 8rem;
+    padding-left: 8rem;
     flex-shrink: 3;
     flex-basis: 0%;
 }
@@ -116,13 +119,14 @@ import TheScatter from "../components/PostMortemTool/TheScatter.vue"
 .result {
     padding: 0.5rem;
     margin-left: 11rem;
-    margin-bottom: 5rem;
+    margin-bottom: 2rem;
     flex-shrink: 3;
     flex-basis: 0%;
 }
 
 .charts {
     overflow: hidden; 
+    width: 100%;
 }
 
 
@@ -141,6 +145,6 @@ import TheScatter from "../components/PostMortemTool/TheScatter.vue"
 }
 
 .title {
-    color: #636060; /* Gray color for the text */
+    color: #636060; 
 }
 </style>
