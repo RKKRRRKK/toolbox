@@ -1,5 +1,5 @@
 <template>
-    <h1 class="title">Post-Mortem GMV Impact Estimation</h1>
+    <h1 class="title">Post-Mortem GMV Impact Estimation {{ date }}</h1>
     <div class="container">
         <div class="horizontal-container">
             <div class="ho-basics">
@@ -15,6 +15,10 @@
             <div class="inputs">
                 <TheInput></TheInput>
             </div>
+            <div class="compwrap">
+            <div></div>
+            <TheCompressor class="compressor"></TheCompressor>
+        </div>
         </div>
         <TheResult class="result"></TheResult>
         <!-- <div class="chart">chart</div> --> <!-- Corrected malformed comment -->
@@ -35,6 +39,19 @@ import TheInput from "../components/PostMortemTool/TheInput.vue"
 import TheChart from "../components/PostMortemTool/TheChart.vue"
 import TheResult from "../components/PostMortemTool/TheCalculation.vue"
 import TheScatter from "../components/PostMortemTool/TheScatter.vue"
+import TheCompressor from "../components/PostMortemTool/TheCompressor.vue"
+import { ref, watch } from 'vue'
+
+const date = ref('')
+      
+      import { useVariablesStore } from '@/stores/PostMortem/variables.js' 
+      const variablesStore = useVariablesStore()
+
+      watch(() => variablesStore, (newData) => {
+        date.value = newData.start ? 'for ' + newData.start : ''
+
+      },
+      { immediate: true, deep: true });
 
 </script>
 
@@ -146,5 +163,15 @@ import TheScatter from "../components/PostMortemTool/TheScatter.vue"
 
 .title {
     color: #636060; 
+}
+
+.compressor {
+    align-self: flex-start;
+}
+
+.compwrap {
+    display: flex;
+    justify-content: space-between;
+    width: 52.5%;
 }
 </style>

@@ -100,7 +100,7 @@ function assignData() {
 
 .upload-button {
     padding: 0.65rem 1.5rem;
-    background-color: #ccc;
+    background-color: rgb(233, 171, 100);
     color: #fff;
     border: none;
     border-radius: 0.2rem;

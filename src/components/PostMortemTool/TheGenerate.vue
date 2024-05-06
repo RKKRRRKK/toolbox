@@ -205,7 +205,7 @@ ORDER BY hours ASC;
         width: 6rem;
         height: 3rem;
         cursor: pointer;
-        background-color: #ccc;
+        background-color: rgb(233, 171, 100);
         color: #fff;
         border: none;
         border-radius: 4px;

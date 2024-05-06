@@ -12,7 +12,9 @@
   },
   "dependencies": {
     "@vuepic/vue-datepicker": "^8.5.0",
+    "brotli-wasm": "^3.0.0",
     "echarts": "^5.5.0",
+    "pako": "^2.1.0",
     "papaparse": "^5.4.1",
     "pinia": "^2.1.7",
     "primevue": "^3.50.0",

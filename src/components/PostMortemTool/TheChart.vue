@@ -26,7 +26,6 @@ function mapNormalizedToReal(index) {
 }
 
 function mapNormalizedToRealAvg(index) {
-    // This assumes 'actual_gmv_euros' is loaded and has the same length as the normalized 'actual_gmv'
     if (variablesStore.data && variablesStore.data.average_gmv_euros) {
         return variablesStore.data.average_gmv_euros[index];
     }
@@ -41,20 +40,34 @@ const chartOption = ref({
     max: 23,
     axisLabel: {
         formatter: function (value) {
-            // Ensures the hour is always shown with two digits
+          
             return value < 10 ? `0${value}:00` : `${value}:00`;
         }
-    }
+    },
+    splitLine: {
+            show: true,
+            lineStyle: {
+                color: '#ccc', 
+                type: 'dashed' 
+            }
+        }
 },
     yAxis: {
         type: 'value',
         axisLabel: {
             formatter: function (value) {
                 const factor = variablesStore.data && variablesStore.data.gmv_part ? variablesStore.data.gmv_part[1] : 1;
-                return `${numberWithCommas(Math.round(value * factor))}€`;
+                return `${numberWithCommas(Math.round(value * factor))} €`;
             }
         },
-        interval: 1
+        interval: 1,
+        splitLine: {
+            show: true,
+            lineStyle: {
+                color: '#ccc', 
+                type: 'dashed' 
+            }
+        }
     },
     tooltip: {
         trigger: 'axis',
@@ -70,7 +83,7 @@ const chartOption = ref({
     },
 
     grid: {
-    left: '2%',  // Adjust this value as needed to provide enough space for labels
+    left: '2%',  
     right: '2%',
     top: '7%',
     bottom: '8%',
@@ -178,7 +191,7 @@ const chartOption = ref({
                     width: 1.5
                 },
                 label: {
-        show: false  // Disables the display of values on the markLine
+        show: false 
     }
             },
       markArea: {
@@ -197,7 +210,7 @@ const chartOption = ref({
 
 const isDataLoaded = ref(false);
 
-// Function to update the markLine if ontime and offtime are available
+
 function updateMarkLine() {
   if (variablesStore.ontime !== undefined && variablesStore.offtime !== undefined) {
     chartOption.value.series[4].markLine.data = [
@@ -219,7 +232,7 @@ watch(() => variablesStore.data, (newData) => {
         chartOption.value.series[1].data = newData.Q1 ? newData.Q1.map((value, index) => [index, value]) : [];
         chartOption.value.series[2].data = newData.Q3 ? newData.Q3.map((value, index) => [index, value]) : [];
         chartOption.value.series[3].data = newData.actual_gmv ? newData.actual_gmv.map((value, index) => [index, value]) : [];
-        updateMarkLine();  // Ensure markLine is updated alongside the data
+        updateMarkLine();  
         if (newData.actual_gmv) {
             isDataLoaded.value = true;
         }

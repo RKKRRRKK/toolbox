@@ -23,7 +23,7 @@ const chartOption2 = ref({
     }
   },
   grid: {
-    left: '5%',  // Adjust this value as needed to provide enough space for labels
+    left: '5%',  
     right: '20%',
     top: '7%',
     bottom: '8%',
@@ -31,14 +31,31 @@ const chartOption2 = ref({
   },
   xAxis: {
     type: 'value',
+    splitLine: {
+            show: true,
+            lineStyle: {
+                color: '#ccc', 
+                type: 'dashed' 
+            }
+        }
   },
   yAxis: {
     type: 'value',
     axisLabel: {
       formatter: (value) => numberWithCommas(value / 1000000) + 'M €'
     },
-    max: 4500000,
+    max:  function (value) {
+    var roundtomil = Math.ceil(value.max / 500000) * 500000;
+    return roundtomil + 500000;
+},
     interval: 500000,
+    splitLine: {
+            show: true,
+            lineStyle: {
+                color: '#ccc', 
+                type: 'dashed' 
+            }
+        }
   },
 
   legend: {
@@ -50,7 +67,7 @@ const chartOption2 = ref({
     },
 
   title: {
-        text: 'Daily Comparison',
+        text: 'Overview of Considered Dates',
         textAlign: 'midlde',
         textStyle: {
             fontSize: 20,
@@ -76,17 +93,23 @@ const chartOption2 = ref({
             },
     markLine: {
         label: {
-           show: false
+           show: true,
+           formatter: function (params) {
+            // Accessing the value from params object and converting it
+            return (params.value / 1000000).toFixed(2) + 'M € \nAverage'
+        },
+        opacity: 0.8
+
         },
         tooltip: {
             show: true, // Enabling tooltip for the markLine
             formatter: 'Average' // Static text for the tooltip
         },
         lineStyle: {
-            color: 'rgba(237, 150, 50, 1)',
-            type: 'dotted',
-            width: 3.5,
-            opacity: 0.32
+            color: 'black',
+            type: 'dashed',
+            width: 2.5,
+            opacity: 0.25
         },
         symbol: ['none', 'none'],
         data: [
@@ -95,24 +118,37 @@ const chartOption2 = ref({
     }
 }
 ,
-   {
-      name: 'Outtage Day',
-      data: [],
-      type: 'scatter',
-      symbolSize: 40,
-
-      itemStyle: {
-        color: 'rgba(237, 150, 50, 0.8)',
-            },
-    }
+{
+  name: 'Outtage Day',
+  data: [], 
+  type: 'scatter',
+  symbolSize: 40,
+  itemStyle: {
+    color: 'rgba(237, 150, 50, 0.8)',
+  },
+  markPoint: {
+    data: [
+      {
+        coord: [],
+        label: {
+          formatter: function (params) {
+         
+            return params.value[2];
+          },
+          position: 'top'
+        }
+      }
+    ]
+  }
+}
 ,
 {
-        data: [], // This will be the average line
+        data: [], 
         type: 'line',
         itemStyle: {
-            color: 'rgba(30, 144, 255, 0.8)',  // Use a different color for the average line
+            color: 'rgba(30, 144, 255, 0.8)',  
         },
-        smooth: true, // Optional, for smoother line
+        smooth: true, 
     }
 ,
   ]
@@ -132,7 +168,7 @@ function parseJSON(jsonStr) {
 
 function parseDates(datesStr) {
     try {
-        // Manually fix the dates string by wrapping each date in quotes
+     
         const correctedDatesStr = datesStr.replace(/\d{4}-\d{2}-\d{2}/g, match => `"${match}"`);
         return JSON.parse(correctedDatesStr);
     } catch (e) {
