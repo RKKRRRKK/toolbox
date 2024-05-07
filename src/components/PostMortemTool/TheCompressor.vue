@@ -77,7 +77,7 @@
   
   <style scoped>
 .button {
-    padding: 0.65rem 1.5rem;
+    padding: 0.65rem 0.8rem;
     background-color: #ccc;  /* rgb(233, 171, 100); */
     color: #fff;
     border: none;
@@ -86,6 +86,7 @@
     font-weight: bold;
     letter-spacing: 1px;
     cursor: pointer;
+    scale: 0.8;
 }
 
 .button:hover {
