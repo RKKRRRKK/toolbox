@@ -125,11 +125,11 @@ const chartOption = ref({
             lineStyle: {
                 color: 'black',
                 width: 2,
-                opacity: 0.35,
+                opacity: 0.5,
             },
             itemStyle: {
                 color: 'black',
-                opacity: 0.35,
+                opacity: 0.5,
             },
             showSymbol: false
         },
@@ -139,14 +139,14 @@ const chartOption = ref({
             type: 'line',
             lineStyle: {
                 color: 'black',
-                width: 1,
-                type: 'dashed',
-                opacity: 0.20
+                width: 7,
+                type: 'dotted',
+                opacity: 0.08
             },
             
             itemStyle: {
                 color: 'black',
-                opacity: 0.20,
+                opacity: 0.1,
             },
             showSymbol: false
         },
@@ -156,13 +156,13 @@ const chartOption = ref({
             type: 'line',
             lineStyle: {
                 color: 'black',
-                width: 1,
-                type: 'dashed',
-                opacity: 0.20
+                width:  7,
+                type: 'dotted',
+                opacity: 0.08
             },
             itemStyle: {
                 color: 'black',
-                opacity: 0.20,
+                opacity: 0.1,
             },
             
             showSymbol: false

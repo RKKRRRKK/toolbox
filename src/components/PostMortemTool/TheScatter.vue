@@ -107,9 +107,9 @@ const chartOption2 = ref({
         },
         lineStyle: {
             color: 'black',
-            type: 'dashed',
-            width: 2.5,
-            opacity: 0.25
+            type: 'line',
+            width: 1.5,
+            opacity: 0.5
         },
         symbol: ['none', 'none'],
         data: [
