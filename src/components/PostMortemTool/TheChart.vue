@@ -3,7 +3,7 @@
         <div class="slider-container">
             <TheSlider class="slider" v-if="isDataLoaded"></TheSlider>
         </div>
-        <v-chart v-if="isDataLoaded" :option="chartOption" style="height: 650px;"></v-chart>
+        <v-chart class="chart" v-if="isDataLoaded" :option="chartOption" style="height: 650px;"></v-chart>
     </div>
 </template>
 
@@ -105,7 +105,7 @@ const chartOption = ref({
     },
 
     title: {
-        text: 'Hourly Comparison',
+        text: 'Hourly Comparison (normalized)',
         textAlign: 'middle',
         textStyle: {
             fontSize: 20,
@@ -269,5 +269,8 @@ watch(() => [variablesStore.ontime, variablesStore.offtime], updateMarkLine, { i
 
 .slider {
     width: 100%; 
+    transform: translateY(3rem);
 }
+
+
 </style>

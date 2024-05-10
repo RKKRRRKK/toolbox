@@ -1,5 +1,5 @@
 <template>
-  <div v-if="accumulatedCalculations && accumulatedCalculations.totalGmvLoss !== 0" class="result">
+  <div v-if="accumulatedCalculations && accumulatedCalculations.totalGmvLoss !== 0" :class="variablesStore.isNegative ? 'result-bad' : 'result-good'">
     <div v-if="accumulatedCalculations && accumulatedCalculations.totalGmvLoss !== 0">
       <div class="lines">
         <h3 :class="variablesStore.isNegative ? 'red' : 'green'">
@@ -9,11 +9,14 @@
           (Range: {{ numberWithCommas(Math.round(accumulatedCalculations.totalRangeFrom)) }}€ to
           {{ numberWithCommas(Math.round(accumulatedCalculations.totalRangeTo)) }}€)
         </p>
-        <p @click="toggleDetails" class="based">Based on <b>{{ numberDays }}</b> similar days*</p>
+        <p >Based on <b>{{ numberDays }}</b> similar days</p>
+        <p :class="variablesStore.isNegative ? 'based-bad' : 'based'" v-if="!showDetails" @click="toggleDetails">click here for more info</p>
+        <p :class="variablesStore.isNegative ? 'based-bad' : 'based'" v-if="showDetails" @click="toggleDetails">click again to close</p>
         <transition name="unfold">
         <div v-if="showDetails" class="detail-text">
           <p>The calculation examines the normalized average hourly GMV from corresponding weekdays over the past 28 days, excluding holidays. The loss/gain is calculated by deducting that average in the selected hours, from the actual generated GMV.</p>
           <p>The calculation of range (max, min) substitutes deducting the average to deducting by the most or least profitable hours respectively</p>
+          <p><b>Normalization:</b> instead of looking at the absolute numbers in euros, we are looking at the trend line; "what % of total GMV was generated at 3pm". This percentage is then multiplied by the GMV total during the outtage day.</p>
         </div>
       </transition>
       </div>
@@ -74,14 +77,26 @@ function toggleDetails() {
   
   
   <style>
-.result {
+.result-bad {
+   background-color: rgb(255, 253, 253);
     margin-top: 2rem;
     width: 25rem;
     margin-left: 2.5rem;
-    border: 1.5px solid #ccc;
+    border: 3.5px solid rgba(255, 0, 0, 0.25); 
     border-radius: 0.5rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* lighter shadow for input fields */
+    box-shadow: 0 0px 12px rgba(255, 0, 0, 0.25); 
 }
+
+.result-good {
+   background-color:rgb(253, 255, 253);
+    margin-top: 2rem;
+    width: 25rem;
+    margin-left: 2.5rem;
+    border: 3.5px solid  rgba(9, 172, 9, 0.25);
+    border-radius: 0.5rem;
+    box-shadow: 0 0px 12px rgba(9, 172, 9, 0.25); 
+}
+
 
 .lines {
     display: flex;
@@ -94,7 +109,7 @@ function toggleDetails() {
 }
 
 .green {
-    color: green;
+    color: rgb(9, 172, 9);
 }
 
 .lines h3, .lines p {
@@ -109,8 +124,21 @@ function toggleDetails() {
     font-size: 0.9rem;  
 }
 
+.based, .based-bad {
+  color: #ccc;
+  opacity: 1
+  
+}
+
+.based-bad:hover {
+  cursor: pointer;
+  color: #FF0000;
+  opacity: 1
+}
 .based:hover {
   cursor: pointer;
+  color: rgb(9, 172, 9);
+  opacity: 1
 }
 
 /* Initial state of the entering element */

@@ -75,8 +75,7 @@ const date = ref('')
 .basics {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    margin-left: 2.5rem;
+    gap: 1rem;
     flex-shrink: 3;
     flex-basis: 0%
 }
@@ -84,7 +83,6 @@ const date = ref('')
 
 .rest {
     display: flex;
-    gap: 6.5rem;
     width: 13rem;
     height: 1rem;
     flex-shrink: 3;
@@ -94,12 +92,10 @@ const date = ref('')
 .ho-basics {
     display: flex;
     gap: 1rem;
-    margin-right: 2rem;
     flex-shrink: 3;
     flex-basis: 0%;
     border: 2px solid #ccc;
     padding: 1rem;
-    padding-right: 2.5rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* subtle shadow for depth */
     border-radius: 0.5rem;
 }
@@ -117,7 +113,7 @@ const date = ref('')
 .horizontal-container {
     display: flex;
     width: 100%;
-    gap: 1rem;
+    gap: 4rem;
     padding-left: 8rem;
     flex-shrink: 3;
     flex-basis: 0%;

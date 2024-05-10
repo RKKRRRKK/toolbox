@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="scatter-container">
         <v-chart v-if="isDataLoaded" :option="chartOption2" style="height: 650px;"></v-chart>
     </div>
 </template>
@@ -216,4 +216,7 @@ watch(() => variablesStore, (newData) => {
 </script>
 
 <style>
+.scatter-container {
+    padding-top: 2rem;
+}
 </style>

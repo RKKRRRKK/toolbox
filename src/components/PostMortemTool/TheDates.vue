@@ -1,74 +1,36 @@
 <template>
-    <div class="dates">
         <div class="field-container">
-            <label for="start">Start Time:</label>
-            <input type="datetime-local" id="start" class="start" step="3600"
-            v-model="starttime"
-            @change="setstarttime"
+            <label for="start">Start Date:</label>
+            <input type="date" id="start" class="start"
+            v-model="startdate"
+            @change="setstartdate"
             >
         </div>
-        <div class="field-container">
-            <label for="end">End Time:</label>
-            <input type="datetime-local" id="end" class="end"  step="3600"
-            v-model="endtime"
-            @change="setendtime"
-            >
-        </div>
-    </div>
-    </template>
+</template>
 
 <script setup>
 import { ref } from 'vue';
-import { useVariablesStore } from '@/stores/PostMortem/variables.js'; 
-import date from '../PostMortemTool/DatePicker.vue';
+import { useVariablesStore } from '@/stores/PostMortem/variables.js';
 
 const variablesStore = useVariablesStore();
-const starttime = ref(variablesStore.start);
-const endtime = ref(variablesStore.end);
+const startdate = ref(variablesStore.start);
 
-function setstarttime() {
-  const datePart = starttime.value.split('T')[0];
-  const timePart = starttime.value.split('T')[1];
-  const hours = parseInt(timePart.split(':')[0]);
-  const minutes = parseInt(timePart.split(':')[1]);
-  let timeAsFloat = hours + minutes / 60;
-  timeAsFloat = timeAsFloat.toFixed(2)
-  
-  variablesStore.setstarttime(datePart);
-  variablesStore.setofftime(Math.floor(timeAsFloat));  ///changed this floor for now 
-  console.log("startime set", datePart, "offtime set", timeAsFloat);
-}
-
-function setendtime() {
-  const datePart = endtime.value.split('T')[0];
-  const timePart = endtime.value.split('T')[1];
-  const hours = parseInt(timePart.split(':')[0]);
-  const minutes = parseInt(timePart.split(':')[1]);
-  let timeAsFloat = hours + minutes / 60;
-  timeAsFloat = timeAsFloat.toFixed(2)
-
-  variablesStore.setendtime(datePart);
-  variablesStore.setontime(Math.floor(timeAsFloat));  ///changed this floor for now 
-  console.log("endtime set", datePart, "ontime set", timeAsFloat);
+function setstartdate() {
+  variablesStore.setstarttime(startdate.value);
+  console.log("startdate set", startdate.value);
 }
 </script>
 
 <style scoped>
-.dates {
-    display: flex;
-    gap: 1rem; 
-    align-items: flex-start; 
-}
 
 .field-container {
     display: flex;
-    flex-direction: column; 
-    width: 50%;
+    flex-direction: column;
+    width: 100%;
 }
 
-.end,.start {
+.start {
     border: 1px solid #ccc;
     border-radius: 0.2rem;
 }
-
 </style>

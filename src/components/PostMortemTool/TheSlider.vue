@@ -1,7 +1,7 @@
 <template>
     <div class="rail" ref="rail">
-        <div class="from" @mousedown="startDrag($event, 'from')" ref="from" :style="{ left: fromPosition }"></div>
-        <div class="to" @mousedown="startDrag($event, 'to')" ref="to" :style="{ left: toPosition }"></div>
+        <div :class="variablesStore.isNegative ? 'from' : 'fromp'" @mousedown="startDrag($event, 'from')" ref="from" :style="{ left: fromPosition }"></div>
+        <div :class="variablesStore.isNegative ? 'to' : 'top'" @mousedown="startDrag($event, 'to')" ref="to" :style="{ left: toPosition }"></div>
     </div>
 </template>
 
@@ -15,13 +15,13 @@ const from = ref(null);
 const to = ref(null);
 const dragging = ref(null);
 
-// Convert hour (0-23) to a position that centers the element
+// Converts hour 0-23 to a position that centers the element
 const calculatePosition = (time) => {
     const percentage = (time / 23) * 100;
-    return `calc(${percentage}% - ${1}rem)`; // Adjust 10px to half of min-width of .from and .to if different
+    return `calc(${percentage}% - ${0.9}rem)`; // Adjust to half of width
 };
 
-// Reactive references for position based on store times
+// Reactive references for position based on store
 const fromPosition = computed(() => calculatePosition(variablesStore.offtime));
 const toPosition = computed(() => calculatePosition(variablesStore.ontime));
 
@@ -37,12 +37,12 @@ function doDrag(event) {
     const rect = rail.value.getBoundingClientRect();
     const halfMarkerWidth = (dragging.value === 'from' ? from.value.offsetWidth : to.value.offsetWidth) / 2;
     let newPos = ((event.clientX - rect.left - halfMarkerWidth) / (rect.width - halfMarkerWidth * 2)) * 23;
-    newPos = Math.round(newPos); // Snap to nearest whole number
+    newPos = Math.round(newPos); // Snaps to nearest whole number
     
-    // Clamping the time to be within 0 to 23
+    // Stops overflow 
     newPos = Math.max(0, Math.min(newPos, 23));
 
-    // Prevent markers from crossing each other
+    // Stops crossing of markers
     if (dragging.value === 'from' && newPos >= variablesStore.ontime) {
         newPos = Math.max(0, variablesStore.ontime - 1);
     } else if (dragging.value === 'to' && newPos <= variablesStore.offtime) {
@@ -61,6 +61,8 @@ function stopDrag() {
     document.removeEventListener('mouseup', stopDrag);
     dragging.value = null;
 }
+
+
 </script>
 
 <style scoped>
@@ -68,25 +70,40 @@ function stopDrag() {
     display: flex;
     position: relative;
     width: 96.5%;
-    height: 2rem; /* Adjust height for better visibility */
+    height: 2rem; 
     background-color: none;
-    transform: translateY(3rem);
     z-index: 999;
 }
 
 .from, .to {
     position: absolute;
-    width: 2rem; /* or 20px or any other fixed size */
+    width: 1.8rem; 
     height: 100%;
-    border-radius: 0.5rem;
+    border-radius: 15% 15% 50% 50%;
     cursor: pointer;
+    background-color: #d89393;
+    color: gray;
 }
 
-.from {
-    background-color: #b47777;
+.from:hover, .from:active, .to:hover, .to:active {
+    background-color: #ffc1c1;
+    cursor: pointer
 }
 
-.to {
-    background-color: #85bd85;
+.fromp, .top {
+    position: absolute;
+    width: 1.8rem;
+    height: 100%;
+    border-radius: 15% 15% 50% 50%;
+    cursor: pointer;
+    background-color: #93d8aa;
+    color: gray;
 }
+
+.fromp:hover, .fromp:active, .top:hover, .top:active {
+    background-color: #c1ffc9;
+    cursor: pointer
+}
+
+
 </style>
