@@ -40,6 +40,7 @@ import TheChart from "../components/PostMortemTool/TheChart.vue"
 import TheResult from "../components/PostMortemTool/TheCalculation.vue"
 import TheScatter from "../components/PostMortemTool/TheScatter.vue"
 import TheCompressor from "../components/PostMortemTool/TheCompressor.vue"
+import TheSlider from "../components/PostMortemTool/TheSlider.vue"
 import { ref, watch } from 'vue'
 
 const date = ref('')

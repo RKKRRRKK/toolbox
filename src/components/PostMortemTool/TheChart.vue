@@ -1,10 +1,14 @@
 <template>
     <div>
+        <div class="slider-container">
+            <TheSlider class="slider" v-if="isDataLoaded"></TheSlider>
+        </div>
         <v-chart v-if="isDataLoaded" :option="chartOption" style="height: 650px;"></v-chart>
     </div>
 </template>
 
 <script setup>
+import TheSlider from "../PostMortemTool/TheSlider.vue"
 import { ref, resolveDirective, watch } from 'vue';
 import { useVariablesStore } from '@/stores/PostMortem/variables'; 
 import ECharts from 'vue-echarts';
@@ -139,7 +143,7 @@ const chartOption = ref({
             type: 'line',
             lineStyle: {
                 color: 'black',
-                width: 7,
+                width: 6,
                 type: 'dotted',
                 opacity: 0.08
             },
@@ -156,7 +160,7 @@ const chartOption = ref({
             type: 'line',
             lineStyle: {
                 color: 'black',
-                width:  7,
+                width:  6,
                 type: 'dotted',
                 opacity: 0.08
             },
@@ -173,7 +177,7 @@ const chartOption = ref({
             type: 'line',
             lineStyle: {
                 color: 'rgba(237, 150, 50, 1)',
-                width: 3
+                width: 3.5
             },
             itemStyle: {
                 color: 'rgba(237, 150, 50, 1)'
@@ -203,7 +207,11 @@ const chartOption = ref({
       },
       tooltip: {
         show: false
-      }
+      },
+      itemStyle: {
+                color: 'green',
+                opacity: 1,
+            },
     }
   ],
 });
@@ -252,4 +260,14 @@ watch(() => [variablesStore.ontime, variablesStore.offtime], updateMarkLine, { i
 
 <style>
 
+.slider-container {
+    display: flex;
+    justify-content: center;
+    padding-left: 4rem;  
+}
+
+
+.slider {
+    width: 100%; 
+}
 </style>
