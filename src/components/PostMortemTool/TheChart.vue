@@ -3,7 +3,7 @@
         <div class="slider-container">
             <TheSlider class="slider" v-if="isDataLoaded"></TheSlider>
         </div>
-        <v-chart class="chart" v-if="isDataLoaded" :option="chartOption" style="height: 650px;"></v-chart>
+        <v-chart class="chart" v-if="isDataLoaded" :option="chartOption"></v-chart>
     </div>
 </template>
 

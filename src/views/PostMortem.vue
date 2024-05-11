@@ -1,6 +1,6 @@
 <template>
-    <h1 class="title">Post-Mortem GMV Impact Estimation {{ date }}</h1>
     <div class="container">
+        <h1 class="title">Post-Mortem GMV Impact Estimation {{ date }}</h1>
         <div class="horizontal-container">
             <div class="ho-basics">
                 <div class="basics">
@@ -60,16 +60,15 @@ const date = ref('')
 <style scoped>
 
 .container {
-    padding-top: 2.5rem;
     padding-left: 10rem;
-    width: 100vw;
-    height: 100vh;
+    padding-right: 5rem;
+    width: 100%;
+    height: 100%;
     display: flex;
     gap: 1rem;
-    flex-direction: column;
-    flex-grow: 3;
-    flex-shrink: 3;
-    flex-basis: 0%;
+    flex-direction: column; 
+    margin-bottom: 5rem;
+    flex:1 
 }
 
 .basics {
@@ -105,6 +104,7 @@ const date = ref('')
     padding: 1rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* lighter shadow for input fields */
     border-radius: 0.5rem;
+    flex: 1
 }
 
 
@@ -115,8 +115,7 @@ const date = ref('')
     width: 100%;
     gap: 4rem;
     padding-left: 8rem;
-    flex-shrink: 3;
-    flex-basis: 0%;
+    flex:1
 }
 
 
@@ -132,21 +131,29 @@ const date = ref('')
 
 .result {
     padding: 0.5rem;
-    margin-left: 11rem;
+    margin-left: 8rem;
     margin-bottom: 2rem;
+    display: flex;
+    position: absolute;
+    transform: translateY(25rem);
+    z-index: 999;
     flex-shrink: 3;
     flex-basis: 0%;
+    flex-grow: 3;
 }
 
 .charts {
-    overflow: hidden; 
     width: 100%;
+    display: flex;
+    height: 100%;
+    padding-top: 5rem;
+    padding-bottom: 10rem;
 }
 
 
 .charts > :first-child {
     float: left; 
-    width: 80%; 
+    width: 80%;
     box-sizing: border-box; 
     /* background-color: rgba(120,120,120,0.5) */
 }
@@ -160,6 +167,7 @@ const date = ref('')
 
 .title {
     color: #636060; 
+    text-align: center;
 }
 
 .compressor {

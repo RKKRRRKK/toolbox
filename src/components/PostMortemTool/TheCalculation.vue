@@ -81,20 +81,24 @@ function toggleDetails() {
    background-color: rgb(255, 253, 253);
     margin-top: 2rem;
     width: 25rem;
+    scale: 1;
     margin-left: 2.5rem;
     border: 3.5px solid rgba(255, 0, 0, 0.25); 
     border-radius: 0.5rem;
     box-shadow: 0 0px 12px rgba(255, 0, 0, 0.25); 
+
 }
 
 .result-good {
    background-color:rgb(253, 255, 253);
     margin-top: 2rem;
+    scale: 1;
     width: 25rem;
     margin-left: 2.5rem;
     border: 3.5px solid  rgba(9, 172, 9, 0.25);
     border-radius: 0.5rem;
-    box-shadow: 0 0px 12px rgba(9, 172, 9, 0.25); 
+    box-shadow: 0 0px 12px rgba(9, 172, 9, 0.25);
+
 }
 
 
@@ -102,6 +106,7 @@ function toggleDetails() {
     display: flex;
     flex-direction: column;
     margin-bottom: 0.5rem; 
+
 }
 
 .red {
@@ -116,6 +121,7 @@ function toggleDetails() {
     margin: 0; 
     padding: 0.2rem 0;
     line-height: 1.2; 
+    
 }
 
 
