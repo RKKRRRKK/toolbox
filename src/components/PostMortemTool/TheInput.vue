@@ -77,6 +77,9 @@ function assignData() {
     };
     reader.readAsText(fileToRead.value);
 }
+
+
+
 </script>
 
 <style scoped>
@@ -100,7 +103,7 @@ function assignData() {
 
 .upload-button {
     padding: 0.65rem 1.5rem;
-    background-color: rgb(233, 171, 100);
+    background-color: rgb(234, 179, 117);
     color: #fff;
     border: none;
     border-radius: 0.2rem;

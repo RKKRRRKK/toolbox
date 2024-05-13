@@ -3,7 +3,7 @@
         <div class="slider-container">
             <TheSlider class="slider" v-if="isDataLoaded"></TheSlider>
         </div>
-        <v-chart class="chart" v-if="isDataLoaded" :option="chartOption"></v-chart>
+        <v-chart class="chart" v-if="isDataLoaded" :option="chartOption" @legendselectchanged="timeframeToggle($event)"></v-chart>
     </div>
 </template>
 
@@ -14,12 +14,19 @@ import { useVariablesStore } from '@/stores/PostMortem/variables';
 import ECharts from 'vue-echarts';
 import 'echarts';
 
+const variablesStore = useVariablesStore();
+
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-
-const variablesStore = useVariablesStore();
+function timeframeToggle(params) {
+    const isSelected = params.selected[params.name];
+    console.log(isSelected, params.name);
+    if (params.name == 'Affected Timeframe') {
+    variablesStore.setTimeframe(isSelected) 
+    }
+}
 
 function mapNormalizedToReal(index) {
     // This assumes 'actual_gmv_euros' is loaded and has the same length as the normalized 'actual_gmv'
@@ -191,7 +198,7 @@ const chartOption = ref({
                 symbol: ['none', 'none'],
                 data: [],
                 lineStyle: {
-                    color: 'rgba(200, 0, 0, 0.4)',
+                 
                     width: 1.5
                 },
                 label: {
@@ -201,7 +208,7 @@ const chartOption = ref({
       markArea: {
         silent: true,
         itemStyle: {
-                    color: 'rgba(255, 0, 0, 0.05)'
+                   
                 },
         data: []  
       },
@@ -248,12 +255,28 @@ watch(() => variablesStore.data, (newData) => {
     }
 }, { immediate: true, deep: true });
 
-watch(() => variablesStore.isNegative, (newValue) => {
-    chartOption.value.series[4].markArea.itemStyle.color = newValue ? 'rgba(150, 0, 0, 0.05)' : 'rgba(0, 150, 0, 0.05)';
-    chartOption.value.series[4].markLine.lineStyle.color = newValue ? 'rgba(200, 0, 0, 0.4)' : 'rgba(0, 150, 0, 0.8)';
-});
+
 
 watch(() => [variablesStore.ontime, variablesStore.offtime], updateMarkLine, { immediate: true, deep: true });
+
+function updateColorStyles() {
+    const markColor = variablesStore.isNegative ? 'rgba(200, 0, 0, 0.4)' : 'rgba(0, 150, 0, 0.8)';
+    const areaColor = variablesStore.isNegative ? 'rgba(150, 0, 0, 0.05)' : 'rgba(0, 150, 0, 0.05)';
+
+    // Update markLine and markArea styles
+    chartOption.value.series[4].markLine.lineStyle.color = markColor;
+    chartOption.value.series[4].markArea.itemStyle.color = areaColor;
+}
+
+    watch(() => variablesStore.isNegative, (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+        updateColorStyles();
+    }
+}, { immediate: true });
+
+updateColorStyles();
+
+
 
 </script>
 

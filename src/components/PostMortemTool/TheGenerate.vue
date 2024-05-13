@@ -124,7 +124,7 @@ NormalizedCTE3 AS (
         a.hour,
         a.day_of_week_number,
         a.date,
-        a.actual_GMV / b.total_gmv * 100 AS normalized_actual_gmv,
+        a.actual_GMV / b.total_gmv * 100 AS normalized_actual_gmv,  
         a.actual_GMV,
         b.total_gmv as total_actual_gmv
     FROM
@@ -181,6 +181,11 @@ ORDER BY hours ASC;
   
 
   `;
+
+  //get rid of total actual gmv in the SQL, send only the hour by hour gmv to JS, meaning calculation of normalized
+  //actual GMV and loss happens inside JS then upon selection of range, 
+  //recalculate by adding to the total_GMV, the expected lost GMV  (via calculating for X inside the range given % 
+  //expected on said day and hour and the base being the rest of the "healthy" hours)
     
   console.log(sql); // Logging the SQL to the console
   variablesStore.setSQL(sql)
@@ -205,7 +210,7 @@ ORDER BY hours ASC;
         width: 6rem;
         height: 3rem;
         cursor: pointer;
-        background-color: rgb(233, 171, 100);
+        background-color: rgb(234, 179, 117);
         color: #fff;
         border: none;
         border-radius: 4px;

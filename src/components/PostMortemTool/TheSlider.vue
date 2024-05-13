@@ -1,5 +1,5 @@
 <template>
-    <div class="rail" ref="rail">
+    <div :class="variablesStore.timeframeToggle ? 'visible' : 'invisible'" class="rail" ref="rail">
         <div :class="variablesStore.isNegative ? 'from' : 'fromp'" @mousedown="startDrag($event, 'from')" ref="from" :style="{ left: fromPosition }"></div>
         <div :class="variablesStore.isNegative ? 'to' : 'top'" @mousedown="startDrag($event, 'to')" ref="to" :style="{ left: toPosition }"></div>
     </div>
@@ -44,13 +44,14 @@ function doDrag(event) {
 
     // Stops crossing of markers
     if (dragging.value === 'from' && newPos >= variablesStore.ontime) {
-        newPos = Math.max(0, variablesStore.ontime - 1);
+        newPos = Math.max(0, variablesStore.ontime);
     } else if (dragging.value === 'to' && newPos <= variablesStore.offtime) {
-        newPos = Math.min(23, variablesStore.offtime + 1);
+        newPos = Math.min(23, variablesStore.offtime);
     }
 
     if (dragging.value === 'from') {
         variablesStore.offtime = newPos;
+        console.log("offtime moved to", newPos, typeof(newPos))
     } else {
         variablesStore.ontime = newPos;
     }
@@ -61,6 +62,7 @@ function stopDrag() {
     document.removeEventListener('mouseup', stopDrag);
     dragging.value = null;
 }
+
 
 
 </script>
@@ -103,6 +105,14 @@ function stopDrag() {
 .fromp:hover, .fromp:active, .top:hover, .top:active {
     background-color: #c1ffc9;
     cursor: pointer
+}
+
+.visible {
+    opacity: 100%
+}
+
+.invisible {
+    opacity: 0%;
 }
 
 
