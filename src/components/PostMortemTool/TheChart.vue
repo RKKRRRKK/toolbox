@@ -30,15 +30,15 @@ function timeframeToggle(params) {
 
 function mapNormalizedToReal(index) {
     // This assumes 'actual_gmv_euros' is loaded and has the same length as the normalized 'actual_gmv'
-    if (variablesStore.data && variablesStore.data.actual_gmv_euros) {
-        return variablesStore.data.actual_gmv_euros[index];
+    if (variablesStore.processedData && variablesStore.processedData.on_h_gmv) {
+        return variablesStore.processedData.on_h_gmv[index];
     }
     return null;
 }
 
 function mapNormalizedToRealAvg(index) {
-    if (variablesStore.data && variablesStore.data.average_gmv_euros) {
-        return variablesStore.data.average_gmv_euros[index];
+    if (variablesStore.processedData && variablesStore.processedData.off_havg_gmv) {
+        return variablesStore.processedData.off_havg_gmv[index];
     }
     return null;
 }
@@ -67,7 +67,7 @@ const chartOption = ref({
         type: 'value',
         axisLabel: {
             formatter: function (value) {
-                const factor = variablesStore.data && variablesStore.data.gmv_part ? variablesStore.data.gmv_part[1] : 1;
+                const factor = variablesStore.processedData && variablesStore.processedData.gmv_part ? variablesStore.processedData.gmv_part[1] : 1;
                 return `${numberWithCommas(Math.round(value * factor))} €`;
             }
         },
@@ -112,7 +112,7 @@ const chartOption = ref({
     },
 
     title: {
-        text: 'Hourly Comparison (normalized)',
+        text: 'Hourly Comparison',
         textAlign: 'middle',
         textStyle: {
             fontSize: 20,
@@ -241,14 +241,14 @@ function updateMarkLine() {
   }
 }
 
-watch(() => variablesStore.data, (newData) => {
+watch(() => variablesStore.processedData, (newData) => {
     if (newData) {
-        chartOption.value.series[0].data = newData.average_gmv ? newData.average_gmv.map((value, index) => [index, value]) : [];
-        chartOption.value.series[1].data = newData.Q1 ? newData.Q1.map((value, index) => [index, value]) : [];
-        chartOption.value.series[2].data = newData.Q3 ? newData.Q3.map((value, index) => [index, value]) : [];
-        chartOption.value.series[3].data = newData.actual_gmv ? newData.actual_gmv.map((value, index) => [index, value]) : [];
+        chartOption.value.series[0].data = newData.avg_norm_gmv ? newData.avg_norm_gmv.map((value, index) => [index, value]) : [];
+        chartOption.value.series[1].data = newData.min_norm_gmv ? newData.min_norm_gmv.map((value, index) => [index, value]) : [];
+        chartOption.value.series[2].data = newData.max_norm_gmv ? newData.max_norm_gmv.map((value, index) => [index, value]) : [];
+        chartOption.value.series[3].data = newData.normalizedActualGMV ? newData.normalizedActualGMV.map((value, index) => [index, value]) : [];
         updateMarkLine();  
-        if (newData.actual_gmv) {
+        if (newData.normalizedActualGMV) {
             isDataLoaded.value = true;
         }
         console.log("updating is loaded value", isDataLoaded.value)

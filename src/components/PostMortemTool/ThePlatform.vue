@@ -10,6 +10,7 @@
   <option value="'web','app'">ALL</option>
 </select>
 </div>
+<PreCalculation></PreCalculation>
 
 </template>
 
@@ -17,6 +18,7 @@
  import { ref } from 'vue'
   
   import { useVariablesStore } from '@/stores/PostMortem/variables.js' 
+  import PreCalculation from "../PostMortemTool/PreCalculation.vue"
   const variablesStore = useVariablesStore()
   const platform = ref(variablesStore.platform)
 

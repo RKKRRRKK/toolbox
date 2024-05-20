@@ -185,16 +185,18 @@ function sumArrays(arrayOfArrays) {
     );
 }
 
-watch(() => variablesStore, (newData) => {
-    if (newData && newData.data.array_gmv && newData.data.array_order && newData.data.array_date) {
-        const gmvArrays = newData.data.array_gmv.map(parseJSON);
+watch(() => variablesStore.data, (newData) => {
+    if (newData && newData.array_gmv && newData.array_order && newData.array_date) {
+        const gmvArrays = newData.array_gmv.map(parseJSON);
         const summedGMV = sumArrays(gmvArrays);
+        variablesStore.setSummedGMV(summedGMV)
+        console.log("set summed gmv", summedGMV)
 
-        const orders = parseJSON(newData.data.array_order[0]);
-        const dates = parseDates(newData.data.array_date[0]);
+        const orders = parseJSON(newData.array_order[0]);
+        const dates = parseDates(newData.array_date[0]);
         const currentDate = newData.start ? newData.start : 'Date Not Selected'
         console.log("start date", newData.start)
-        const currentGMV = Math.round(variablesStore.data.gmv_part[1] * 100)
+        const currentGMV = Math.round(variablesStore.data.on_total_gmv)
         const index = summedGMV.length + 1 
         console.log(index)
 

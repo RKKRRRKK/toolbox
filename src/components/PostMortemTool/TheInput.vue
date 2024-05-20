@@ -24,56 +24,58 @@ function assignData() {
         alert("Please select a CSV file first.");
         return;
     }
+    console.log("assing data triggered")
     const reader = new FileReader();
     reader.onload = (e) => {
         const text = e.target.result;
         const lines = text.split('\n');
         const data = {
             hours: [],
-            average_gmv: [],
-            actual_gmv: [],
-            Q1: [],
-            Q3: [],
-            avg_loss: [],
-            max_loss: [],
-            min_loss: [],
-            actual_gmv_euros: [],
-            average_gmv_euros: [],
-            gmv_part: [],
-            days: [],
+            on_h_gmv: [],
+            off_havg_gmv: [],
+            off_hmin_gmv: [],
+            off_hmax_gmv: [],
+            on_total_gmv: [],
+            days_accounted: [],
             array_gmv: [],
             array_date: [],
             array_order: [],
         };
+
+        // a.hour as hours,
+        // a.actual_GMV as on_h_gmv,
+        // b.average as off_havg_gmv,
+        // b.min as off_hmin_gmv,
+        // b.max as off_hmax_gmv,
+        // a.total_gmv as on_total_gmv,
+        // array_gmv,
+        // array_date,
+        // array_order,
+        // days_avg as days_accounted,
 
         // Start processing from the second line to skip the header
         for (let i = 1; i < lines.length; i++) {
             // Split line only on commas not inside quotes
             const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
 
-            if (row.length < 15) continue; // Skip lines that do not have a complete data set
+            if (row.length < 10) continue; // Skip lines that do not have a complete data set
 
             // Parse individual fields
-            data.average_gmv.push(parseFloat(row[0].trim()));
-            data.Q3.push(parseFloat(row[1].trim()));
-            data.Q1.push(parseFloat(row[2].trim()));
-            data.actual_gmv.push(parseFloat(row[3].trim()));
-            data.hours.push(parseFloat(row[4].trim()));
-            data.avg_loss.push(parseFloat(row[5].trim()));
-            data.max_loss.push(parseFloat(row[6].trim()));
-            data.min_loss.push(parseFloat(row[7].trim()));
-            data.actual_gmv_euros.push(parseFloat(row[8].trim()));
-            data.average_gmv_euros.push(parseFloat(row[9].trim()));
-            data.gmv_part.push(parseFloat(row[10].trim()));
-            data.days.push(parseFloat(row[11].trim()));
+            data.hours.push(parseFloat(row[0].trim()));
+            data.on_h_gmv.push(parseFloat(row[1].trim()));
+            data.off_havg_gmv.push(parseFloat(row[2].trim()));
+            data.off_hmin_gmv.push(parseFloat(row[3].trim()));
+            data.off_hmax_gmv.push(parseFloat(row[4].trim()));
+            data.on_total_gmv.push(parseFloat(row[5].trim()));
+            data.days_accounted.push(parseFloat(row[9].trim()));
 
             // Parse JSON array fields directly
-            data.array_gmv.push(JSON.parse(row[12].trim()));
-            data.array_date.push(JSON.parse(row[13].trim()));
-            data.array_order.push(JSON.parse(row[14].trim()));
+            data.array_gmv.push(JSON.parse(row[6].trim()));
+            data.array_date.push(JSON.parse(row[7].trim()));
+            data.array_order.push(JSON.parse(row[8].trim()));
         }
+        console.log("data in the input component", data)
         variablesStore.setData(data);
-        console.log(data);
     };
     reader.readAsText(fileToRead.value);
 }

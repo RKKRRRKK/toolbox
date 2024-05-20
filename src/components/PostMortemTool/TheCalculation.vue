@@ -16,6 +16,7 @@
         <p>
           Based on <b>{{ numberDays }}</b> similar days
         </p>
+        <PreCalculation></PreCalculation>
         <p
           :class="variablesStore.isNegative ? 'based-bad' : 'based'"
           v-if="!showDetails"
@@ -56,9 +57,10 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
 import { useVariablesStore } from '@/stores/PostMortem/variables'
+import PreCalculation from "../PostMortemTool/PreCalculation.vue"
 const variablesStore = useVariablesStore()
 const isNegative = ref(false)
-const showDetails = ref(false) // Reactive variable to control visibility of additional details
+const showDetails = ref(false) 
 
 function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -66,35 +68,35 @@ function numberWithCommas(x) {
 
 // Computed property to accumulate the values
 const numberDays = computed(() => {
-  const { data } = variablesStore
-  if (!data) {
-    console.log('no day data')
+  const { processedData } = variablesStore
+  if (!processedData) {
+    console.log('no day processedData')
   }
-  return data.days[1]
+  return processedData.days_accounted[1]
 })
 
 const accumulatedCalculations = computed(() => {
-  const { data, offtime, ontime } = variablesStore
+  const { processedData, offtime, ontime } = variablesStore
   if (
-    !data ||
-    !Array.isArray(data.hours) ||
-    !Array.isArray(data.actual_gmv) ||
-    !Array.isArray(data.average_gmv) ||
-    !Array.isArray(data.Q3) ||
-    !Array.isArray(data.Q1)
+    !processedData ||
+    !Array.isArray(processedData.hours) ||
+    !Array.isArray(processedData.on_h_gmv) ||
+    !Array.isArray(processedData.off_havg_gmv) ||
+    !Array.isArray(processedData.off_hmax_gmv) ||
+    !Array.isArray(processedData.off_hmin_gmv)
   ) {
-    console.error('Data structure is invalid or missing arrays:', data)
+    console.error('Data structure is invalid or missing arrays:', processedData)
     return { totalGmvLoss: 0, totalRangeTo: 0, totalRangeFrom: 0 }
   }
 
   let totalGmvLoss = 0,
     totalRangeTo = 0,
     totalRangeFrom = 0
-  for (let i = 0; i < data.hours.length; i++) {
-    if (data.hours[i] >= offtime && data.hours[i] <= ontime) {
-      totalGmvLoss -= data.avg_loss[i]
-      totalRangeTo -= data.max_loss[i]
-      totalRangeFrom -= data.min_loss[i]
+  for (let i = 0; i < processedData.hours.length; i++) {
+    if (processedData.hours[i] >= offtime && processedData.hours[i] <= ontime) {
+      totalGmvLoss -= processedData.avg_norm_loss[i]
+      totalRangeTo -= processedData.max_norm_loss[i]
+      totalRangeFrom -= processedData.min_norm_loss[i]
     }
   }
 
@@ -112,6 +114,8 @@ watch(accumulatedCalculations, (newValue) => {
 function toggleDetails() {
   showDetails.value = !showDetails.value
 }
+
+
 </script>
 
 <style>
@@ -124,9 +128,9 @@ function toggleDetails() {
   border: 3.5px solid rgba(255, 0, 0, 0.25);
   border-radius: 0.5rem;
   box-shadow: 0 0px 12px rgba(255, 0, 0, 0.25);
-  -webkit-user-select: none; /* Safari */
-  -ms-user-select: none; /* IE 10 and IE 11 */
-  user-select: none; /* Standard syntax */
+  -webkit-user-select: none; 
+  -ms-user-select: none; 
+  user-select: none; 
 }
 
 .result-good {
@@ -186,7 +190,7 @@ function toggleDetails() {
   opacity: 1;
 }
 
-/* Initial state of the entering element */
+
 .unfold-enter-from,
 .unfold-leave-to {
   transform: scaleY(0);
@@ -195,16 +199,16 @@ function toggleDetails() {
   opacity: 0;
 }
 
-/* Target state of the entering element */
+
 .unfold-enter-to,
 .unfold-leave-from {
   transform: scaleY(1);
   transform-origin: top;
-  height: auto; /* Adjust this based on the content size or leave as 'auto' */
+  height: auto; 
   opacity: 1;
 }
 
-/* Active state of the animation */
+
 .unfold-enter-active,
 .unfold-leave-active {
   transition:
