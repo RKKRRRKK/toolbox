@@ -196,7 +196,8 @@ watch(() => variablesStore.data, (newData) => {
         const dates = parseDates(newData.array_date[0]);
         const currentDate = newData.start ? newData.start : 'Date Not Selected'
         console.log("start date", newData.start)
-        const currentGMV = Math.round(variablesStore.data.on_total_gmv)
+        const currentGMV = Math.round(variablesStore.data.on_total_gmv[1])
+
         const index = summedGMV.length + 1 
         console.log(index)
 

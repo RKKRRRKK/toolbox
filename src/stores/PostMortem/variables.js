@@ -42,7 +42,7 @@ export const useVariablesStore = defineStore('variables', {
     
     setData(data) {
       this.data = data
-      // console.log("data set with", data)
+      console.log("data set with", data)
       //   let loss = data.avg_loss
       //   console.log("loss is", loss)
       //   let iter_sum = 0
@@ -85,6 +85,22 @@ export const useVariablesStore = defineStore('variables', {
 
     setProcessedData(value) {
       this.processedData = value
+    },
+
+    setStartingPosition(loss) {
+        console.log("loss is", loss)
+        let iter_sum = 0
+        let iter_pos = 0
+        for (let i = 0; i < loss.length -1; i++) {
+            let current_sum = loss[i] + loss[i+1] 
+            if (current_sum > iter_sum) {
+                iter_sum = current_sum
+                iter_pos = i
+            }
+        }
+        this.offtime = iter_pos 
+        this.ontime = iter_pos + 1
+      console.log("starting position set with", iter_pos, iter_pos +1)
     }
   }
 });
