@@ -12,7 +12,7 @@ export const useVariablesStore = defineStore('variables', {
     data:{},
     isNegative: true,
     timeframeToggle: true,
-    model: 'simple',
+    model: 'normalized',
     summedGMV: [],  
     processedData: {},
     
@@ -101,6 +101,37 @@ export const useVariablesStore = defineStore('variables', {
         this.offtime = iter_pos 
         this.ontime = iter_pos + 1
       console.log("starting position set with", iter_pos, iter_pos +1)
-    }
+    },
+
+    // switchNormtoFlat() {
+    //   let one = this.processedData.normalizedActualGMV 
+    //   let two = this.processedData.normalizedOffGMV 
+    //   let three = this.processedData.avg_norm_gmv
+    //   let four = this.processedData.min_norm_gmv 
+    //   let five = this.processedData.max_norm_gmv 
+    //   let six = this.processedData.avg_norm_loss
+    //   let seven = this.processedData.max_norm_loss 
+    //   let eight = this.processedData.min_norm_loss 
+
+    //   this.processedData.normalizedActualGMV = this.data.on_h_gmv;
+    //   this.processedData.normalizedOffGMV = this.processedData.flatOffGMV;
+    //   this.processedData.avg_norm_gmv = this.processedData.avg_flat_gmv;
+    //   this.processedData.min_norm_gmv = this.processedData.min_flat_gmv;
+    //   this.processedData.max_norm_gmv = this.processedData.max_flat_gmv;
+    //   this.processedData.avg_norm_loss = this.processedData.avg_flat_loss;
+    //   this.processedData.max_norm_loss = this.processedData.max_flat_loss;  
+    //   this.processedData.min_norm_loss = this.processedData.min_flat_loss;
+
+
+    //   this.data.on_h_gmv = one;
+    //   this.processedData.flatOffGMV = two;
+    //   this.processedData.avg_flat_gmv = three;
+    //   this.processedData.min_flat_gmv = four;
+    //   this.processedData.max_flat_gmv = five;
+    //   this.processedData.avg_flat_loss = six;
+    //   this.processedData.max_flat_loss = seven;  
+    //   this.processedData.min_flat_loss = eight;
+
+    // }
   }
 });

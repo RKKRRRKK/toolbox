@@ -94,9 +94,16 @@ const accumulatedCalculations = computed(() => {
     totalRangeFrom = 0
   for (let i = 0; i < processedData.hours.length; i++) {
     if (processedData.hours[i] >= offtime && processedData.hours[i] <= ontime) {
+       if (variablesStore.model === 'normalized') {
       totalGmvLoss -= processedData.avg_norm_loss[i]
       totalRangeTo -= processedData.max_norm_loss[i]
       totalRangeFrom -= processedData.min_norm_loss[i]
+       }
+       else if (variablesStore.model ==='simple') {
+      totalGmvLoss -= processedData.avg_flat_loss[i]
+      totalRangeTo -= processedData.max_flat_loss[i]
+      totalRangeFrom -= processedData.min_flat_loss[i]
+       }
     }
   }
 

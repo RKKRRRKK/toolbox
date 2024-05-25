@@ -28,11 +28,13 @@ function setModel() {
 // Watch the summedGMV property
 
 
-watch(() => variablesStore.summedGMV, (newData) => {
-    if (newData) {
+watch(
+    [() => variablesStore.summedGMV, () => variablesStore.model], 
+    () => {
         calculateData();
-    }
-}, { immediate: false, deep: true });
+    },
+    { immediate: false, deep: true }
+);
 function parseJSON(jsonStr) {
     try {
         return JSON.parse(jsonStr);
@@ -41,6 +43,7 @@ function parseJSON(jsonStr) {
         return [];
     }
 }
+
 
 function calculateData() {
     console.log("Calculating data");
@@ -130,31 +133,17 @@ function calculateData() {
         min_flat_loss.push(min_flat_gmv - gmv)
 
         //un-normalized flat values 
-        if (model === 'normalized') {
-            console.log("model is normalized check:", model, "therefore doing nothing")
-        }
-        else {
-            console.log("model is simple check:", model, "therefore setting normalized values to flat")
-            normalizedActualGMV = gmv;
-            normalizedOffGMV = flatOffGMV;
-            avg_norm_gmv = avg_flat_gmv;
-            min_norm_gmv = min_flat_gmv;
-            max_norm_gmv = max_flat_gmv;
-            avg_norm_loss = avg_flat_loss;
-            max_norm_loss = max_flat_loss;
-            min_norm_loss = min_flat_loss;
-        }
-
+ 
        
 
     });
 
 
-
     // Combine all data into a new enriched object
-    const enrichedData = {
+        
+        let enrichedData = {
         ...data, // Spread existing data to preserve untouched values
-        normalizedActualGMV,      //this should be used for yellow line 
+        normalizedActualGMV,      
         normalizedOffGMV,
         avg_norm_gmv,
         min_norm_gmv,
@@ -163,16 +152,46 @@ function calculateData() {
         max_norm_loss,
         min_norm_loss,
         gmv_part,
+flatOffGMV,
+avg_flat_gmv,
+min_flat_gmv,
+max_flat_gmv,
+avg_flat_loss,
+min_flat_loss,
+max_flat_loss,
+
 
     };
+    console.log("enrichedData", enrichedData)
+    console.log("enrichedData.avg_norm_loss", enrichedData.avg_norm_loss)
+    setData(enrichedData)
 
-    // Assign computed results to the reactive object
+} //--------------------------END OF CALCULATE DATA FUNCTION   
+   //       BELOW TRIGGER AN EVENT IN STORE THAT ASSIGNS FLATS TO NORMS
+
+
+  
+    function setData(enrichedData) {
     variablesStore.setProcessedData(enrichedData);
     console.log("enrichedData set", enrichedData);
+
+    if (variablesStore.model === 'normalized') 
+    {
     variablesStore.setStartingPosition(enrichedData.avg_norm_loss);
+    }
+
+    else if (variablesStore.model === 'simple')
+    {
+        variablesStore.setStartingPosition(enrichedData.avg_flat_loss)
+    }
+
     console.log("starting position set", enrichedData);
-
-
 }
+
+
+// watch(() => variablesStore.model, (newModel) => {
+//      variablesStore.switchNormtoFlat()
+//     }
+// );
 
 </script>

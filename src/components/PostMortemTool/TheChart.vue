@@ -243,11 +243,21 @@ function updateMarkLine() {
 
 watch(() => variablesStore.processedData, (newData) => {
     if (newData) {
+        if (variablesStore.model === 'normalized')
+        {
         chartOption.value.series[0].data = newData.avg_norm_gmv ? newData.avg_norm_gmv.map((value, index) => [index, value]) : [];
         chartOption.value.series[1].data = newData.min_norm_gmv ? newData.min_norm_gmv.map((value, index) => [index, value]) : [];
         chartOption.value.series[2].data = newData.max_norm_gmv ? newData.max_norm_gmv.map((value, index) => [index, value]) : [];
         chartOption.value.series[3].data = newData.normalizedActualGMV ? newData.normalizedActualGMV.map((value, index) => [index, value]) : [];
-        updateMarkLine();  
+        updateMarkLine(); 
+        }
+        else if (variablesStore.model === 'simple') 
+        {
+        chartOption.value.series[0].data = newData.avg_flat_gmv ? newData.avg_flat_gmv.map((value, index) => [index, value]) : [];
+        chartOption.value.series[1].data = newData.min_flat_gmv ? newData.min_flat_gmv.map((value, index) => [index, value]) : [];
+        chartOption.value.series[2].data = newData.max_flat_gmv ? newData.max_flat_gmv.map((value, index) => [index, value]) : [];
+        chartOption.value.series[3].data = newData.on_h_gmv ? newData.on_h_gmv.map((value, index) => [index, value]) : [];
+        }
         if (newData.normalizedActualGMV) {
             isDataLoaded.value = true;
         }
