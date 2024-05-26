@@ -29,7 +29,7 @@ function setModel() {
 
 
 watch(
-    [() => variablesStore.summedGMV, () => variablesStore.model], 
+    [() => variablesStore.summedGMV, () => variablesStore.model, () => variablesStore.extraGMV], 
     () => {
         calculateData();
     },
@@ -80,10 +80,16 @@ function calculateData() {
     let max_flat_loss = [];
     let min_flat_loss = [];
 
+    //norm * gmv_part
+    let avg_norm_gmv_converted = []
+    let min_norm_gmv_converted = []
+    let max_norm_gmv_converted = []
+
+
 
     // Process only necessary data to calculate new values
     data.on_h_gmv.forEach((gmv, index) => {
-        const totalGMV = data.on_total_gmv[index];
+        const totalGMV = data.on_total_gmv[index] + (variablesStore.extraGMV || 0);
         const normalizedGMV = gmv / totalGMV * 100;
         normalizedActualGMV.push(normalizedGMV);
         gmv_part.push(totalGMV / 100)
@@ -115,22 +121,30 @@ function calculateData() {
         max_norm_gmv.push(maximum);
         min_norm_gmv.push(minimum);
 
+        //flat * gmv_part = normalized for on-day
+
+        avg_norm_gmv_converted.push(average * (totalGMV / 100));
+        max_norm_gmv_converted.push(maximum * (totalGMV / 100));
+        min_norm_gmv_converted.push(minimum*  (totalGMV / 100));
+
         
         avg_flat_gmv.push(average_flat);
         max_flat_gmv.push(maximum_flat);
         min_flat_gmv.push(minimum_flat);
 
 
-        // normalized losses
+        // normalized losses  the expected and actual gmv normalization difference multiplied by the gmv that hour giving us "x"
         avg_norm_loss.push((average / normalizedGMV * gmv) - gmv);
+        // console.log("average", average, "/", "normalizedGMV", normalizedGMV, "* gmv", gmv, ")", "- gmv", gmv )
+        // console.log( "===", (average / normalizedGMV * gmv) - gmv)
         max_norm_loss.push((maximum / normalizedGMV * gmv) - gmv);
         min_norm_loss.push((minimum / normalizedGMV * gmv) - gmv);
 
 
         //flat losses 
-        avg_flat_loss.push(avg_flat_gmv - gmv)
-        max_flat_loss.push(max_flat_gmv - gmv)
-        min_flat_loss.push(min_flat_gmv - gmv)
+        avg_flat_loss.push(average_flat - gmv)
+        max_flat_loss.push(maximum_flat - gmv)
+        min_flat_loss.push(minimum_flat - gmv)
 
         //un-normalized flat values 
  
@@ -159,6 +173,9 @@ max_flat_gmv,
 avg_flat_loss,
 min_flat_loss,
 max_flat_loss,
+avg_norm_gmv_converted,
+min_norm_gmv_converted, 
+max_norm_gmv_converted,
 
 
     };
@@ -167,7 +184,7 @@ max_flat_loss,
     setData(enrichedData)
 
 } //--------------------------END OF CALCULATE DATA FUNCTION   
-   //       BELOW TRIGGER AN EVENT IN STORE THAT ASSIGNS FLATS TO NORMS
+
 
 
   
@@ -188,10 +205,5 @@ max_flat_loss,
     console.log("starting position set", enrichedData);
 }
 
-
-// watch(() => variablesStore.model, (newModel) => {
-//      variablesStore.switchNormtoFlat()
-//     }
-// );
 
 </script>

@@ -16,7 +16,13 @@
         <p>
           Based on <b>{{ numberDays }}</b> similar days
         </p>
+        <div>
         <PreCalculation></PreCalculation>
+        <div v-if="variablesStore.model === 'normalized'">
+        <button @click="sendSetExtra">Add Lost GMV</button>
+        <button @click="deleteExtra">Reset Lost GMV</button>
+      </div>
+      </div>
         <p
           :class="variablesStore.isNegative ? 'based-bad' : 'based'"
           v-if="!showDetails"
@@ -61,6 +67,7 @@ import PreCalculation from "../PostMortemTool/PreCalculation.vue"
 const variablesStore = useVariablesStore()
 const isNegative = ref(false)
 const showDetails = ref(false) 
+const totalGmvLoss = ref(0)
 
 function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -107,6 +114,10 @@ const accumulatedCalculations = computed(() => {
     }
   }
 
+
+
+
+
   //off 5
   //on 10 
   //
@@ -122,6 +133,15 @@ function toggleDetails() {
   showDetails.value = !showDetails.value
 }
 
+function sendSetExtra() {
+  variablesStore.setExtraGmv((accumulatedCalculations.value.totalGmvLoss) * -1)
+  console.log("setExtra", accumulatedCalculations.value.totalGmvLoss)
+}
+
+function deleteExtra() {
+  variablesStore.setExtraGmv(0)
+  console.log("deleteExtra", 0)
+}
 
 </script>
 

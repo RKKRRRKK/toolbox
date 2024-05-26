@@ -28,19 +28,17 @@ function timeframeToggle(params) {
     }
 }
 
+
 function mapNormalizedToReal(index) {
-    // This assumes 'actual_gmv_euros' is loaded and has the same length as the normalized 'actual_gmv'
-    if (variablesStore.processedData && variablesStore.processedData.on_h_gmv) {
-        return variablesStore.processedData.on_h_gmv[index];
-    }
-    return null;
+    return variablesStore.model === 'normalized' ? 
+        variablesStore.processedData.on_h_gmv[index] : 
+        index;  // Return index or a default for 'simple' model
 }
 
 function mapNormalizedToRealAvg(index) {
-    if (variablesStore.processedData && variablesStore.processedData.off_havg_gmv) {
-        return variablesStore.processedData.off_havg_gmv[index];
-    }
-    return null;
+    return variablesStore.model === 'normalized' ? 
+        variablesStore.processedData.avg_norm_gmv_converted[index] :  
+        index;  // Return index or a default for 'simple' model
 }
 
 
@@ -63,20 +61,16 @@ const chartOption = ref({
             }
         }
 },
-    yAxis: {
+yAxis: {
         type: 'value',
         axisLabel: {
             formatter: function (value) {
-                const factor = variablesStore.processedData && variablesStore.processedData.gmv_part ? variablesStore.processedData.gmv_part[1] : 1;
-                return `${numberWithCommas(Math.round(value * factor))} €`;
-            }
-        },
-        interval: 1,
-        splitLine: {
-            show: true,
-            lineStyle: {
-                color: '#ccc', 
-                type: 'dashed' 
+                if (variablesStore.model === 'normalized') {
+                    const factor = variablesStore.processedData?.gmv_part?.[1] || 1;
+                    return `${numberWithCommas(Math.round(value * factor))} €`;
+                } else {
+                    return `${numberWithCommas(Math.round(value))} €`;
+                }
             }
         }
     },
@@ -85,10 +79,17 @@ const chartOption = ref({
         formatter: function (params) {
             const actualGmvPoint = params.find(p => p.seriesName === 'Actual GMV');
             if (actualGmvPoint) {
-                const realValue = mapNormalizedToReal(actualGmvPoint.dataIndex);
-                const avgValue = mapNormalizedToRealAvg(actualGmvPoint.dataIndex);
-                return `Hour: ${actualGmvPoint.axisValue}:00 UTC<br>Actual GMV: ${numberWithCommas(realValue.toFixed(0))}€
-                <br>Expected GMV: ${numberWithCommas(avgValue.toFixed(0))}€`;
+                if (variablesStore.model === 'normalized') {
+                    const realValue = mapNormalizedToReal(actualGmvPoint.dataIndex);
+                    const avgValue = mapNormalizedToRealAvg(actualGmvPoint.dataIndex);
+                    return `Hour: ${actualGmvPoint.axisValueLabel}<br>Actual GMV: ${numberWithCommas(realValue.toFixed(0))}€
+                    <br>Expected GMV: ${numberWithCommas(avgValue.toFixed(0))}€`;
+                } else {
+                    const realValue = variablesStore.processedData.on_h_gmv[actualGmvPoint.dataIndex];
+                    const avgValue = variablesStore.processedData.off_havg_gmv[actualGmvPoint.dataIndex];
+                    return `Hour: ${actualGmvPoint.axisValueLabel}<br>Actual GMV: ${numberWithCommas(realValue.toFixed(0))}€
+                    <br>Expected GMV: ${numberWithCommas(avgValue.toFixed(0))}€`;
+                }
             }
         }
     },
