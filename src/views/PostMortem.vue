@@ -141,7 +141,7 @@ const date = ref('')
     margin-bottom: 2rem;
     display: flex;
     position: absolute;
-    transform: translateY(27rem);
+    transform: translateY(26.5rem);
     z-index: 999;
     flex-shrink: 3;
     flex-basis: 0%;
