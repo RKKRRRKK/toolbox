@@ -185,36 +185,42 @@ function sumArrays(arrayOfArrays) {
     );
 }
 
-watch(() => variablesStore.data, (newData) => {
-    if (newData && newData.array_gmv && newData.array_order && newData.array_date) {
-        const gmvArrays = newData.array_gmv.map(parseJSON);
-        const summedGMV = sumArrays(gmvArrays);
-        variablesStore.setSummedGMV(summedGMV)
-        console.log("set summed gmv", summedGMV)
 
-        const orders = parseJSON(newData.array_order[0]);
-        const dates = parseDates(newData.array_date[0]);
-        const currentDate = newData.start ? newData.start : 'Date Not Selected'
-        console.log("start date", newData.start)
-        const currentGMV = Math.round(variablesStore.data.on_total_gmv[1])
+watch(
+    [() => variablesStore.data, () => variablesStore.start], 
+    ([newData, newStart], [oldData, oldStart]) => {
+        if (newData && newData.array_gmv && newData.array_order && newData.array_date) {
+            const gmvArrays = newData.array_gmv.map(parseJSON);
+            const summedGMV = sumArrays(gmvArrays);
+            variablesStore.setSummedGMV(summedGMV);
+            console.log("set summed gmv", summedGMV);
 
-        const index = summedGMV.length + 1 
-        console.log(index)
+            const orders = parseJSON(newData.array_order[0]);
+            const dates = parseDates(newData.array_date[0]);
+            const currentDate = newStart ? newStart : 'Date Not Selected';
+            console.log("start date", newStart);
+            const currentGMV = Math.round(variablesStore.data.on_total_gmv[1]);
 
-        if (orders && dates && summedGMV.length > 0) {
-            const seriesData = orders.map((order, index) => [order, summedGMV[index], dates[index]]);
-            console.log("seriesData", seriesData)
-            console.log("my series data", [index, currentGMV, currentDate])
-            chartOption2.value.series[0].data = seriesData;
-            chartOption2.value.series[1].data = [[index, currentGMV, currentDate]]
-            isDataLoaded.value = true;
-            console.log("updating isdataloaded value at TheScatter.vue", isDataLoaded);
-            chartOption2.value.xAxis.max = Math.max(...seriesData.map(item => item[0])) + 2;
-        } else {
-            console.error('missing data at TheScatter');
+            const index = summedGMV.length + 1;
+            console.log(index);
+
+            if (orders && dates && summedGMV.length > 0) {
+                const seriesData = orders.map((order, index) => [order, summedGMV[index], dates[index]]);
+                console.log("seriesData", seriesData);
+                console.log("my series data", [index, currentGMV, currentDate]);
+                chartOption2.value.series[0].data = seriesData;
+                chartOption2.value.series[1].data = [[index, currentGMV, currentDate]];
+                isDataLoaded.value = true;
+                console.log("updating isdataloaded value at TheScatter.vue", isDataLoaded);
+                chartOption2.value.xAxis.max = Math.max(...seriesData.map(item => item[0])) + 2;
+            } else {
+                console.error('missing data at TheScatter');
+            }
         }
-    }
-}, { immediate: true, deep: true });
+    }, 
+    { immediate: true, deep: true }
+);
+
 
 </script>
 

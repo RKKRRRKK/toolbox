@@ -1,6 +1,8 @@
+import 'material-icons/iconfont/material-icons.css';
 import { createApp } from 'vue'
 import PrimeVue from 'primevue/config'
 import { createPinia } from 'pinia'
+
 
 import App from './App.vue'
 import router from './router'

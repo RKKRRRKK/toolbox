@@ -1,4 +1,5 @@
 <template>
+    <div class="wrap">
       <label for="platform">Selected model:</label>
      <select name="platform" id="platform" class="select"
       v-model="model"
@@ -7,13 +8,40 @@
   <option value="simple">simple</option>
   <option value="normalized">normalized</option>
 </select>
+<button @click="reset_use()" class="refresh">
+    <span class="material-icons">refresh</span>
+</button>
+</div>
 </template>
 <script setup>
 import { ref, watch } from 'vue'
 import { useVariablesStore } from '@/stores/PostMortem/variables'
+import { useEstimationStore } from '@/stores/PostMortem/estimation';
 
 const variablesStore = useVariablesStore()
+const estimationStore = useEstimationStore()
+const enrichedData = ref(variablesStore.enrichedData)
 
+let norm_use = 0
+let simple_use = 0
+function reset_use() {
+    norm_use = 0 
+    simple_use = 0
+    if (variablesStore.model === 'normalized' && norm_use === 0) 
+    {
+    variablesStore.setStartingPosition(enrichedData.value.avg_norm_loss);
+    norm_use++
+    }
+
+    else if (variablesStore.model === 'simple' && simple_use === 0)
+    {
+        variablesStore.setStartingPosition(enrichedData.value.avg_flat_loss)
+        simple_use++
+    }
+
+    console.log("starting position set from reset_use()");
+    
+}
 const model = ref(variablesStore.model)
 
 function setModel() {
@@ -21,6 +49,7 @@ function setModel() {
     console.log("model set", model.value)
     console.log("data", variablesStore.data)
     console.log("summedGMV", variablesStore.summedGMV)
+    reset_use()
 }
 
 // Assuming data is fetched and reactive
@@ -28,10 +57,27 @@ function setModel() {
 // Watch the summedGMV property
 
 
+
 watch(
-    [() => variablesStore.summedGMV, () => variablesStore.model, () => variablesStore.extraGMV], 
-    () => {
-        calculateData();
+    [() => variablesStore.ontime, () => variablesStore.offtime],
+    (newValues, oldValues) => {
+        const hasChange = newValues.some((newValue, index) => newValue !== oldValues[index]);
+        
+        if (hasChange) {
+            estimationStore.updateEstimations(variablesStore.offtime, variablesStore.ontime);
+        }
+    },
+    { immediate: false, deep: true }
+);
+
+watch(
+    [() => variablesStore.summedGMV, () => variablesStore.model, () => estimationStore.result],
+    (newValues, oldValues) => {
+        const hasChange = newValues.some((newValue, index) => newValue !== oldValues[index]);
+        
+        if (hasChange) {
+            calculateData();
+        }
     },
     { immediate: false, deep: true }
 );
@@ -89,7 +135,7 @@ function calculateData() {
 
     // Process only necessary data to calculate new values
     data.on_h_gmv.forEach((gmv, index) => {
-        const totalGMV = data.on_total_gmv[index] + (variablesStore.extraGMV || 0);
+        const totalGMV = data.on_total_gmv[index] + (estimationStore.result || 0);
         const normalizedGMV = gmv / totalGMV * 100;
         normalizedActualGMV.push(normalizedGMV);
         gmv_part.push(totalGMV / 100)
@@ -155,7 +201,7 @@ function calculateData() {
 
     // Combine all data into a new enriched object
         
-        let enrichedData = {
+    enrichedData.value = {
         ...data, // Spread existing data to preserve untouched values
         normalizedActualGMV,      
         normalizedOffGMV,
@@ -180,8 +226,8 @@ max_norm_gmv_converted,
 
     };
     console.log("enrichedData", enrichedData)
-    console.log("enrichedData.avg_norm_loss", enrichedData.avg_norm_loss)
-    setData(enrichedData)
+    // console.log("enrichedData.avg_norm_loss", enrichedData.avg_norm_loss)
+    setData(enrichedData.value)
 
 } //--------------------------END OF CALCULATE DATA FUNCTION   
 
@@ -192,14 +238,16 @@ max_norm_gmv_converted,
     variablesStore.setProcessedData(enrichedData);
     console.log("enrichedData set", enrichedData);
 
-    if (variablesStore.model === 'normalized') 
+    if (variablesStore.model === 'normalized' && norm_use === 0) 
     {
     variablesStore.setStartingPosition(enrichedData.avg_norm_loss);
+    norm_use++
     }
 
-    else if (variablesStore.model === 'simple')
+    else if (variablesStore.model === 'simple' && simple_use === 0)
     {
         variablesStore.setStartingPosition(enrichedData.avg_flat_loss)
+        simple_use++
     }
 
     console.log("starting position set", enrichedData);
@@ -207,3 +255,35 @@ max_norm_gmv_converted,
 
 
 </script>
+
+<style>
+
+.wrap {
+    margin-top: -0.5rem;
+}
+
+.refresh {
+  margin-left: 0.5rem;
+  scale: 0.85;
+  transform: translateY(6px);
+  background-color: rgb(234, 179, 117);
+  color: #fff;
+  border: none;
+  border-radius: 0.2rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+
+.refresh:hover {
+    background-color: rgba(237, 150, 50, 1);
+}
+
+.refresh:active {
+        background-color: rgb(82, 50, 14);
+        box-shadow: none;
+        transform: translateY(7px);
+    }
+
+
+</style>

@@ -2,6 +2,7 @@
   <div
     v-if="accumulatedCalculations && accumulatedCalculations.totalGmvLoss !== 0"
     :class="variablesStore.isNegative ? 'result-bad' : 'result-good'"
+
   >
     <div v-if="accumulatedCalculations && accumulatedCalculations.totalGmvLoss !== 0">
       <div class="lines">
@@ -18,10 +19,6 @@
         </p>
         <div>
         <PreCalculation></PreCalculation>
-        <div v-if="variablesStore.model === 'normalized'">
-        <button @click="sendSetExtra">Add Lost GMV</button>
-        <button @click="deleteExtra">Reset Lost GMV</button>
-      </div>
       </div>
         <p
           :class="variablesStore.isNegative ? 'based-bad' : 'based'"
@@ -121,7 +118,7 @@ const accumulatedCalculations = computed(() => {
   //off 5
   //on 10 
   //
-  console.log({ totalGmvLoss, totalRangeTo, totalRangeFrom }) // Debug output
+  // console.log({ totalGmvLoss, totalRangeTo, totalRangeFrom }) // Debug output
   return { totalGmvLoss, totalRangeTo, totalRangeFrom }
 })
 
@@ -131,17 +128,7 @@ watch(accumulatedCalculations, (newValue) => {
 
 function toggleDetails() {
   showDetails.value = !showDetails.value
-}
-
-function sendSetExtra() {
-  variablesStore.setExtraGmv((accumulatedCalculations.value.totalGmvLoss) * -1)
-  console.log("setExtra", accumulatedCalculations.value.totalGmvLoss)
-}
-
-function deleteExtra() {
-  variablesStore.setExtraGmv(0)
-  console.log("deleteExtra", 0)
-}
+};
 
 </script>
 

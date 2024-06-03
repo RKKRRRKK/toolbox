@@ -1,6 +1,6 @@
 <template>
         <div class="field-container">
-            <label for="start">Start Date:</label>
+            <label for="start">Date:</label>
             <input type="date" id="start" class="start"
             v-model="startdate"
             @change="setstartdate"

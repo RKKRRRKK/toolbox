@@ -10,7 +10,7 @@
   <option value="'web','app'">ALL</option>
 </select>
 </div>
-<PreCalculation></PreCalculation>
+<PreCalculation class="wrapper"></PreCalculation>
 
 </template>
 
@@ -36,6 +36,10 @@
 .select {
   border: 1px solid #ccc;
     border-radius: 0.2rem;
+}
+
+.wrapper {
+  display:none
 }
 
 

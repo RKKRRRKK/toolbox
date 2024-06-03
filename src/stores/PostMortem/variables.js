@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { ref, watch } from 'vue';
 
 export const useVariablesStore = defineStore('variables', {
   state: () => ({
@@ -6,8 +7,8 @@ export const useVariablesStore = defineStore('variables', {
     end: '',
     offtime: '',
     ontime: '',
-    storefront: '',
-    platform: '',
+    storefront: 'DE',
+    platform: "'web'",
     SQL: '',
     data:{},
     isNegative: true,
@@ -89,7 +90,7 @@ export const useVariablesStore = defineStore('variables', {
     },
 
     setStartingPosition(loss) {
-        console.log("loss is", loss)
+        // console.log("loss is", loss)
         let iter_sum = 0
         let iter_pos = 0
         for (let i = 0; i < loss.length -1; i++) {
@@ -99,14 +100,29 @@ export const useVariablesStore = defineStore('variables', {
                 iter_pos = i
             }
         }
+        if (this.offtime !== iter_pos || this.ontime !== iter_pos + 1) {
+        console.log("this.offtime", this.offtime, ",", 'iter_pos', iter_pos, '\n', "this.ontime", this.ontime, ",", "(iter_pos +1)", iter_pos + 1)
         this.offtime = iter_pos 
         this.ontime = iter_pos + 1
-      console.log("starting position set with", iter_pos, iter_pos +1)
+        console.log("starting position set with", iter_pos, iter_pos +1)
+        }
     },
 
     setExtraGmv(value) {
       this.extraGMV = value
-    }
+    },
+
+    waitForProcessedData() {
+      return new Promise((resolve) => {
+          const unwatch = watch(() => this.processedData, (newData) => {
+              if (newData) { 
+                  unwatch();
+                  resolve();
+              }
+          }, { immediate: false });
+      });
+  }
+
 
   }
 });

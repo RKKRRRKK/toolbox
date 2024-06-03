@@ -2,6 +2,7 @@
     <div class="container">
         <h1 class="title">Post-Mortem GMV Impact Estimation {{ date }}</h1>
         <div class="horizontal-container">
+            <TheGuide class="guide"></TheGuide>
             <div class="ho-basics">
                 <div class="basics">
                     <TheDates></TheDates>
@@ -41,6 +42,7 @@ import TheResult from "../components/PostMortemTool/TheCalculation.vue"
 import TheScatter from "../components/PostMortemTool/TheScatter.vue"
 import TheCompressor from "../components/PostMortemTool/TheCompressor.vue"
 import TheSlider from "../components/PostMortemTool/TheSlider.vue"
+import TheGuide from "../components/PostMortemTool/TheGuide.vue"
 import { ref, watch } from 'vue'
 
 const date = ref('')
@@ -178,5 +180,10 @@ const date = ref('')
     display: flex;
     justify-content: space-between;
     width: 52.5%;
+}
+
+.guide {
+    width: 30rem;
+    scale: 1;
 }
 </style>

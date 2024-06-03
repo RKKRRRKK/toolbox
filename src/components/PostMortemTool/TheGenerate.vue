@@ -19,7 +19,7 @@
   // Constructing the SQL query string
   const sql = `
 
-  WITH CTE1 AS (
+  WITH CTE1 AS (    
     SELECT
         SUM(o.total_price / 100) AS GMV,
         EXTRACT(HOUR FROM o.order_timestamp) AS hour,
@@ -35,7 +35,7 @@
       
      
     WHERE
-        o.code_storefront = '${storefront}'
+        o.code_storefront = 'DE'
         AND DATE(o.order_timestamp) BETWEEN DATE_SUB('${start}', INTERVAL 28 DAY) AND DATE_SUB('${start}', INTERVAL 1 DAY)
         AND IFNULL(app.source, 'web')  in (${platform})
         AND DATE(o.order_timestamp) NOT IN (SELECT date_holiday FROM  \`prod-data-engineering-real.business_intelligence.national_holidays_de\`)
@@ -43,10 +43,10 @@
         hour, date, day_of_week_number
 ),
 
-TotalAverageGMVPerDate AS (
+total_off_gmv AS (
     SELECT
         date,
-        SUM(GMV) AS total_average_gmv
+        SUM(GMV) AS total_average_gmv,
     FROM
         CTE1
     GROUP BY
@@ -58,23 +58,23 @@ NormalizedCTE1 AS (
         CTE1.hour,
         CTE1.day_of_week_number,
         CTE1.date,
-        CTE1.GMV / TotalAverageGMVPerDate.total_average_gmv * 100 AS normalized_average_gmv,
+        total_off_gmv.total_average_gmv as total_avg_gmv,
         CTE1.GMV
     FROM
         CTE1
     JOIN
-        TotalAverageGMVPerDate ON CTE1.date = TotalAverageGMVPerDate.date
+        total_off_gmv ON CTE1.date = total_off_gmv.date
 ),
 
 CTE2 AS (
 SELECT
     hour,
     day_of_week_number,
-    avg(normalized_average_gmv) AS average,
-    max(normalized_average_gmv) AS max,
-    min(normalized_average_gmv) AS min,
-    count(normalized_average_gmv) AS days_avg,
-    avg(gmv) AS average_gmv_euros,
+    avg(gmv) AS average,
+    max(gmv) AS max,
+    min(gmv) AS min,
+    count(total_avg_gmv) AS days_avg,
+    avg(total_avg_gmv) AS average_gmv_euros,
     ARRAY_AGG(ROUND(gmv)) AS array_gmv,
     ARRAY_AGG(date) AS array_date,
     ARRAY_AGG(row_number) AS array_order
@@ -88,7 +88,7 @@ FROM (
         hour, day_of_week_number
 ),
 
-CTE3 AS (
+CTE3  AS (
     SELECT
         SUM(o.total_price / 100) AS actual_GMV,
         EXTRACT(HOUR FROM o.order_timestamp) AS hour,
@@ -102,14 +102,14 @@ CTE3 AS (
         \`prod-data-engineering-real.hm_live.buy_event\` AS app
         ON app.id_pre_checkout = c.id_pre_checkout
     WHERE
-        o.code_storefront = '${storefront}'
+        o.code_storefront = 'DE'
         AND DATE(o.order_timestamp) = '${start}'
     AND IFNULL(app.source, 'web') in (${platform})
     GROUP BY
         hour, date, day_of_week_number
 ),
 
-TotalGMVOnDate AS (
+total_on_gmv AS (
     SELECT
         date,
         SUM(actual_GMV) AS total_gmv
@@ -124,34 +124,26 @@ NormalizedCTE3 AS (
         a.hour,
         a.day_of_week_number,
         a.date,
-        a.actual_GMV / b.total_gmv * 100 AS normalized_actual_gmv,  
         a.actual_GMV,
-        b.total_gmv as total_actual_gmv
+        b.total_gmv 
     FROM
         CTE3 a
     JOIN
-        TotalGMVOnDate b ON a.date = b.date
+        total_on_gmv b ON a.date = b.date
 ),
 
 CTE5 AS (
     SELECT
-        a.date,
         a.hour as hours,
-        a.day_of_week_number,
-        a.normalized_actual_gmv as actual_gmv,
-        b.average AS average_gmv,
-        b.max,
-        b.min,
-        b.days_avg as days_accounted,
-        ((b.average / a.normalized_actual_gmv) * a.actual_GMV) - a.actual_GMV as avg_loss,
-        ((b.max / a.normalized_actual_gmv) * a.actual_GMV) - a.actual_GMV as max_loss,
-        ((b.min / a.normalized_actual_gmv) * a.actual_GMV) - a.actual_GMV as min_loss,
-        a.actual_GMV as actual_gmv_euros,
-        ((b.average / a.normalized_actual_gmv) * a.actual_GMV) as average_gmv_euros,
-        total_actual_gmv,
-        b.array_gmv,
-        b.array_date,
-        b.array_order
+        a.actual_GMV as on_h_gmv,
+        b.average as off_havg_gmv,
+        b.min as off_hmin_gmv,
+        b.max as off_hmax_gmv,
+        a.total_gmv as on_total_gmv,
+        array_gmv,
+        array_date,
+        array_order,
+        days_avg as days_accounted,
     FROM
         NormalizedCTE3 a
     LEFT JOIN
@@ -159,25 +151,10 @@ CTE5 AS (
 )
 
 SELECT
-average_gmv,
-max,
-min,
-actual_gmv,
-hours,
-avg_loss,
-max_loss,
-min_loss,
-actual_gmv_euros,
-average_gmv_euros,
-total_actual_gmv / 100 as gmv_part,
-days_accounted,
-array_gmv,
-array_date,
-array_order,
+*
 
 FROM CTE5
 ORDER BY hours ASC;
-
   
 
   `;
