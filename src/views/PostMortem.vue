@@ -1,6 +1,9 @@
 <template>
     <div class="container">
+        <div class="title-wrap">
         <h1 class="title">Post-Mortem GMV Impact Estimation {{ date }}</h1>
+        <DarkMode></DarkMode>
+    </div>
         <div class="horizontal-container">
             <TheGuide class="guide"></TheGuide>
             <div class="ho-basics">
@@ -43,6 +46,7 @@ import TheScatter from "../components/PostMortemTool/TheScatter.vue"
 import TheCompressor from "../components/PostMortemTool/TheCompressor.vue"
 import TheSlider from "../components/PostMortemTool/TheSlider.vue"
 import TheGuide from "../components/PostMortemTool/TheGuide.vue"
+import DarkMode from "../components/PostMortemTool/DarkMode.vue"
 import { ref, watch } from 'vue'
 
 const date = ref('')
@@ -137,7 +141,7 @@ const date = ref('')
     margin-bottom: 2rem;
     display: flex;
     position: absolute;
-    transform: translateY(25rem);
+    transform: translateY(27rem);
     z-index: 999;
     flex-shrink: 3;
     flex-basis: 0%;
@@ -170,6 +174,7 @@ const date = ref('')
 .title {
     color: #636060; 
     text-align: center;
+    margin: auto;
 }
 
 .compressor {
@@ -185,5 +190,10 @@ const date = ref('')
 .guide {
     width: 30rem;
     scale: 1;
+}
+
+.title-wrap {
+    display: flex;
+    margin: 2rem;
 }
 </style>

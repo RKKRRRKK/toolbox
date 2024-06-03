@@ -9,12 +9,22 @@
 
 <script setup>
 import TheSlider from "../PostMortemTool/TheSlider.vue"
-import { ref, resolveDirective, watch } from 'vue';
+import { ref, resolveDirective, watch, provide, computed } from 'vue';
 import { useVariablesStore } from '@/stores/PostMortem/variables'; 
-import ECharts from 'vue-echarts';
+import ECharts, { THEME_KEY } from 'vue-echarts';
 import 'echarts';
 
 const variablesStore = useVariablesStore();
+
+const theme = computed(() => variablesStore.darkMode ? 'dark' : 'light');
+
+watch(variablesStore.darkMode, (newValue) => {
+   console.log("theme changed at TheChart.vue to: ", newValue)
+   console.log("theme changed at TheChart.vue to: ", theme)
+})
+
+
+provide(THEME_KEY, "`${theme}`");
 
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -32,13 +42,13 @@ function timeframeToggle(params) {
 function mapNormalizedToReal(index) {
     return variablesStore.model === 'normalized' ? 
         variablesStore.processedData.on_h_gmv[index] : 
-        index;  // Return index or a default for 'simple' model
+        index;  
 }
 
 function mapNormalizedToRealAvg(index) {
     return variablesStore.model === 'normalized' ? 
         variablesStore.processedData.avg_norm_gmv_converted[index] :  
-        index;  // Return index or a default for 'simple' model
+        index;  
 }
 
 
@@ -50,7 +60,7 @@ const chartOption = ref({
     axisLabel: {
         formatter: function (value) {
           
-            return value < 10 ? `0${value}:00` : `${value}:00`;
+            return value < 10 ? `${value}-${value + 1}:00` : `${value}-${value + 1}:00`
         }
     },
     splitLine: {
@@ -183,12 +193,15 @@ yAxis: {
             name: 'Actual GMV', 
             data: [], 
             type: 'line',
+            symbolSize: 10,
+            symbol: 'circle',
             lineStyle: {
                 color: 'rgba(237, 150, 50, 1)',
                 width: 3.5
             },
             itemStyle: {
-                color: 'rgba(237, 150, 50, 1)'
+                color: 'rgba(237, 150, 50, 1)',
+    
             }
         },
         {

@@ -19,6 +19,7 @@
     "papaparse": "^5.4.1",
     "pinia": "^2.1.7",
     "primevue": "^3.50.0",
+    "scss": "^0.2.4",
     "vue": "^3.4.21",
     "vue-echarts": "^6.6.9",
     "vue-router": "^4.3.0"
@@ -30,6 +31,7 @@
     "eslint": "^8.49.0",
     "eslint-plugin-vue": "^9.17.0",
     "prettier": "^3.0.3",
+    "sass": "^1.77.4",
     "vite": "^5.1.6"
   }
 }

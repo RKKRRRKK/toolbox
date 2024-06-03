@@ -124,6 +124,7 @@ const accumulatedCalculations = computed(() => {
 
 watch(accumulatedCalculations, (newValue) => {
   variablesStore.setNegative(newValue.totalGmvLoss < 0)
+  variablesStore.setLoss(newValue.totalGmvLoss)
 })
 
 function toggleDetails() {

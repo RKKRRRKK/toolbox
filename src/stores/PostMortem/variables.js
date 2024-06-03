@@ -17,6 +17,8 @@ export const useVariablesStore = defineStore('variables', {
     summedGMV: [],  
     processedData: {},
     extraGMV:0,
+    loss:0,
+    darkMode: false,
     
   }),
   actions: {
@@ -121,6 +123,16 @@ export const useVariablesStore = defineStore('variables', {
               }
           }, { immediate: false });
       });
+  },
+
+  setLoss(loss) {
+  this.loss = loss
+  console.log('loss set as: ', loss)
+  },
+
+  setDarkMode(value) {
+    this.darkMode = value
+    console.log("darkmode triggered in variables.js", value)
   }
 
 

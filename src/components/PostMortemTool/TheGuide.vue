@@ -1,7 +1,7 @@
 <template>
 <div class="div">
 <h3>How To Use:</h3>
-<p>1. Select the date of outtage and fill relevant data</p>
+<p>1. Select the date of red flag and choose platform</p>
 <p>2. Generate and Copy the SQL using "GetSQL" </p>
 <p>3. Run the SQL in BigQuery and save result as CSV (local file) </p>
 <P>4. Choose and Upload the saved CSV</P>
@@ -9,6 +9,8 @@
 </template>
 
 <script setup>
+
+
 </script>
 
 
@@ -19,5 +21,7 @@
     margin-right: -1rem;
     margin-left: -2rem;
 }
+
+
 
 </style>

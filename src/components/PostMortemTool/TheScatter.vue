@@ -46,7 +46,11 @@ const chartOption2 = ref({
     },
     max:  function (value) {
     var roundtomil = Math.ceil(value.max / 500000) * 500000;
-    return roundtomil + 500000;
+    return roundtomil
+},
+    min: function (value) {
+    var roundtomil = Math.floor(value.min / 500000) * 500000;
+    return roundtomil
 },
     interval: 500000,
     splitLine: {
@@ -59,7 +63,7 @@ const chartOption2 = ref({
   },
 
   legend: {
-        data: ['Comparison Days', 'Outtage Day'], 
+        data: ['Comparison Days', 'Outtage Day', 'Outtage Day + Loss'], 
         orient: 'horizontal',
         bottom: 10, 
         left: 'center' 
@@ -143,6 +147,33 @@ const chartOption2 = ref({
 }
 ,
 {
+  name: 'Outtage Day + Loss',
+  data: [], 
+  type: 'scatter',
+  symbolSize: 40,
+  itemStyle: {
+    color: 'rgba(237, 150, 50, 0.1)',
+    borderColor: 'rgba(237, 150, 50, 0.8)',
+    borderType: 'dashed',
+    borderWidth: 2
+  },
+  markPoint: {
+    data: [
+      {
+        coord: [],
+        label: {
+          formatter: function (params) {
+         
+            return params.value[2];
+          },
+          position: 'top'
+        }
+      }
+    ]
+  }
+}
+,
+{
         data: [], 
         type: 'line',
         itemStyle: {
@@ -187,8 +218,8 @@ function sumArrays(arrayOfArrays) {
 
 
 watch(
-    [() => variablesStore.data, () => variablesStore.start], 
-    ([newData, newStart], [oldData, oldStart]) => {
+    [() => variablesStore.data, () => variablesStore.start, () => variablesStore.loss], 
+    ([newData, newStart, newLoss], [oldData, oldStart]) => {
         if (newData && newData.array_gmv && newData.array_order && newData.array_date) {
             const gmvArrays = newData.array_gmv.map(parseJSON);
             const summedGMV = sumArrays(gmvArrays);
@@ -208,8 +239,11 @@ watch(
                 const seriesData = orders.map((order, index) => [order, summedGMV[index], dates[index]]);
                 console.log("seriesData", seriesData);
                 console.log("my series data", [index, currentGMV, currentDate]);
+                console.log("total gmv plus loss: ", currentGMV, " + ", (-1 * Math.round(newLoss)))
+                let totalGMVPlusLoss = currentGMV + (-1 * Math.round(newLoss))
                 chartOption2.value.series[0].data = seriesData;
                 chartOption2.value.series[1].data = [[index, currentGMV, currentDate]];
+                chartOption2.value.series[2].data = [[index, totalGMVPlusLoss, currentDate]];
                 isDataLoaded.value = true;
                 console.log("updating isdataloaded value at TheScatter.vue", isDataLoaded);
                 chartOption2.value.xAxis.max = Math.max(...seriesData.map(item => item[0])) + 2;
