@@ -13,10 +13,9 @@
 
     
       function generateSQL() {
-  // Accessing values from the store
+
   const { start, end, storefront, platform } = variablesStore
 
-  // Constructing the SQL query string
   const sql = `
 
   WITH CTE1 AS (    
@@ -159,19 +158,16 @@ ORDER BY hours ASC;
 
   `;
 
-  //get rid of total actual gmv in the SQL, send only the hour by hour gmv to JS, meaning calculation of normalized
-  //actual GMV and loss happens inside JS then upon selection of range, 
-  //recalculate by adding to the total_GMV, the expected lost GMV  (via calculating for X inside the range given % 
-  //expected on said day and hour and the base being the rest of the "healthy" hours)
+
     
-  console.log(sql); // Logging the SQL to the console
+  console.log(sql); 
   variablesStore.setSQL(sql)
 
   navigator.clipboard.writeText(sql).then(() => {
-    // This block executes on successful copying
+
     alert("Successfully copied to clipboard please execute in BigQuery");
   }).catch(err => {
-    // This block handles any errors that might occur
+  
     console.error("Failed to copy text: ", err);
     alert("Failed to copy to clipboard");
   });
@@ -209,7 +205,3 @@ ORDER BY hours ASC;
     }
     </style>
 
-<!-- WHERE code_storefront = '${storefront}'
-AND c.date_inserted > '${start} 00:00:00 UTC'
-AND c.date_inserted < '${end} 23:59:59 UTC'
-AND IFNULL(app.source, 'web') = '${platform}' -->  

@@ -52,7 +52,7 @@ function setModel() {
     reset_use()
 }
 
-// Assuming data is fetched and reactive
+
 
 // Watch the summedGMV property
 
@@ -96,7 +96,7 @@ function calculateData() {
 
     const { data, summedGMV } = variablesStore;
 
-    // Helper function to safely parse JSON strings into arrays
+    //  parse JSON strings into arrays
     function parseJSON(jsonStr) {
         try {
             return JSON.parse(jsonStr);
@@ -106,7 +106,7 @@ function calculateData() {
         }
     }
 
-    // New arrays to store calculated values and new metrics
+    // arrays to store calculated values and new metrics
     let normalizedActualGMV = [];
     let normalizedOffGMV = [];
     let avg_norm_gmv = [];
@@ -133,17 +133,17 @@ function calculateData() {
 
 
 
-    // Process only necessary data to calculate new values
+   
     data.on_h_gmv.forEach((gmv, index) => {
         const totalGMV = data.on_total_gmv[index] + (estimationStore.result || 0);
         const normalizedGMV = gmv / totalGMV * 100;
         normalizedActualGMV.push(normalizedGMV);
         gmv_part.push(totalGMV / 100)
 
-        // Calculating normalizedOffGMV for each entry in array_gmv after parsing it
+        // calculating normalizedOffGMV for each entry in array_gmv after parsing it
         const individualNormalizedOffGMV = [];
         const individualFlatOffGMV = [];
-        const gmvArray = parseJSON(data.array_gmv[index]);  // Parse the JSON string into an array
+        const gmvArray = parseJSON(data.array_gmv[index]);  // parse the JSON string into an array
         gmvArray.forEach((gmvValue, gmvIndex) => {
             const normalized = (gmvValue / summedGMV[gmvIndex % summedGMV.length]) *100;
             const flat = gmvValue;
@@ -199,10 +199,10 @@ function calculateData() {
     });
 
 
-    // Combine all data into a new enriched object
+    // combine all data into a new object
         
     enrichedData.value = {
-        ...data, // Spread existing data to preserve untouched values
+        ...data,
         normalizedActualGMV,      
         normalizedOffGMV,
         avg_norm_gmv,

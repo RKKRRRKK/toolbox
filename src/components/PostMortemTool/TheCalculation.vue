@@ -70,7 +70,7 @@ function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
 
-// Computed property to accumulate the values
+// computed property to accumulate the values
 const numberDays = computed(() => {
   const { processedData } = variablesStore
   if (!processedData) {

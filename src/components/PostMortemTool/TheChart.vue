@@ -16,15 +16,15 @@ import 'echarts';
 
 const variablesStore = useVariablesStore();
 
-const theme = computed(() => variablesStore.darkMode ? 'dark' : 'light');
+// const theme = computed(() => variablesStore.darkMode ? 'dark' : 'light');
 
-watch(variablesStore.darkMode, (newValue) => {
-   console.log("theme changed at TheChart.vue to: ", newValue)
-   console.log("theme changed at TheChart.vue to: ", theme)
-})
+// watch(variablesStore.darkMode, (newValue) => {
+//    console.log("theme changed at TheChart.vue to: ", newValue)
+//    console.log("theme changed at TheChart.vue to: ", theme)
+// })
 
 
-provide(THEME_KEY, "`${theme}`");
+// provide(THEME_KEY, "`${theme}`");
 
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -287,7 +287,7 @@ function updateColorStyles() {
     const markColor = variablesStore.isNegative ? 'rgba(200, 0, 0, 0.4)' : 'rgba(0, 150, 0, 0.8)';
     const areaColor = variablesStore.isNegative ? 'rgba(150, 0, 0, 0.05)' : 'rgba(0, 150, 0, 0.05)';
 
-    // Update markLine and markArea styles
+    // update markLine and markArea styles
     chartOption.value.series[4].markLine.lineStyle.color = markColor;
     chartOption.value.series[4].markArea.itemStyle.color = areaColor;
 }

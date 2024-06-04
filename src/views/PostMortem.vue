@@ -2,7 +2,7 @@
     <div class="container">
         <div class="title-wrap">
         <h1 class="title">Post-Mortem GMV Impact Estimation {{ date }}</h1>
-        <DarkMode></DarkMode>
+        <!-- <DarkMode></DarkMode> -->
     </div>
         <div class="horizontal-container">
             <TheGuide class="guide"></TheGuide>
@@ -25,7 +25,7 @@
         </div>
         </div>
         <TheResult class="result"></TheResult>
-        <!-- <div class="chart">chart</div> --> <!-- Corrected malformed comment -->
+        <!-- <div class="chart">chart</div> -->
         <div class="charts">
             <TheChart></TheChart>
             <TheScatter></TheScatter>
@@ -101,14 +101,14 @@ const date = ref('')
     flex-basis: 0%;
     border: 2px solid #ccc;
     padding: 1rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* subtle shadow for depth */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
     border-radius: 0.5rem;
 }
 
 .inputs {
     border: 2px solid #ccc;
     padding: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* lighter shadow for input fields */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
     border-radius: 0.5rem;
   
 }
