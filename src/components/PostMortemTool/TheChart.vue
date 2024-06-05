@@ -92,7 +92,7 @@ yAxis: {
                 if (variablesStore.model === 'normalized') {
                     const realValue = mapNormalizedToReal(actualGmvPoint.dataIndex);
                     const avgValue = mapNormalizedToRealAvg(actualGmvPoint.dataIndex);
-                    return `Hour: ${actualGmvPoint.axisValueLabel}<br>Actual GMV: ${numberWithCommas(realValue.toFixed(0))}€
+                    return `Time: Between ${Math.floor(actualGmvPoint.axisValueLabel)}:00  and  ${Math.floor(actualGmvPoint.axisValueLabel) }:59<br>Actual GMV: ${numberWithCommas(realValue.toFixed(0))}€
                     <br>Expected GMV: ${numberWithCommas(avgValue.toFixed(0))}€`;
                 } else {
                     const realValue = variablesStore.processedData.on_h_gmv[actualGmvPoint.dataIndex];
@@ -196,11 +196,11 @@ yAxis: {
             symbolSize: 10,
             symbol: 'circle',
             lineStyle: {
-                color: 'rgba(237, 150, 50, 1)',
+                color: 'rgba(237, 150, 50, 0.5)',
                 width: 3.5
             },
             itemStyle: {
-                color: 'rgba(237, 150, 50, 1)',
+                color: 'rgba(237, 150, 50, 0.5)',
     
             }
         },

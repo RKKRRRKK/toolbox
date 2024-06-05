@@ -1,6 +1,6 @@
 <template>
     <div>
-      <button class="button" @click="compressAndGenerateAndCopyURL">Generate and Copy URL</button>
+      <button class="button" @click="compressAndGenerateAndCopyURL">Share</button>
       <!-- <p v-if="copySuccess">URL copied to clipboard, share with care.</p> -->
       <p v-if="copyError">{{ copyError }}</p>
     </div>
@@ -76,7 +76,7 @@ const compressAndGenerateAndCopyURL = async () => {
     const base64Data = urlSafeBase64Encode(String.fromCharCode(...compressedData));
     const url = `${window.location.origin}${window.location.pathname}?data=${base64Data}`;
     await navigator.clipboard.writeText(url);
-    alert('URL has been copied to clipboard. Contains internal data, share cautiously!');
+    alert('URL has been copied to clipboard. The URL itself contains internal sensitive data, share cautiously!');
     copySuccess.value = true;
   } catch (error) {
     console.error("Error compressing or copying data:", error);
