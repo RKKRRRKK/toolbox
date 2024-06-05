@@ -74,7 +74,6 @@ const date = ref('')
     gap: 1rem;
     flex-direction: column; 
     margin-bottom: 5rem;
-    flex:1 
 }
 
 .basics {
@@ -82,16 +81,18 @@ const date = ref('')
     flex-direction: column;
     gap: 1rem;
     flex-shrink: 3;
-    flex-basis: 0%
+    flex-basis: 0%;
+    width: 9vw;
+    min-width: 170px;
+
 }
 
 
 .rest {
     display: flex;
-    width: 13rem;
-    height: 1rem;
-    flex-shrink: 3;
-    flex-basis: 0%
+    width: 100%;
+    gap: 25%
+
 }
 
 .ho-basics {
@@ -103,6 +104,7 @@ const date = ref('')
     padding: 1rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
     border-radius: 0.5rem;
+    flex-direction: column;
 }
 
 .inputs {
@@ -110,9 +112,17 @@ const date = ref('')
     padding: 1rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
     border-radius: 0.5rem;
-  
+    width: 15vw;
+    height: 11vh;
+    min-height: 10rem;
+    min-width: 11rem;
 }
 
+/* @media screen and (max-width: 1000px) {
+  .guide {
+    font-size: 10px;
+  }
+} */
 
 
 
@@ -121,7 +131,7 @@ const date = ref('')
     width: 100%;
     gap: 4rem;
     padding-left: 8rem;
-    flex:1
+
 }
 
 
@@ -188,7 +198,7 @@ const date = ref('')
 }
 
 .guide {
-    width: 30rem;
+    min-width: 30rem;
     scale: 1;
 }
 

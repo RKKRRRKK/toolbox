@@ -88,11 +88,13 @@ function assignData() {
 .input {
     display: flex;
     align-self: center;
+    width: 100%;
 }
 
 .input_form {
     display: flex;
     flex-direction: column;
+    width: 100%;
 }
 
 .file-input {
@@ -101,6 +103,7 @@ function assignData() {
     border-radius: 0.2rem;
     font-size: 1rem;
     margin-bottom: 0.5rem;
+    width: 100%;
 }
 
 .upload-button {
@@ -113,6 +116,7 @@ function assignData() {
     font-weight: bold;
     letter-spacing: 1px;
     cursor: pointer;
+    width: 100%;
 }
 
 .upload-button:hover {
