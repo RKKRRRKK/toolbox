@@ -26,11 +26,12 @@ function setstartdate() {
 .field-container {
     display: flex;
     flex-direction: column;
-    width: 100%;
 }
 
 .start {
     border: 1px solid #ccc;
     border-radius: 0.2rem;
+    width: 100%;
+    font-size: MAX(0.4vw, 0.7rem);
 }
 </style>

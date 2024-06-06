@@ -13,7 +13,7 @@ import { useVariablesStore } from '@/stores/PostMortem/variables.js'
 
 
 const variablesStore = useVariablesStore()
-const fileToRead = ref(null) // Store the file reference
+const fileToRead = ref(null)
 
 function storeFile(event) {
     fileToRead.value = event.target.files[0] ? event.target.files[0] : null;
@@ -69,7 +69,7 @@ function assignData() {
             data.on_total_gmv.push(parseFloat(row[5].trim()));
             data.days_accounted.push(parseFloat(row[9].trim()));
 
-            // Parse JSON array fields directly
+            // Parse JSON array fields
             data.array_gmv.push(JSON.parse(row[6].trim()));
             data.array_date.push(JSON.parse(row[7].trim()));
             data.array_order.push(JSON.parse(row[8].trim()));
@@ -88,22 +88,25 @@ function assignData() {
 .input {
     display: flex;
     align-self: center;
+    font-size: 0.8rem;
     width: 100%;
+    height: 100%;
 }
 
 .input_form {
     display: flex;
     flex-direction: column;
     width: 100%;
+    height: 100%;
 }
 
 .file-input {
     padding: 0.5rem;
     border: 1px solid #ccc;
     border-radius: 0.2rem;
-    font-size: 1rem;
     margin-bottom: 0.5rem;
     width: 100%;
+    height: 6vh;
 }
 
 .upload-button {
@@ -112,11 +115,12 @@ function assignData() {
     color: #fff;
     border: none;
     border-radius: 0.2rem;
-    font-size: 1rem;
+    font-size: 0.8rem;
     font-weight: bold;
     letter-spacing: 1px;
     cursor: pointer;
-    width: 100%;
+     width: 100%;
+     height: 5vh;
 }
 
 .upload-button:hover {

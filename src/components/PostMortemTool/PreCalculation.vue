@@ -258,13 +258,18 @@ max_norm_gmv_converted,
 
 <style>
 
+.select {
+    font-size: MAX(0.6vw, 0.6rem);
+}
+
 .wrap {
     margin-top: -0.5rem;
+    font-size: MAX(0.6vw, 0.6rem);
 }
 
 .refresh {
   margin-left: 0.5rem;
-  scale: 0.85;
+  scale: 0.8;
   transform: translateY(6px);
   background-color: rgb(234, 179, 117);
   color: #fff;

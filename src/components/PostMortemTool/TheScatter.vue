@@ -71,7 +71,7 @@ const chartOption2 = ref({
     },
 
   title: {
-        text: 'Overview of Considered Dates',
+        text: 'Overview',
         textAlign: 'midlde',
         textStyle: {
             fontSize: 20,
@@ -106,8 +106,8 @@ const chartOption2 = ref({
 
         },
         tooltip: {
-            show: true, // Enabling tooltip for the markLine
-            formatter: 'Average' // Static text for the tooltip
+            show: true, //tooltip for the markLine
+            formatter: 'Average' //text for the tooltip
         },
         lineStyle: {
             color: 'black',

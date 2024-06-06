@@ -179,14 +179,15 @@ ORDER BY hours ASC;
     <style scoped>
 
     .gen {
+        margin-top: 0.5rem;
         width: 100%;
-        height: 2.5rem;
+        height: 80%;
         cursor: pointer;
         background-color: rgb(234, 179, 117);
         color: #fff;
         border: none;
         border-radius: 4px;
-        font-size: 1rem;
+        font-size: 0.8rem;
         font-weight: bold;
         letter-spacing: 1px;
         transition: background-color 0.3s ease;

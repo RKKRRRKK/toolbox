@@ -32,9 +32,14 @@
 
 <style scoped>
 
+.field-container {
+  width: 50%;
+}
+
 .storefronts {
   border: 1px solid #ccc;
     border-radius: 0.2rem;
+  font-size: MAX(0.4vw, 0.7rem);
 }
 
 </style>

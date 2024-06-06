@@ -60,20 +60,22 @@ const date = ref('')
       },
       { immediate: true, deep: true });
 
+//use vh for eleemtns that should shrink 
+//use minimum and maximum width
+
+
 </script>
 
 
 <style scoped>
 
 .container {
-    padding-left: 10rem;
-    padding-right: 5rem;
     width: 100%;
     height: 100%;
     display: flex;
     gap: 1rem;
     flex-direction: column; 
-    margin-bottom: 5rem;
+    margin-bottom: 5vh;
 }
 
 .basics {
@@ -83,46 +85,45 @@ const date = ref('')
     flex-shrink: 3;
     flex-basis: 0%;
     width: 9vw;
-    min-width: 170px;
-
+    min-width: 125px;
 }
 
 
 .rest {
     display: flex;
     width: 100%;
-    gap: 25%
-
 }
 
 .ho-basics {
     display: flex;
-    gap: 1rem;
+    gap: 0.5rem;
     flex-shrink: 3;
     flex-basis: 0%;
     border: 2px solid #ccc;
-    padding: 1rem;
+    padding: 0.8rem;
+    padding-right: 0.5rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
     border-radius: 0.5rem;
-    flex-direction: column;
+    height: 9vh;
+    min-height: 7rem;
+    min-width: 14rem;
+    font-size: 0.8rem;
 }
+
 
 .inputs {
     border: 2px solid #ccc;
     padding: 1rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
     border-radius: 0.5rem;
-    width: 15vw;
-    height: 11vh;
-    min-height: 10rem;
+    width: 12vw;
+    height: 12vh;
+    min-height: 8rem;
     min-width: 11rem;
+
+  
 }
 
-/* @media screen and (max-width: 1000px) {
-  .guide {
-    font-size: 10px;
-  }
-} */
 
 
 
@@ -131,7 +132,6 @@ const date = ref('')
     width: 100%;
     gap: 4rem;
     padding-left: 8rem;
-
 }
 
 
@@ -151,19 +151,19 @@ const date = ref('')
     margin-bottom: 2rem;
     display: flex;
     position: absolute;
-    transform: translateY(26.5rem);
+    transform: translateY(MAX(28vh, 16.5rem));
     z-index: 999;
-    flex-shrink: 3;
-    flex-basis: 0%;
-    flex-grow: 3;
+    width: 16%;
+    min-width: 15rem;
+    height: auto;
 }
 
 .charts {
     width: 100%;
     display: flex;
     height: 100%;
-    padding-top: 5rem;
-    padding-bottom: 10rem;
+    /* padding-top: 5rem;
+    padding-bottom: 10rem; */
 }
 
 
@@ -198,12 +198,15 @@ const date = ref('')
 }
 
 .guide {
-    min-width: 30rem;
+    font-size: max(1.2vh, 0.8rem);
+    width: 30rem;
+    min-width: 25rem;
     scale: 1;
+
 }
 
 .title-wrap {
     display: flex;
-    margin: 2rem;
+    margin: 1rem;
 }
 </style>

@@ -135,9 +135,9 @@ function toggleDetails() {
 
 <style>
 .result-bad {
+  font-size: MAX(0.6vw, 0.6rem);
   background-color: rgb(255, 253, 253);
   margin-top: 2rem;
-  width: 25rem;
   scale: 1;
   margin-left: 2.5rem;
   border: 3.5px solid rgba(255, 0, 0, 0.25);
@@ -149,10 +149,10 @@ function toggleDetails() {
 }
 
 .result-good {
+  font-size: MAX(0.6vw, 0.6rem);
   background-color: rgb(253, 255, 253);
   margin-top: 2rem;
   scale: 1;
-  width: 25rem;
   margin-left: 2.5rem;
   border: 3.5px solid rgba(9, 172, 9, 0.25);
   border-radius: 0.5rem;
@@ -185,7 +185,7 @@ function toggleDetails() {
 
 .detail-text {
   color: gray;
-  font-size: 0.9rem;
+  font-size: MAX(0.6vw, 0.6rem);
 }
 
 .based,
