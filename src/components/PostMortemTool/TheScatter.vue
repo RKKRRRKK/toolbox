@@ -26,7 +26,7 @@ const chartOption2 = ref({
     left: '5%',  
     right: '20%',
     top: '7%',
-    bottom: '8%',
+    bottom: '15%',
     containLabel: true
   },
   xAxis: {

@@ -108,7 +108,7 @@ yAxis: {
     left: '2%',  
     right: '2%',
     top: '7%',
-    bottom: '8%',
+    bottom: '15%',
     containLabel: true
   },
 
@@ -322,7 +322,7 @@ updateColorStyles();
 
 .slider {
     width: 100%; 
-    transform: translateY(3rem);
+    transform: translateY(MAX(0rem, 5vh));
 }
 
 
