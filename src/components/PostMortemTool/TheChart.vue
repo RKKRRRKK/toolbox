@@ -39,6 +39,7 @@ function timeframeToggle(params) {
 }
 
 
+
 function mapNormalizedToReal(index) {
     return variablesStore.model === 'normalized' ? 
         variablesStore.processedData.on_h_gmv[index] : 
@@ -56,7 +57,8 @@ const chartOption = ref({
     xAxis: {
     type: 'value',
     interval: 1,
-    max: 23,
+    max: 23.5,
+    min: 0,
     axisLabel: {
         formatter: function (value) {
           
@@ -70,6 +72,7 @@ const chartOption = ref({
                 type: 'dashed' 
             }
         }
+        
 },
 yAxis: {
         type: 'value',
@@ -143,15 +146,16 @@ yAxis: {
         { 
             name: 'Average (Expected) GMV', 
             data: [], 
-            type: 'line',
+            type: 'bar',
+            stack: 'x',
             lineStyle: {
-                color: 'black',
+                color: 'red',
                 width: 2,
-                opacity: 0.5,
+                opacity: 1,
             },
             itemStyle: {
-                color: 'black',
-                opacity: 0.5,
+                color: '#F0F0F0',
+                opacity: 1,
             },
             showSymbol: false
         },
@@ -159,45 +163,43 @@ yAxis: {
             name: 'Min', 
             data: [], 
             type: 'line',
+            symbol: 'rect',
+            symbolSize: [20, 5],
             lineStyle: {
-                color: 'black',
-                width: 6,
-                type: 'dotted',
-                opacity: 0.08
+                width: 0,
             },
-            
             itemStyle: {
-                color: 'black',
-                opacity: 0.1,
+                color: 'gray',
+                opacity: 0.35,
             },
-            showSymbol: false
+            showSymbol: true
         },
         { 
             name: 'Max', 
             data: [], 
             type: 'line',
+            symbol: 'rect',
+            symbolSize: [20, 5],
             lineStyle: {
-                color: 'black',
-                width:  6,
-                type: 'dotted',
-                opacity: 0.08
+                width:  0,
             },
             itemStyle: {
-                color: 'black',
-                opacity: 0.1,
+                color: 'gray',
+                opacity: 0.35,
             },
             
-            showSymbol: false
+            showSymbol: true
         },
         { 
             name: 'Actual GMV', 
             data: [], 
-            type: 'line',
+            type: 'bar',
             symbolSize: 10,
             symbol: 'circle',
+            stack: 'x',
             lineStyle: {
-                color: 'rgba(237, 150, 50, 0.5)',
-                width: 3.5
+                color: 'ccc',
+                width: 3.5,
             },
             itemStyle: {
                 color: 'rgba(237, 150, 50, 0.5)',
