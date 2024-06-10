@@ -19,6 +19,7 @@ export const useVariablesStore = defineStore('variables', {
     extraGMV:0,
     loss:0,
     darkMode: false,
+    offtimes: [],
     
   }),
   actions: {
@@ -93,20 +94,18 @@ export const useVariablesStore = defineStore('variables', {
 
     setStartingPosition(loss) {
         // console.log("loss is", loss)
-        let iter_sum = 0
+        let iter_loss = 0
         let iter_pos = 0
         for (let i = 0; i < loss.length -1; i++) {
-            let current_sum = loss[i] + loss[i+1] 
-            if (current_sum > iter_sum) {
-                iter_sum = current_sum
+            let current_loss = loss[i]
+            if (current_loss > iter_loss) {
+                iter_loss = current_loss
                 iter_pos = i
             }
         }
-        if (this.offtime !== iter_pos || this.ontime !== iter_pos + 1) {
-        console.log("this.offtime", this.offtime, ",", 'iter_pos', iter_pos, '\n', "this.ontime", this.ontime, ",", "(iter_pos +1)", iter_pos + 1)
-        this.offtime = iter_pos 
-        this.ontime = iter_pos + 1
-        console.log("starting position set with", iter_pos, iter_pos +1)
+        if (this.offtimes !== iter_pos) {
+        console.log("offtimes set with: ", iter_pos)
+        this.offtimes.push(iter_pos)
         }
     },
 
@@ -133,6 +132,11 @@ export const useVariablesStore = defineStore('variables', {
   setDarkMode(value) {
     this.darkMode = value
     console.log("darkmode triggered in variables.js", value)
+  },
+
+  setOfftimes(value) {
+    this.offtimes = value
+    console.log('offtimes set with', value)
   }
 
 

@@ -46,7 +46,8 @@
               the most or least profitable hours respectively
             </p>
             <p>
-              <b>Normalization:</b> instead of looking at the absolute numbers in euros, we are
+              <b>Simple:</b> Looks at 
+              <b>Normalized:</b> instead of looking at the absolute numbers in euros, we are
               looking at the trend line; "what % of total GMV was generated at 3pm". This percentage
               is then multiplied by the GMV total during the outtage day.
             </p>
@@ -96,8 +97,10 @@ const accumulatedCalculations = computed(() => {
   let totalGmvLoss = 0,
     totalRangeTo = 0,
     totalRangeFrom = 0
-  for (let i = 0; i < processedData.hours.length; i++) {
-    if (processedData.hours[i] >= offtime && processedData.hours[i] <= ontime) {
+    for (let i = 0; i < processedData.hours.length; i++) {
+      console.log('Offtimes type:', typeof variablesStore.offtimes); // Check the type of offtimes
+console.log('Offtimes value:', variablesStore.offtimes); // Log the actual value
+    if (variablesStore.offtimes.includes(processedData.hours[i])) { // Check if the current hour is in offtimes
        if (variablesStore.model === 'normalized') {
       totalGmvLoss -= processedData.avg_norm_loss[i]
       totalRangeTo -= processedData.max_norm_loss[i]

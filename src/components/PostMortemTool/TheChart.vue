@@ -1,20 +1,20 @@
 <template>
     <div>
         <div class="slider-container">
-            <TheSlider class="slider" v-if="isDataLoaded"></TheSlider>
         </div>
-        <v-chart class="chart" v-if="isDataLoaded" :option="chartOption" @legendselectchanged="timeframeToggle($event)"></v-chart>
+        <v-chart class="chart" v-if="isDataLoaded" :option="chartOption"  @click="onBarClick"></v-chart>
     </div>
 </template>
 
 <script setup>
-import TheSlider from "../PostMortemTool/TheSlider.vue"
 import { ref, resolveDirective, watch, provide, computed } from 'vue';
 import { useVariablesStore } from '@/stores/PostMortem/variables'; 
 import ECharts, { THEME_KEY } from 'vue-echarts';
 import 'echarts';
 
 const variablesStore = useVariablesStore();
+const selectedBars = ref([]);
+const offtimes = ref([...variablesStore.offtimes]);
 
 // const theme = computed(() => variablesStore.darkMode ? 'dark' : 'light');
 
@@ -38,6 +38,27 @@ function timeframeToggle(params) {
     }
 }
 
+function refreshChart() {
+    chartOption.value = { ...chartOption.value };
+}
+
+function onBarClick(params) {
+    console.log('click went through')
+    if (params.seriesName === 'Actual GMV') {
+        const index = params.dataIndex;
+        const isSelectedIndex = selectedBars.value.indexOf(index);
+        if (isSelectedIndex > -1) {
+            selectedBars.value.splice(isSelectedIndex, 1); // Deselect
+        } else {
+            selectedBars.value.push(index); // Select
+        }
+        console.log('refreshed chart with', selectedBars.value);
+        variablesStore.setOfftimes(selectedBars.value);
+        refreshChart();
+    }
+}
+
+
 
 
 function mapNormalizedToReal(index) {
@@ -57,12 +78,12 @@ const chartOption = ref({
     xAxis: {
     type: 'value',
     interval: 1,
-    max: 23.5,
-    min: 0,
+    max: 24,
+    min: -1,
     axisLabel: {
         formatter: function (value) {
           
-            return value < 10 ? `${value}-${value + 1}:00` : `${value}-${value + 1}:00`
+            return value > -1 && value < 24 ? `${value}-${value + 1}:00` : `` 
         }
     },
     splitLine: {
@@ -118,7 +139,7 @@ yAxis: {
 
 
     legend: {
-        data: ['Average (Expected) GMV', 'Min', 'Max', 'Actual GMV', 'Affected Timeframe'], 
+        data: ['Average (Expected) GMV', 'Min', 'Max', 'Actual GMV'], 
         orient: 'horizontal',
         bottom: 10, 
         left: 'center' 
@@ -202,60 +223,18 @@ yAxis: {
                 width: 3.5,
             },
             itemStyle: {
-                color: 'rgba(237, 150, 50, 0.5)',
+                color: (params) => {
+            return selectedBars.value.includes(params.dataIndex) ? 'rgba(245, 50, 20, 0.75)' : 'rgba(237, 150, 50, 0.5)';
+        }
     
             }
         },
-        {
-      name: 'Affected Timeframe',
-      type: 'line',
-      markLine: {
-                silent: true,
-                symbol: ['none', 'none'],
-                data: [],
-                lineStyle: {
-                 
-                    width: 1.5
-                },
-                label: {
-        show: false 
-    }
-            },
-      markArea: {
-        silent: true,
-        itemStyle: {
-                   
-                },
-        data: []  
-      },
-      tooltip: {
-        show: false
-      },
-      itemStyle: {
-                color: 'green',
-                opacity: 1,
-            },
-    }
+      
   ],
 });
 
 const isDataLoaded = ref(false);
 
-
-function updateMarkLine() {
-  if (variablesStore.ontime !== undefined && variablesStore.offtime !== undefined) {
-    chartOption.value.series[4].markLine.data = [
-      { xAxis: variablesStore.ontime },
-      { xAxis: variablesStore.offtime }
-    ];
-    chartOption.value.series[4].markArea.data = [
-      [
-        { xAxis: variablesStore.ontime },
-        { xAxis: variablesStore.offtime }
-      ]
-    ];
-  }
-}
 
 watch(() => variablesStore.processedData, (newData) => {
     if (newData) {
@@ -265,7 +244,6 @@ watch(() => variablesStore.processedData, (newData) => {
         chartOption.value.series[1].data = newData.min_norm_gmv ? newData.min_norm_gmv.map((value, index) => [index, value]) : [];
         chartOption.value.series[2].data = newData.max_norm_gmv ? newData.max_norm_gmv.map((value, index) => [index, value]) : [];
         chartOption.value.series[3].data = newData.normalizedActualGMV ? newData.normalizedActualGMV.map((value, index) => [index, value]) : [];
-        updateMarkLine(); 
         }
         else if (variablesStore.model === 'simple') 
         {
@@ -280,27 +258,6 @@ watch(() => variablesStore.processedData, (newData) => {
         console.log("updating is loaded value", isDataLoaded.value)
     }
 }, { immediate: true, deep: true });
-
-
-
-watch(() => [variablesStore.ontime, variablesStore.offtime], updateMarkLine, { immediate: true, deep: true });
-
-function updateColorStyles() {
-    const markColor = variablesStore.isNegative ? 'rgba(200, 0, 0, 0.4)' : 'rgba(0, 150, 0, 0.8)';
-    const areaColor = variablesStore.isNegative ? 'rgba(150, 0, 0, 0.05)' : 'rgba(0, 150, 0, 0.05)';
-
-    // update markLine and markArea styles
-    chartOption.value.series[4].markLine.lineStyle.color = markColor;
-    chartOption.value.series[4].markArea.itemStyle.color = areaColor;
-}
-
-    watch(() => variablesStore.isNegative, (newVal, oldVal) => {
-    if (newVal !== oldVal) {
-        updateColorStyles();
-    }
-}, { immediate: true });
-
-updateColorStyles();
 
 
 
