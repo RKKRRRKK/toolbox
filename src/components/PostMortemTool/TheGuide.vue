@@ -4,7 +4,8 @@
 <p>1. Select the date of red flag and choose platform</p>
 <p>2. Generate and Copy the SQL using "GetSQL" </p>
 <p>3. Run the SQL in BigQuery and save result as CSV (local file) </p>
-<P>4. Choose and Upload the saved CSV</P>
+<p>4. Choose and Upload the saved CSV</p>
+<p>5. Click the bar(s) that contain the timeframe of the event</p>
 </div>
 </template>
 

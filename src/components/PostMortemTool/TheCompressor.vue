@@ -51,8 +51,7 @@
 
       await store.waitForProcessedData();
 
-      store.offtime = decompressedData.offtime;
-      store.ontime = decompressedData.ontime;
+      store.setOfftimes(decompressedData.offtimes);
       
     } catch (error) {
       console.error("Error decoding or decompressing URL data:", error);
@@ -66,8 +65,7 @@ const compressAndGenerateAndCopyURL = async () => {
     const dataToCompress = {
       data: store.data,
       start: store.start,
-      offtime: store.offtime,
-      ontime: store.ontime,
+      offtimes: store.offtimes,
       model: store.model,
     };
     const json = JSON.stringify(dataToCompress);

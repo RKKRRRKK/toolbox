@@ -1,7 +1,5 @@
 <template>
     <div>
-        <div class="slider-container">
-        </div>
         <v-chart class="chart" v-if="isDataLoaded" :option="chartOption"  @click="onBarClick"></v-chart>
     </div>
 </template>
@@ -13,7 +11,7 @@ import ECharts, { THEME_KEY } from 'vue-echarts';
 import 'echarts';
 
 const variablesStore = useVariablesStore();
-const selectedBars = ref([]);
+const selectedBars = ref([...variablesStore.offtimes]);
 const offtimes = ref([...variablesStore.offtimes]);
 
 // const theme = computed(() => variablesStore.darkMode ? 'dark' : 'light');
@@ -44,6 +42,8 @@ function refreshChart() {
 
 function onBarClick(params) {
     console.log('click went through')
+    console.log("params.dataIndex", params.dataIndex);
+    console.log("selectedBars", selectedBars.value);
     if (params.seriesName === 'Actual GMV') {
         const index = params.dataIndex;
         const isSelectedIndex = selectedBars.value.indexOf(index);
@@ -58,7 +58,17 @@ function onBarClick(params) {
     }
 }
 
-
+watch(
+    () => variablesStore.offtimes,
+    () => {
+           selectedBars.value = variablesStore.offtimes
+           refreshChart()
+           console.log("offtimes: ",variablesStore.offtimes)
+           console.log("selectedBars: ", selectedBars)
+        
+    },
+    { immediate: false, deep: true }
+);
 
 
 function mapNormalizedToReal(index) {
@@ -83,16 +93,16 @@ const chartOption = ref({
     axisLabel: {
         formatter: function (value) {
           
-            return value > -1 && value < 24 ? `${value}-${value + 1}:00` : `` 
+            return value > -1 && value < 24 ? `${value}:00` : `` 
         }
     },
-    splitLine: {
-            show: true,
-            lineStyle: {
-                color: '#ccc', 
-                type: 'dashed' 
-            }
-        }
+    // splitLine: {
+    //         show: false,
+    //         lineStyle: {
+    //             color: '#ccc', 
+    //             type: 'dashed' 
+    //         }
+    //     }
         
 },
 yAxis: {
@@ -139,7 +149,7 @@ yAxis: {
 
 
     legend: {
-        data: ['Average (Expected) GMV', 'Min', 'Max', 'Actual GMV'], 
+        data: ['Actual GMV','Average (Expected) GMV', 'Min', 'Max'], 
         orient: 'horizontal',
         bottom: 10, 
         left: 'center' 
@@ -153,7 +163,7 @@ yAxis: {
             fontSize: 20,
         },
         padding: [
-    0,  // up
+    25,  // up
     0, // right
     0,  // down
     200, // left
@@ -166,6 +176,7 @@ yAxis: {
     series: [
         { 
             name: 'Average (Expected) GMV', 
+            color: 'rgba(237, 200, 100, 0.08)',
             data: [], 
             type: 'bar',
             stack: 'x',
@@ -175,8 +186,13 @@ yAxis: {
                 opacity: 1,
             },
             itemStyle: {
-                color: '#F0F0F0',
+                color: (params) => {
+            return selectedBars.value.includes(params.dataIndex) ? 'rgba(245, 50, 20, 0.08)' : 'rgba(237, 200, 100, 0.08)';
+        },
                 opacity: 1,
+                borderWidth: 2.2,
+                borderColor: 'rgba(100, 100, 100, 0.4)',
+                borderType: 'solid',
             },
             showSymbol: false
         },
@@ -185,34 +201,34 @@ yAxis: {
             data: [], 
             type: 'line',
             symbol: 'rect',
-            symbolSize: [20, 5],
+            symbolSize: [25, 2.5], // Fixed size
             lineStyle: {
                 width: 0,
             },
             itemStyle: {
-                color: 'gray',
-                opacity: 0.35,
+                color: 'rgba(100, 100, 100, 0.25)'
             },
-            showSymbol: true
+            showSymbol: true,
+            hoverAnimation: false,
         },
         { 
             name: 'Max', 
             data: [], 
             type: 'line',
             symbol: 'rect',
-            symbolSize: [20, 5],
+            symbolSize: [25, 2.5], // Fixed size
             lineStyle: {
-                width:  0,
+                width: 0,
             },
             itemStyle: {
-                color: 'gray',
-                opacity: 0.35,
+                color: 'rgba(100, 100, 100, 0.25)'
             },
-            
-            showSymbol: true
+            showSymbol: true,
+            hoverAnimation: false,
         },
         { 
-            name: 'Actual GMV', 
+            name: 'Actual GMV',
+            color: 'rgba(237, 150, 50, 0.5)',
             data: [], 
             type: 'bar',
             symbolSize: 10,
@@ -224,7 +240,7 @@ yAxis: {
             },
             itemStyle: {
                 color: (params) => {
-            return selectedBars.value.includes(params.dataIndex) ? 'rgba(245, 50, 20, 0.75)' : 'rgba(237, 150, 50, 0.5)';
+            return selectedBars.value.includes(params.dataIndex) ? 'rgba(245, 50, 20, 0.55)' : 'rgba(237, 150, 50, 0.5)';
         }
     
             }
@@ -272,17 +288,6 @@ watch(() => variablesStore.processedData, (newData) => {
     min-height: 20rem;
 }
 
-.slider-container {
-    display: flex;
-    justify-content: center;
-    padding-left: 4rem;  
-}
-
-
-.slider {
-    width: 100%; 
-    transform: translateY(MAX(0rem, 5vh));
-}
 
 
 </style>

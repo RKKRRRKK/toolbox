@@ -198,7 +198,7 @@ const date = ref('')
 }
 
 .guide {
-    font-size: max(1.2vh, 0.8rem);
+    font-size: max(1.1vh, 0.75rem);
     width: 30rem;
     min-width: 25rem;
     scale: 1;

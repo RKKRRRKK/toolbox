@@ -22,26 +22,12 @@ const variablesStore = useVariablesStore()
 const estimationStore = useEstimationStore()
 const enrichedData = ref(variablesStore.enrichedData)
 
-let norm_use = 0
-let simple_use = 0
-function reset_use() {
-    norm_use = 0 
-    simple_use = 0
-    if (variablesStore.model === 'normalized' && norm_use === 0) 
-    {
-    variablesStore.setStartingPosition(enrichedData.value.avg_norm_loss);
-    norm_use++
-    }
 
-    else if (variablesStore.model === 'simple' && simple_use === 0)
-    {
-        variablesStore.setStartingPosition(enrichedData.value.avg_flat_loss)
-        simple_use++
-    }
-
-    console.log("starting position set from reset_use()");
-    
-}
+//handle a case of no offtime in TheCalculation first... 
+// function reset_use() {
+//   variablesStore.offtimes = []
+                          
+// }
 const model = ref(variablesStore.model)
 
 function setModel() {
@@ -49,26 +35,13 @@ function setModel() {
     console.log("model set", model.value)
     console.log("data", variablesStore.data)
     console.log("summedGMV", variablesStore.summedGMV)
-    reset_use()
+    // reset_use()
 }
 
 
 
-// Watch the summedGMV property
 
 
-
-watch(
-    [() => variablesStore.ontime, () => variablesStore.offtime],
-    (newValues, oldValues) => {
-        const hasChange = newValues.some((newValue, index) => newValue !== oldValues[index]);
-        
-        if (hasChange) {
-            estimationStore.updateEstimations(variablesStore.offtime, variablesStore.ontime);
-        }
-    },
-    { immediate: false, deep: true }
-);
 
 watch(
     [() => variablesStore.summedGMV, () => variablesStore.model, () => estimationStore.result],
@@ -237,20 +210,6 @@ max_norm_gmv_converted,
     function setData(enrichedData) {
     variablesStore.setProcessedData(enrichedData);
     console.log("enrichedData set", enrichedData);
-
-    if (variablesStore.model === 'normalized' && norm_use === 0) 
-    {
-    variablesStore.setStartingPosition(enrichedData.avg_norm_loss);
-    norm_use++
-    }
-
-    else if (variablesStore.model === 'simple' && simple_use === 0)
-    {
-        variablesStore.setStartingPosition(enrichedData.avg_flat_loss)
-        simple_use++
-    }
-
-    console.log("starting position set", enrichedData);
 }
 
 

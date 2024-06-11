@@ -37,19 +37,18 @@
         <transition name="unfold">
           <div v-if="showDetails" class="detail-text">
             <p>
-              The calculation examines the normalized average hourly GMV from corresponding weekdays
+              The calculation examines the average hourly GMV from corresponding weekdays
               over the past 28 days, excluding holidays. The loss/gain is calculated by deducting
-              that average in the selected hours, from the actual generated GMV.
+              that average (or expected) value in the selected hours, from the actual generated GMV.
             </p>
             <p>
               The calculation of range (max, min) substitutes deducting the average to deducting by
               the most or least profitable hours respectively
             </p>
             <p>
-              <b>Simple:</b> Looks at 
-              <b>Normalized:</b> instead of looking at the absolute numbers in euros, we are
-              looking at the trend line; "what % of total GMV was generated at 3pm". This percentage
-              is then multiplied by the GMV total during the outtage day.
+              <b>Simple:</b> Compares the absolute differences in euros.
+              <p></p>
+              <b>Normalized:</b> Compares proportions: "what % of total GMV was supposed to be generated at 15:00?". Usually yields a more narow min-max spread.
             </p>
           </div>
         </transition>
@@ -98,8 +97,6 @@ const accumulatedCalculations = computed(() => {
     totalRangeTo = 0,
     totalRangeFrom = 0
     for (let i = 0; i < processedData.hours.length; i++) {
-      console.log('Offtimes type:', typeof variablesStore.offtimes); // Check the type of offtimes
-console.log('Offtimes value:', variablesStore.offtimes); // Log the actual value
     if (variablesStore.offtimes.includes(processedData.hours[i])) { // Check if the current hour is in offtimes
        if (variablesStore.model === 'normalized') {
       totalGmvLoss -= processedData.avg_norm_loss[i]
@@ -137,6 +134,7 @@ function toggleDetails() {
 </script>
 
 <style>
+
 .result-bad {
   font-size: MAX(0.6vw, 0.6rem);
   background-color: rgb(255, 253, 253);

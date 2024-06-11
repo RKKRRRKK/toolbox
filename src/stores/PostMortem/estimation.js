@@ -14,18 +14,29 @@ export const useEstimationStore = defineStore('estimationStore', {
   actions: {
     updateEstimations(offtimes) {
       const actualOutsideRange = this.actualgmv.filter((_, index) => !offtimes.includes(index));
+    //   console.log("actualOutsideRange: ", actualOutsideRange)
       const predictionOutsideRange = this.averagegmv.filter((_, index) => !offtimes.includes(index));
       const totalPrediction = this.averagegmv.reduce((acc, curr) => acc + curr, 0);
+    //   console.log("totalPrediction: ", totalPrediction)
       const actualOutsideRangeTotal = actualOutsideRange.reduce((acc, curr) => acc + curr, 0);
+    //   console.log("actualOutsideRangeTotal: ", actualOutsideRangeTotal)
       
       const relativeValuesPrediction = this.averagegmv.map(gmv => gmv / totalPrediction);
+    //   console.log("relativeValuesPrediction: ", relativeValuesPrediction)
       const relativePredictedInsideRange = offtimes.map(index => relativeValuesPrediction[index]);
+    //   console.log("relativePredictedInsideRange: ", relativePredictedInsideRange)
       const actualInsideRange = offtimes.map(index => this.actualgmv[index]);
+    //   console.log("actualInsideRange: ", actualInsideRange)
       const actualInsideRangeSum = actualInsideRange.reduce((acc, curr) => acc + curr, 0);
+    //   console.log("actualInsideRangeSum OKAY: ", actualInsideRangeSum)
 
       const relativePredictedInsideRangeTotal = relativePredictedInsideRange.reduce((acc, curr) => acc + curr, 0);
+    //   console.log("relativePredictedInsideRangeTotal: ", relativePredictedInsideRangeTotal)
+      
       const predictedTotalMinusInsideRelative = 1 - relativePredictedInsideRangeTotal;
-      const actualTotal = (actualOutsideRangeTotal / predictedTotalMinusInsideRelative) * 100;
+    //   console.log("predictedTotalMinusInsideRelative: ", predictedTotalMinusInsideRelative)
+      const actualTotal = (actualOutsideRangeTotal / predictedTotalMinusInsideRelative);  //deleted * 100 from here ... why was it here?
+    //   console.log("actualTotal: ", actualTotal)
 
       const outageActualPredicted = relativePredictedInsideRange.map(relative => actualTotal * relative);
       const outageActualPredictedSum = outageActualPredicted.reduce((acc, curr) => acc + curr, 0);

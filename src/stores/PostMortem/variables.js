@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
+import { useEstimationStore } from '@/stores/PostMortem/estimation'
 
 export const useVariablesStore = defineStore('variables', {
   state: () => ({
@@ -22,6 +23,7 @@ export const useVariablesStore = defineStore('variables', {
     offtimes: [],
     
   }),
+
   actions: {
     setstarttime(value) {
       this.start = value
@@ -92,23 +94,6 @@ export const useVariablesStore = defineStore('variables', {
       this.processedData = value
     },
 
-    setStartingPosition(loss) {
-        // console.log("loss is", loss)
-        let iter_loss = 0
-        let iter_pos = 0
-        for (let i = 0; i < loss.length -1; i++) {
-            let current_loss = loss[i]
-            if (current_loss > iter_loss) {
-                iter_loss = current_loss
-                iter_pos = i
-            }
-        }
-        if (this.offtimes !== iter_pos) {
-        console.log("offtimes set with: ", iter_pos)
-        this.offtimes.push(iter_pos)
-        }
-    },
-
     setExtraGmv(value) {
       this.extraGMV = value
     },
@@ -137,6 +122,8 @@ export const useVariablesStore = defineStore('variables', {
   setOfftimes(value) {
     this.offtimes = value
     console.log('offtimes set with', value)
+    const estimationStore = useEstimationStore();
+    estimationStore.updateEstimations(value);
   }
 
 

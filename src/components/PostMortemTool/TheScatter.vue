@@ -259,7 +259,5 @@ watch(
 </script>
 
 <style>
-.scatter-container {
-    padding-top: 2rem;
-}
+
 </style>
