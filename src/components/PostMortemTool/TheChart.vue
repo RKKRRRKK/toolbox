@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-chart class="chart" v-if="isDataLoaded" :option="chartOption"  @click="onBarClick"></v-chart>
+        <v-chart ref="chartRef" class="chart" v-if="isDataLoaded" :option="chartOption"  @click="onBarClick"></v-chart>
     </div>
 </template>
 

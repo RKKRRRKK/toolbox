@@ -213,10 +213,10 @@ const date = ref('')
     margin: 1rem;
 }
 
-@media (max-width: 1500px) {  /* Adjust 768px to your preferred breakpoint */
+@media (max-width: 1500px) {  
   .ho-basics, .guide, .inputs, .compressor, .chart, .scatter {
     transform: scale(0.9);
-    transform-origin: center; /* Adjust this to set the point around which the scaling occurs */
+    transform-origin: center; 
   }
   .horizontal-container {
     gap: 1rem;

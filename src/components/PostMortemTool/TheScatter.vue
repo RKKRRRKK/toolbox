@@ -1,6 +1,6 @@
 <template>
     <div class="scatter-container">
-        <v-chart v-if="isDataLoaded" :option="chartOption2"></v-chart>
+        <v-chart ref="chartRef" v-if="isDataLoaded" :option="chartOption2"></v-chart>
     </div>
 </template>
 
@@ -18,7 +18,7 @@ function numberWithCommas(x) {
 const chartRef = ref(null);
 
 const handleResize = () => {
-    // Update the legend's bottom value on resize
+ 
     chartOption2.value.legend.bottom = calculateLegendBottom();
     if (chartRef.value) {
         chartRef.value.resize();
@@ -37,8 +37,7 @@ onUnmounted(() => {
 
 
 const calculateLegendBottom = () => {
-    // You can customize this logic based on your specific needs
-    return window.innerWidth < 1500 ? -5 : 70; // Example: more bottom space on smaller screens
+    return window.innerWidth < 1500 ? -5 : 70; 
 };
 
 const variablesStore = useVariablesStore();
