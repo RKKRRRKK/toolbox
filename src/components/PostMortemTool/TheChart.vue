@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import { ref, resolveDirective, watch, provide, computed } from 'vue';
+import { ref, resolveDirective, watch, provide, computed, onMounted, onUnmounted } from 'vue';
 import { useVariablesStore } from '@/stores/PostMortem/variables'; 
 import ECharts, { THEME_KEY } from 'vue-echarts';
 import 'echarts';
@@ -13,6 +13,32 @@ import 'echarts';
 const variablesStore = useVariablesStore();
 const selectedBars = ref([...variablesStore.offtimes]);
 const offtimes = ref([...variablesStore.offtimes]);
+
+
+const chartRef = ref(null);
+
+const handleResize = () => {
+    // Update the legend's bottom value on resize
+    chartOption.value.legend.bottom = calculateLegendBottom();
+    if (chartRef.value) {
+        chartRef.value.resize();
+    }
+};
+
+onMounted(() => {
+    window.addEventListener('resize', handleResize);
+    handleResize();
+});
+
+onUnmounted(() => {
+    window.removeEventListener('resize', handleResize);
+});
+
+
+
+const calculateLegendBottom = () => {
+    return window.innerWidth < 1500 ? 10 : 70; 
+};
 
 // const theme = computed(() => variablesStore.darkMode ? 'dark' : 'light');
 
@@ -44,7 +70,7 @@ function onBarClick(params) {
     console.log('click went through')
     console.log("params.dataIndex", params.dataIndex);
     console.log("selectedBars", selectedBars.value);
-    if (params.seriesName === 'Actual GMV') {
+    if (params.seriesName === 'Actual GMV' || params.seriesName === 'Average (Expected) GMV') {
         const index = params.dataIndex;
         const isSelectedIndex = selectedBars.value.indexOf(index);
         if (isSelectedIndex > -1) {
@@ -151,7 +177,7 @@ yAxis: {
     legend: {
         data: ['Actual GMV','Average (Expected) GMV', 'Min', 'Max'], 
         orient: 'horizontal',
-        bottom: 10, 
+        bottom: calculateLegendBottom(), 
         left: 'center' 
         
     },
@@ -163,7 +189,7 @@ yAxis: {
             fontSize: 20,
         },
         padding: [
-    25,  // up
+    0,  // up
     0, // right
     0,  // down
     200, // left

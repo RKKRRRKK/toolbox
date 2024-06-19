@@ -26,9 +26,10 @@
         </div>
         <TheResult class="result"></TheResult>
         <!-- <div class="chart">chart</div> -->
+        <div class="padding"></div>
         <div class="charts">
-            <TheChart></TheChart>
-            <TheScatter></TheScatter>
+            <TheChart class="chart"></TheChart>
+            <TheScatter class="scatter"></TheScatter>
         </div>
     </div>
 </template>
@@ -116,10 +117,10 @@ const date = ref('')
     padding: 1rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
     border-radius: 0.5rem;
-    width: 12vw;
-    height: 12vh;
-    min-height: 8rem;
-    min-width: 11rem;
+    width: 9vw;
+    height: 9vh;
+    min-height: 7rem;
+    min-width: 14rem;
 
   
 }
@@ -146,15 +147,15 @@ const date = ref('')
 } */
 
 .result {
-    padding: 0.5rem;
+    padding: MAX(0.5%, 0.5rem);
     margin-left: 8rem;
     margin-bottom: 2rem;
     display: flex;
     position: absolute;
-    transform: translateY(MAX(28vh, 16.5rem));
+    transform: translateY(MAX(30vh, 17.5rem));
     z-index: 999;
-    width: 16%;
-    min-width: 15rem;
+    width: 12%;
+    min-width: 13rem;
     height: auto;
 }
 
@@ -162,6 +163,7 @@ const date = ref('')
     width: 100%;
     display: flex;
     height: 100%;
+    padding-top: 4rem;
     /* padding-top: 5rem;
     padding-bottom: 10rem; */
 }
@@ -208,5 +210,29 @@ const date = ref('')
 .title-wrap {
     display: flex;
     margin: 1rem;
+}
+
+@media (max-width: 1500px) {  /* Adjust 768px to your preferred breakpoint */
+  .ho-basics, .guide, .inputs, .compressor, .chart, .scatter {
+    transform: scale(0.9);
+    transform-origin: center; /* Adjust this to set the point around which the scaling occurs */
+  }
+  .horizontal-container {
+    gap: 1rem;
+  }
+
+  .container {
+    transform: scaleY(0.95);
+    margin-top: -2rem;
+    margin-bottom: 0vh;
+  }
+
+  .charts {
+    padding-top: 0rem;
+  }
+
+  .inputs {
+    padding: 0.8rem;
+  }
 }
 </style>

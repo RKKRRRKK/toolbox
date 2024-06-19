@@ -48,7 +48,7 @@
             <p>
               <b>Simple:</b> Compares the absolute differences in euros.
               <p></p>
-              <b>Normalized:</b> Compares proportions: "what % of total GMV was supposed to be generated at 15:00?". Usually yields a more narow min-max spread.
+              <b>Normalized:</b> Compares proportions: "what % of total GMV was supposed to be generated at 15:00?". Usually yields a more narow min-max spread. Since this calculation relies on selection, the bars will change slightly as they are being clicked.
             </p>
           </div>
         </transition>
@@ -180,7 +180,7 @@ function toggleDetails() {
 .lines h3,
 .lines p {
   margin: 0;
-  padding: 0.2rem 0;
+  padding: 0.1rem 0;
   line-height: 1.2;
 }
 

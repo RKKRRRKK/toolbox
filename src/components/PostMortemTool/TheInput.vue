@@ -101,12 +101,13 @@ function assignData() {
 }
 
 .file-input {
-    padding: 0.5rem;
+    padding: 0.2rem;
+    padding-bottom: 1.5rem;
     border: 1px solid #ccc;
     border-radius: 0.2rem;
     margin-bottom: 0.5rem;
     width: 100%;
-    height: 6vh;
+    height: 2.1vh;
 }
 
 .upload-button {
@@ -120,7 +121,7 @@ function assignData() {
     letter-spacing: 1px;
     cursor: pointer;
      width: 100%;
-     height: 5vh;
+     height: MAX(3vh, 2rem);
 }
 
 .upload-button:hover {

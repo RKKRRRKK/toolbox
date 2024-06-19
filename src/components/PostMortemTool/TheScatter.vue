@@ -5,14 +5,41 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted, onUnmounted} from 'vue';
 import { useVariablesStore } from '@/stores/PostMortem/variables'; 
 import ECharts from 'vue-echarts';
 import 'echarts';
 
+
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
+
+const chartRef = ref(null);
+
+const handleResize = () => {
+    // Update the legend's bottom value on resize
+    chartOption2.value.legend.bottom = calculateLegendBottom();
+    if (chartRef.value) {
+        chartRef.value.resize();
+    }
+};
+
+onMounted(() => {
+    window.addEventListener('resize', handleResize);
+    handleResize();
+});
+
+onUnmounted(() => {
+    window.removeEventListener('resize', handleResize);
+});
+
+
+
+const calculateLegendBottom = () => {
+    // You can customize this logic based on your specific needs
+    return window.innerWidth < 1500 ? -5 : 70; // Example: more bottom space on smaller screens
+};
 
 const variablesStore = useVariablesStore();
 const chartOption2 = ref({
@@ -65,7 +92,7 @@ const chartOption2 = ref({
   legend: {
         data: ['Comparison Days', 'Outtage Day', 'Outtage Day + Loss'], 
         orient: 'horizontal',
-        bottom: 10, 
+        bottom: calculateLegendBottom(), 
         left: 'center' 
         
     },
