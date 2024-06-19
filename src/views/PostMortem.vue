@@ -71,6 +71,7 @@ const date = ref('')
 <style scoped>
 
 .container {
+    margin-top: 3rem;
     width: 100%;
     height: 100%;
     display: flex;
@@ -223,7 +224,7 @@ const date = ref('')
 
   .container {
     transform: scaleY(0.95);
-    margin-top: -2rem;
+    margin-top: 0rem;
     margin-bottom: 0vh;
   }
 

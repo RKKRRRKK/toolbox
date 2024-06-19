@@ -1,7 +1,7 @@
 <template>
     <header>
       <!-- Navigation Links -->
-      <nav>
+      <nav v-if="!isPostmortem">
         <router-link to="/texttool">TextTool</router-link>
         <router-link to="/colortool">ColorTool</router-link>
         <router-link to="/postmortem">PostMortem</router-link>
@@ -12,6 +12,12 @@
 </template>
 
 <script setup>
+import { useRoute } from 'vue-router';
+import {computed } from 'vue';
+
+const route = useRoute();
+const isPostmortem = computed(() => route.path === '/postmortem');
+
 </script>
 
 <style>
