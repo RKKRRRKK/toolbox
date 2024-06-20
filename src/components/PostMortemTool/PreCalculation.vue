@@ -154,12 +154,18 @@ function calculateData() {
 
 
         // normalized losses  the expected and actual gmv normalization difference multiplied by the gmv that hour giving us "x"
+        if (gmv == 0) {
+            avg_norm_loss.push(average * gmv_part[1])
+            max_norm_loss.push(maximum * gmv_part[1])
+            min_norm_loss.push(minimum * gmv_part[1])
+        }
+        else {
         avg_norm_loss.push((average / normalizedGMV * gmv) - gmv);
         // console.log("average", average, "/", "normalizedGMV", normalizedGMV, "* gmv", gmv, ")", "- gmv", gmv )
         // console.log( "===", (average / normalizedGMV * gmv) - gmv)
         max_norm_loss.push((maximum / normalizedGMV * gmv) - gmv);
         min_norm_loss.push((minimum / normalizedGMV * gmv) - gmv);
-
+        }
 
         //flat losses 
         avg_flat_loss.push(average_flat - gmv)

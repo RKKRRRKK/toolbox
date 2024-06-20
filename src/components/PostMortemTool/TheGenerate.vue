@@ -17,8 +17,24 @@
   const { start, end, storefront, platform } = variablesStore
 
   const sql = `
+  WITH CTE0 AS (
+    SELECT
+        COUNT(DISTINCT EXTRACT(HOUR FROM o.order_timestamp)) AS hour,
+        DATE(o.order_timestamp) AS date,
+        count(*)
+    
+FROM \`hm_live.orders\` o
+    WHERE
+        o.code_storefront = 'DE'
+        AND DATE(o.order_timestamp) BETWEEN DATE_SUB('${start}', INTERVAL 28 DAY) AND DATE_SUB('${start}', INTERVAL 1 DAY)
+    GROUP BY
+     date
+    HAVING hour > 23
+),
 
-  WITH CTE1 AS (    
+
+
+ CTE1 AS (    
     SELECT
         SUM(o.total_price / 100) AS GMV,
         EXTRACT(HOUR FROM o.order_timestamp) AS hour,
@@ -31,6 +47,7 @@
     LEFT JOIN
         \`prod-data-engineering-real.hm_live.buy_event\` AS app
         ON app.id_pre_checkout = c.id_pre_checkout
+    LEFT JOIN CTE0 ON CTE0.date = DATE(o.order_timestamp) 
       
      
     WHERE
@@ -38,8 +55,15 @@
         AND DATE(o.order_timestamp) BETWEEN DATE_SUB('${start}', INTERVAL 28 DAY) AND DATE_SUB('${start}', INTERVAL 1 DAY)
         AND IFNULL(app.source, 'web')  in (${platform})
         AND DATE(o.order_timestamp) NOT IN (SELECT date_holiday FROM  \`prod-data-engineering-real.business_intelligence.national_holidays_de\`)
+        AND CTE0.date IS NOT NULL
     GROUP BY
         hour, date, day_of_week_number
+),
+
+all_hours AS (
+
+    SELECT h AS hour
+    FROM UNNEST(GENERATE_ARRAY(0, 23)) AS h
 ),
 
 total_off_gmv AS (
@@ -87,7 +111,7 @@ FROM (
         hour, day_of_week_number
 ),
 
-CTE3  AS (
+CTE29  AS (
     SELECT
         SUM(o.total_price / 100) AS actual_GMV,
         EXTRACT(HOUR FROM o.order_timestamp) AS hour,
@@ -102,10 +126,34 @@ CTE3  AS (
         ON app.id_pre_checkout = c.id_pre_checkout
     WHERE
         o.code_storefront = 'DE'
-        AND DATE(o.order_timestamp) = '${start}'
-    AND IFNULL(app.source, 'web') in (${platform})
+        AND DATE(o.order_timestamp) =  '${start}'
+    AND IFNULL(app.source, 'web') in  (${platform})
     GROUP BY
         hour, date, day_of_week_number
+),
+
+defaults AS (
+    SELECT
+        MAX(date) AS default_date,
+        MAX(day_of_week_number) AS default_down
+    FROM CTE29
+),
+
+
+
+
+
+CTE3 AS (SELECT
+    COALESCE(CTE29.actual_GMV, 0) AS actual_GMV,
+    ah.hour,
+    COALESCE(CTE29.date, (select default_date FROM defaults)) AS date,  
+    COALESCE(CTE29.day_of_week_number, (select default_down FROM defaults)) AS day_of_week_number  
+FROM
+    all_hours ah
+LEFT JOIN
+    CTE29 ON CTE29.hour = ah.hour
+ORDER BY
+    ah.hour
 ),
 
 total_on_gmv AS (
@@ -155,7 +203,6 @@ SELECT
 FROM CTE5
 ORDER BY hours ASC;
   
-
   `;
 
 
