@@ -24,10 +24,11 @@ const enrichedData = ref(variablesStore.enrichedData)
 
 
 //handle a case of no offtime in TheCalculation first... 
-// function reset_use() {
-//   variablesStore.offtimes = []
+function reset_use() {
+    console.log("reset use")
+  variablesStore.setOfftimes([])
                           
-// }
+}
 const model = ref(variablesStore.model)
 
 function setModel() {
