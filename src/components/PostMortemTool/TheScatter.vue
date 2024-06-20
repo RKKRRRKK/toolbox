@@ -20,6 +20,11 @@ const chartRef = ref(null);
 const handleResize = () => {
  
     chartOption2.value.legend.bottom = calculateLegendBottom();
+    chartOption2.value.title.padding = calculatePaddingTitle();
+    chartOption2.value.title.textStyle.fontSize = calculateTitleFontSize();
+    chartOption2.value.series[0].symbolSize = calculateCircleSize();
+    chartOption2.value.series[1].symbolSize = calculateCircleSize();
+    chartOption2.value.series[2].symbolSize = calculateCircleSize();
     if (chartRef.value) {
         chartRef.value.resize();
     }
@@ -40,6 +45,21 @@ const calculateLegendBottom = () => {
     return window.innerWidth < 1500 ? -5 : 70; 
 };
 
+const calculatePaddingTitle = () => {
+    return window.innerWidth < 1500 ? [0,0,0,0] : [30,0,0,65];
+};
+
+const calculateTitleFontSize = () => {
+  return window.innerWidth < 1500 ? 15 : 20
+};
+
+
+const calculateCircleSize = () => {
+    return window.innerWidth < 1500 ? 30 : 60; 
+};
+
+
+
 const variablesStore = useVariablesStore();
 const chartOption2 = ref({
   tooltip: {
@@ -58,7 +78,7 @@ const chartOption2 = ref({
   xAxis: {
     type: 'value',
     splitLine: {
-            show: true,
+            show: false,
             lineStyle: {
                 color: '#ccc', 
                 type: 'dashed' 
@@ -78,7 +98,7 @@ const chartOption2 = ref({
     var roundtomil = Math.floor(value.min / 500000) * 500000;
     return roundtomil
 },
-    interval: 500000,
+    interval: 250000,
     splitLine: {
             show: true,
             lineStyle: {
@@ -100,15 +120,10 @@ const chartOption2 = ref({
         text: 'Overview',
         textAlign: 'midlde',
         textStyle: {
-            fontSize: 20,
+            fontSize: calculateTitleFontSize(),
         },
 
-        padding: [
-    0,  // up
-    0, // right
-    0,  // down
-    65, // left
-],
+        padding: calculatePaddingTitle(),
 
     },
   series: [
@@ -116,7 +131,7 @@ const chartOption2 = ref({
       name: 'Comparison Days',
       data: [],
       type: 'scatter',
-      symbolSize: 40,
+      symbolSize: calculateCircleSize(),
 
       itemStyle: {
                 color: 'rgba(204, 204, 204, 0.8)',
@@ -152,7 +167,7 @@ const chartOption2 = ref({
   name: 'Outtage Day',
   data: [], 
   type: 'scatter',
-  symbolSize: 40,
+  symbolSize: calculateCircleSize(),
   itemStyle: {
     color: 'rgba(237, 150, 50, 0.8)',
   },
@@ -176,7 +191,7 @@ const chartOption2 = ref({
   name: 'Outtage Day + Loss',
   data: [], 
   type: 'scatter',
-  symbolSize: 40,
+  symbolSize: calculateCircleSize(),
   itemStyle: {
     color: 'rgba(237, 150, 50, 0.1)',
     borderColor: 'rgba(237, 150, 50, 0.8)',
@@ -257,6 +272,9 @@ watch(
             const currentDate = newStart ? newStart : 'Date Not Selected';
             console.log("start date", newStart);
             const currentGMV = Math.round(variablesStore.data.on_total_gmv[1]);
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const newDate = new Date(variablesStore.start);
+            const weekDay = days[newDate.getDay()];
 
             const index = summedGMV.length + 1;
             console.log(index);
@@ -270,6 +288,7 @@ watch(
                 chartOption2.value.series[0].data = seriesData;
                 chartOption2.value.series[1].data = [[index, currentGMV, currentDate]];
                 chartOption2.value.series[2].data = [[index, totalGMVPlusLoss, currentDate]];
+                chartOption2.value.title.text = variablesStore.start ? "Overview Past 4 " + weekDay + "s" : "Overview";
                 isDataLoaded.value = true;
                 console.log("updating isdataloaded value at TheScatter.vue", isDataLoaded);
                 chartOption2.value.xAxis.max = Math.max(...seriesData.map(item => item[0])) + 2;

@@ -48,15 +48,21 @@ import TheCompressor from "../components/PostMortemTool/TheCompressor.vue"
 import TheSlider from "../components/PostMortemTool/TheSlider.vue"
 import TheGuide from "../components/PostMortemTool/TheGuide.vue"
 import DarkMode from "../components/PostMortemTool/DarkMode.vue"
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
+import { useVariablesStore } from '@/stores/PostMortem/variables.js' 
+
+const variablesStore = useVariablesStore()
+
 
 const date = ref('')
-      
-      import { useVariablesStore } from '@/stores/PostMortem/variables.js' 
-      const variablesStore = useVariablesStore()
 
-      watch(() => variablesStore, (newData) => {
-        date.value = newData.start ? 'for ' + newData.start : ''
+
+    watch(() => variablesStore, (newData) => {
+    const newDate =  newData.start ? new Date(newData.start) : '';
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const weekDay = newData.start ?  days[newDate.getDay()] : '';
+
+        date.value = newData.start ? 'for ' + newData.start + " " + `(${weekDay})` : ''
 
       },
       { immediate: true, deep: true });

@@ -20,6 +20,10 @@ const chartRef = ref(null);
 const handleResize = () => {
     // Update the legend's bottom value on resize
     chartOption.value.legend.bottom = calculateLegendBottom();
+    chartOption.value.title.padding = calculatePaddingTitle();
+    chartOption.value.title.textStyle.fontSize = calculateTitleFontSize();
+    chartOption.value.series[1].symbolSize = calculateSymbolSize();
+    chartOption.value.series[2].symbolSize = calculateSymbolSize();
     if (chartRef.value) {
         chartRef.value.resize();
     }
@@ -39,6 +43,18 @@ onUnmounted(() => {
 const calculateLegendBottom = () => {
     return window.innerWidth < 1500 ? 10 : 70; 
 };
+
+const calculatePaddingTitle = () => {
+    return window.innerWidth < 1500 ? [0,0,0,200] : [30,0,0,200];
+}
+
+const calculateTitleFontSize = () => {
+  return window.innerWidth < 1500 ? 17 : 20
+};
+
+const calculateSymbolSize = () => {
+    return window.innerWidth < 1500 ? [12.5, 2] : [25, 2.5];
+ }
 
 // const theme = computed(() => variablesStore.darkMode ? 'dark' : 'light');
 
@@ -122,13 +138,13 @@ const chartOption = ref({
             return value > -1 && value < 24 ? `${value}:00` : `` 
         }
     },
-    // splitLine: {
-    //         show: false,
+    splitLine: {
+            show: false,
     //         lineStyle: {
     //             color: '#ccc', 
     //             type: 'dashed' 
     //         }
-    //     }
+        }
         
 },
 yAxis: {
@@ -186,14 +202,9 @@ yAxis: {
         text: 'Hourly Comparison',
         textAlign: 'middle',
         textStyle: {
-            fontSize: 20,
+            fontSize: calculateTitleFontSize(),
         },
-        padding: [
-    0,  // up
-    0, // right
-    0,  // down
-    200, // left
-]
+        padding: calculatePaddingTitle()
     },
 
     
@@ -217,7 +228,7 @@ yAxis: {
         },
                 opacity: 1,
                 borderWidth: 2.2,
-                borderColor: 'rgba(100, 100, 100, 0.4)',
+                borderColor: 'rgba(100, 100, 100, 0.2)',
                 borderType: 'solid',
             },
             showSymbol: false
@@ -227,7 +238,7 @@ yAxis: {
             data: [], 
             type: 'line',
             symbol: 'rect',
-            symbolSize: [25, 2.5], // Fixed size
+            symbolSize: calculateSymbolSize(),
             lineStyle: {
                 width: 0,
             },
@@ -242,7 +253,7 @@ yAxis: {
             data: [], 
             type: 'line',
             symbol: 'rect',
-            symbolSize: [25, 2.5], // Fixed size
+            symbolSize: calculateSymbolSize(),
             lineStyle: {
                 width: 0,
             },
@@ -265,11 +276,47 @@ yAxis: {
                 width: 3.5,
             },
             itemStyle: {
-                color: (params) => {
-            return selectedBars.value.includes(params.dataIndex) ? 'rgba(245, 50, 20, 0.55)' : 'rgba(237, 150, 50, 0.5)';
-        }
-    
+        color: (params) => {
+            if (selectedBars.value.includes(params.dataIndex)) {
+                // Gradient for selected bars
+                return {
+                    type: 'linear',
+                    x: 0,
+                    y: 0,
+                    x2: 1,
+                    y2: 0,
+                    colorStops: [
+                    {offset: 0, color: 'rgba(232,41,12,0.6)'}, // 0%
+                        {offset: 0.25, color: 'rgba(245,50,20,0.6)'}, // 18%
+                        {offset: 0.45, color: 'rgba(240,75,50,0.6)'}, // 40%
+                        {offset: 0.55, color: 'rgba(240,75,50,0.6)'}, // 60%
+                        {offset: 0.75, color: 'rgba(245,50,20,0.6)'}, // 83%
+                        {offset: 1, color: 'rgba(232,41,12,0.6)'} // 100%
+                    ],
+                    global: false
+                };
+            } else {
+                // Gradient for non-selected bars
+                return {
+                    type: 'linear',
+                    x: 0,
+                    y: 0,
+                    x2: 1,
+                    y2: 0,
+                    //'rgba(237, 150, 50, 0.5)'
+                    colorStops: [
+                        {offset: 0, color: 'rgba(232,140,12,0.6)'}, // 0%
+                        {offset: 0.23, color: 'rgba(237,150,50,0.6)'}, // 23%
+                        {offset: 0.47, color: 'rgba(240,175,55,0.6)'}, // 47%
+                        {offset: 0.57, color: 'rgba(240,175,55,0.6)'}, // 57%
+                        {offset: 0.79, color: 'rgba(237,150,50,0.6)'}, // 79%
+                        {offset: 1, color: 'rgba(232,140,12,0.6)'} // 100%
+                    ],
+                    global: false
+                };
             }
+        }
+    },
         },
       
   ],
