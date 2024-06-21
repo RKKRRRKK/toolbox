@@ -275,6 +275,7 @@ watch(
             const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
             const newDate = new Date(variablesStore.start);
             const weekDay = days[newDate.getDay()];
+            const n_days = variablesStore.data.days_accounted
 
             const index = summedGMV.length + 1;
             console.log(index);
@@ -288,7 +289,7 @@ watch(
                 chartOption2.value.series[0].data = seriesData;
                 chartOption2.value.series[1].data = [[index, currentGMV, currentDate]];
                 chartOption2.value.series[2].data = [[index, totalGMVPlusLoss, currentDate]];
-                chartOption2.value.title.text = variablesStore.start ? "Overview Past 4 " + weekDay + "s" : "Overview";
+                chartOption2.value.title.text = variablesStore.start ? `Overview Past ${n_days[1]} ` + weekDay + "s" : "Overview";
                 isDataLoaded.value = true;
                 console.log("updating isdataloaded value at TheScatter.vue", isDataLoaded);
                 chartOption2.value.xAxis.max = Math.max(...seriesData.map(item => item[0])) + 2;

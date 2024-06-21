@@ -15,7 +15,7 @@
           {{ numberWithCommas(Math.round(accumulatedCalculations.totalRangeTo)) }}€)
         </p>
         <p>
-          Based on <b>{{ numberDays }}</b> similar days
+          Based on past <b>{{ numberDays }}</b> {{ weekDay }}
         </p>
         <div>
         <PreCalculation></PreCalculation>
@@ -77,6 +77,16 @@ const numberDays = computed(() => {
     console.log('no day processedData')
   }
   return processedData.days_accounted[1]
+})
+
+const weekDay = computed(() => {
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  if (variablesStore.start) {
+    const newDate = new Date(variablesStore.start);
+    return `${days[newDate.getDay()]}'s`;
+  } else {
+    return 'days'; // Default value or handle as needed
+  }
 })
 
 const accumulatedCalculations = computed(() => {
