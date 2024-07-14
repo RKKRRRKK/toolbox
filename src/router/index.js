@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import TextTool from '../views/TextTool.vue'; 
 import ColorTool from '../views/ColorTool.vue'; 
 import PostMortem from '../views/PostMortem.vue';
+import TheDashboard from '../views/TheDashboard.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,7 +21,12 @@ const router = createRouter({
       path: '/postmortem',
       name: 'postmortem',
       component: PostMortem,
-    }
+    },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: TheDashboard, 
+    },
   ]
 })
 

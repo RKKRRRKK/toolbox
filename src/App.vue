@@ -6,6 +6,8 @@
         <router-link to="/colortool">ColorTool</router-link>
         <router-link to="/postmortem">PostMortem</router-link>
       </nav>
+      <TheMenu v-if="isPostmortem"></TheMenu>
+      
     </header>
     <!-- Router View -->
     <router-view></router-view>
@@ -14,9 +16,10 @@
 <script setup>
 import { useRoute } from 'vue-router';
 import {computed } from 'vue';
+import TheMenu from '../src/components/ui/HamburgerMenu.vue'
 
 const route = useRoute();
-const isPostmortem = computed(() => route.path === '/postmortem');
+const isPostmortem = computed(() => route.path === '/postmortem' || route.path === '/dashboard');
 
 </script>
 
