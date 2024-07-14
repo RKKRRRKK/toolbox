@@ -1,77 +1,99 @@
 <template>
     <div class="input">
         <form class="input_form" @submit.prevent="assignData">
-            <input type="file" id="csvFile" name="csvFile" accept=".csv" @change="storeFile" class="file-input">
+            <input type="file" id="csvFiles" name="csvFiles" accept=".csv" @change="storeFiles" multiple class="file-input">
             <button type="submit" class="upload-button">Upload</button>
         </form>
     </div>
 </template>
+
 <script setup>
 import { ref } from 'vue'
-import { useVariablesStore } from '@/stores/TheDashboard/data.js'
+import { useDashboardStore } from '@/stores/TheDashboard/data.js'
 
+const dashboardStore = useDashboardStore()
+const filesToRead = ref([])
 
-const variablesStore = useVariablesStore()
-const fileToRead = ref(null)
-
-function storeFile(event) {
-    fileToRead.value = event.target.files[0] ? event.target.files[0] : null;
+function storeFiles(event) {
+    console.log("storeFiles")
+    filesToRead.value = Array.from(event.target.files);
 }
-
 function assignData() {
-    if (!fileToRead.value) {
-        alert("Please select a CSV file first.");
+    console.log("assignData started");
+    if (!filesToRead.value.length) {
+        console.alert("Please select CSV files first.");
         return;
     }
-    console.log("assing data triggered")
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        const text = e.target.result;
-        const lines = text.split('\n');
-        const data = {
-            hours: [],
-            on_h_gmv: [],
-            off_havg_gmv: [],
-            off_hmin_gmv: [],
-            off_hmax_gmv: [],
-            on_total_gmv: [],
-            days_accounted: [],
-            array_gmv: [],
-            array_date: [],
-            array_order: [],
+
+    filesToRead.value.forEach(file => {
+        const reader = new FileReader();
+
+        reader.onload = () => {
+            console.log("File loaded:", file.name);
+            const text = reader.result;
+            const fileName = file.name;
+            const nameWithoutExtension = fileName.slice(0, -4); // Assuming .csv extension
+            const lastChar = nameWithoutExtension[nameWithoutExtension.length - 1];
+            console.log(`Processing file ${fileName} with lastChar ${lastChar}`);
+
+            if (lastChar === '0') {
+                parseCSV0(text);
+            } else if (lastChar === '1') {
+                parseCSV1(text);
+            } else {
+                console.log(`File ${fileName} does not match expected naming conventions.`);
+            }
         };
 
+        reader.onerror = (error) => {
+            console.error("Error reading file:", error);
+        };
 
-        // Start processing from the second line to skip the header
-        for (let i = 1; i < lines.length; i++) {
-            // Split line only on commas not inside quotes
-            const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-
-            if (row.length < 10) continue; // Skip lines that do not have a complete data set
-
-            // Parse individual fields
-            data.hours.push(parseFloat(row[0].trim()));
-            data.on_h_gmv.push(parseFloat(row[1].trim()));
-            data.off_havg_gmv.push(parseFloat(row[2].trim()));
-            data.off_hmin_gmv.push(parseFloat(row[3].trim()));
-            data.off_hmax_gmv.push(parseFloat(row[4].trim()));
-            data.on_total_gmv.push(parseFloat(row[5].trim()));
-            data.days_accounted.push(parseFloat(row[9].trim()));
-
-            // Parse JSON array fields
-            data.array_gmv.push(JSON.parse(row[6].trim()));
-            data.array_date.push(JSON.parse(row[7].trim()));
-            data.array_order.push(JSON.parse(row[8].trim()));
-        }
-        console.log("data in the input component", data)
-        variablesStore.setData(data);
-    };
-    reader.readAsText(fileToRead.value);
+        reader.readAsText(file);
+    });
 }
 
+function parseCSV(text) {
+    console.log("parseCSV")
+    const rows = text.split('\n');
+    const headers = rows.shift().split(',');
+    return rows.map(row => {
+        const data = row.split(',');
+        const obj = {};
+        headers.forEach((header, index) => {
+            obj[header.trim()] = data[index].trim();
+        });
+        return obj;
+    });
+}
 
+function parseCSV0(text) {
+    console.log("parseCSV0")
+    const data = parseCSV(text);
+    const hour = data.map(row => row.hour);
+    const date = data.map(row => row.date);
+    const gmv = data.map(row => row.gmv);
+    const payment_provider_method = data.map(row => row.payment_provider_method);
+    const holiday = data.map(row => row.holiday);
+    const platform = data.map(row => row.platform);
 
+    dashboardStore.setCSV0Data({ hour, date, gmv, payment_provider_method, holiday, platform });
+}
+
+function parseCSV1(text) {
+    console.log("parseCSV1")
+    const data = parseCSV(text);
+    const sid_count = data.map(row => row.sid_count);
+    const category = data.map(row => row.category);
+    const operating_system = data.map(row => row.operating_system);
+    const browser = data.map(row => row.browser);
+    const date = data.map(row => row.date);
+    const hour = data.map(row => row.hour);
+
+    dashboardStore.setCSV1Data({ sid_count, category, operating_system, browser, date, hour });
+}
 </script>
+
 
 <style scoped>
 .input {
