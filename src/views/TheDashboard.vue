@@ -4,8 +4,8 @@
 <DashInput class="input"></DashInput>
 </div>
     <div class="container">
-<div class="one">1</div>
-<div class="two">2</div>
+<HourlyLine class="one"></HourlyLine>
+<PaymentBar class="two"></PaymentBar>
 <HealthMetrics class="three"></HealthMetrics>
 <div class="four">4</div>
 <div class="five">5</div>
@@ -17,6 +17,8 @@
 <script setup>
 import DashInput from "../components/TheDashboard/DashInput.vue"
 import HealthMetrics from "../components/TheDashboard/HealthMetrics.vue"
+import PaymentBar from "../components/TheDashboard/PaymentBar.vue"
+import HourlyLine from "../components/TheDashboard/HourlyLine.vue"
 </script>
 
 
@@ -31,7 +33,7 @@ import HealthMetrics from "../components/TheDashboard/HealthMetrics.vue"
     flex-wrap: wrap;
 }
 
-.one, .two, .four, .five, .six {
+ .four, .five, .six {
     background-color: red;
 }
 

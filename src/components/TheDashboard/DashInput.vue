@@ -72,7 +72,7 @@ function parseCSV0(text) {
     const data = parseCSV(text);
     const hour = data.map(row => row.hour);
     const date = data.map(row => row.date);
-    const gmv = data.map(row => row.gmv);
+    const gmv = data.map(row => parseFloat(row.gmv));
     const payment_provider_method = data.map(row => row.payment_provider_method);
     const holiday = data.map(row => row.holiday);
     const platform = data.map(row => row.platform);
