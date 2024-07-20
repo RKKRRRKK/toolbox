@@ -1,16 +1,12 @@
 <template>
     <div>
-        <select v-model="selectedPaymentMethod">
-            <option value="">All</option>
-            <option v-for="method in paymentMethods" :key="method" :value="method">{{ method }}</option>
-        </select>
         <v-chart ref="chartRef" class="chart" v-if="isDataLoaded" :option="chartOption"></v-chart>
     </div>
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue';
-import { useDashboardStore } from '@/stores/TheDashboard/data.js'; 
+import { ref, watch, onMounted, computed } from 'vue';
+import { useDashboardStore } from '@/stores/TheDashboard/data.js';
 import 'echarts';
 
 const dashboardStore = useDashboardStore();
@@ -37,20 +33,16 @@ const chartOption = ref({
         left:'10%',
         top: '5%' 
     },
-
     series: [],
 });
 
 const isDataLoaded = ref(false);
-const selectedPaymentMethod = ref('');
-const paymentMethods = ref([]);
-
+// Use computed for reactive update
+const selectedPaymentMethod = computed(() => dashboardStore.selectedPaymentMethod);
 
 const processData = (data) => {
     const hours = [...new Set(data.hour)];
     const dates = [...new Set(data.date)];
-    paymentMethods.value = [...new Set(data.payment_provider_method)];
-
     chartOption.value.xAxis.data = hours;
     chartOption.value.legend.data = dates;
 
@@ -75,25 +67,24 @@ const processData = (data) => {
     }));
 
     chartOption.value.series = series;
+    isDataLoaded.value = true; // Set true after processing
 };
 
 watch(() => dashboardStore.hm_live, (newData) => {
     if (newData && newData.date.length) {
         processData(newData);
-        isDataLoaded.value = true;
     }
 }, { immediate: true, deep: true });
 
-watch(selectedPaymentMethod, () => {
+watch(selectedPaymentMethod, (newMethod) => {
     if (dashboardStore.hm_live.date.length) {
         processData(dashboardStore.hm_live);
     }
-});
+}, { immediate: true });
 
 onMounted(() => {
     if (dashboardStore.hm_live.date.length) {
         processData(dashboardStore.hm_live);
-        isDataLoaded.value = true;
     }
 });
 </script>

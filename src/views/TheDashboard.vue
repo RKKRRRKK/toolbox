@@ -2,6 +2,7 @@
 <div class="topwrap">    
 <h1 class="title">Post-Mortem Analysis Dashboard</h1>
 <DashInput class="input"></DashInput>
+<PaymentMethodSelector></PaymentMethodSelector>
 </div>
     <div class="container">
 <HourlyLine class="one"></HourlyLine>
@@ -19,6 +20,7 @@ import DashInput from "../components/TheDashboard/DashInput.vue"
 import HealthMetrics from "../components/TheDashboard/HealthMetrics.vue"
 import PaymentBar from "../components/TheDashboard/PaymentBar.vue"
 import HourlyLine from "../components/TheDashboard/HourlyLine.vue"
+import PaymentMethodSelector from "../components/TheDashboard/PaymentMethodSelector.vue"
 </script>
 
 

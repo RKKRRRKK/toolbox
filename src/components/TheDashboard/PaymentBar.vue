@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted, computed } from 'vue';
 import { useDashboardStore } from '@/stores/TheDashboard/data.js'; 
 import 'echarts';
 
@@ -13,9 +13,8 @@ function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-
 const dashboardStore = useDashboardStore();
-
+const selectedPaymentMethod = computed(() => dashboardStore.selectedPaymentMethod);
 const chartRef = ref(null);
 const chartOption = ref({
     xAxis: {
@@ -27,7 +26,9 @@ const chartOption = ref({
         axisLabel: {
             formatter: '{value}%'
         },
-        max: 100
+        max: function (value) {
+            return Math.round(value.max);
+        }
     },
     grid: {
         left: '0%',  
@@ -37,22 +38,23 @@ const chartOption = ref({
         containLabel: true,
     },
     legend: {
+        show: false,
         data: [],
         orient: 'vertical',
-        left: 'right' 
+        left: 'right',
+        selected: {}
     },
     series: [],
     tooltip: {
-        trigger: 'item', // Change trigger to 'item'
+        trigger: 'item',
         formatter: function (params) {
-            const realValue = numberWithCommas(Math.round(params.data * totalValues.value[params.dataIndex] / 100)); // Convert back to real value
+            const realValue = numberWithCommas(Math.round(params.data * totalValues.value[params.dataIndex] / 100)) + '€';
             const percentage = params.data.toFixed(2);
-                return `${params.seriesName}: ${realValue} (${percentage}%)`;
-        
-            }
-            }
+            return `<strong style="font-size: 18px;">${params.seriesName}</strong> <br><br> <b>Real GMV:</b> ${realValue}  <br> <b>Share of Daily Total:</b> ${percentage}% 
+            <br> <i>(Scale of bars depends on %)</i>`;
+        }
+    }
 });
-
 
 const isDataLoaded = ref(false);
 const totalValues = ref([]);
@@ -74,7 +76,6 @@ const processData = (data) => {
         '#616161', '#424242', '#212121', '#000000'
     ];
 
-    // Calculate total GMV for each date
     totalValues.value = dates.map(date => {
         return data.gmv.reduce((sum, gmv, index) => {
             return data.date[index] === date ? sum + gmv : sum;
@@ -102,17 +103,18 @@ const processData = (data) => {
                     const realValue = methodData[params.dataIndex] * totalValues.value[params.dataIndex] / 100;
                     const percentage = methodData[params.dataIndex].toFixed(2);
                     if (percentage > 4) {
-                    return `${params.seriesName} (${percentage}%)`;
+                        return `${params.seriesName} (${percentage}%)`;
+                    } else {
+                        return "";
                     }
-                    else return ""
                 }
             },
             itemStyle: {
                 color: (params) => {
                     if (params.dataIndex === dates.length - 1) {
-                        return redShades[methodIndex % redShades.length]; // Distinct shades of red for the last date
+                        return redShades[methodIndex % redShades.length];
                     } else {
-                        return grayShades[methodIndex % grayShades.length]; // Distinct shades of gray for other dates
+                        return grayShades[methodIndex % grayShades.length];
                     }
                 }
             }
@@ -120,14 +122,31 @@ const processData = (data) => {
     });
 
     chartOption.value.series = series;
+
+    // Deselect all except "klarna_opf"
+    deselectAllExcept(selectedPaymentMethod);
 };
 
-watch(() => dashboardStore.hm_live, (newData) => {
-    if (newData && newData.date.length) {
-        processData(newData);
-        isDataLoaded.value = true;
+const deselectAllExcept = (methodToKeep) => {
+    const selected = {};
+    if (methodToKeep.value) {
+        // Only keep the selected method if it exists
+        chartOption.value.legend.data.forEach(method => {
+            selected[method] = method === methodToKeep.value;
+        });
+    } else {
+        // If no method is selected, ensure all methods are selected
+        chartOption.value.legend.data.forEach(method => {
+            selected[method] = true;
+        });
     }
-}, { immediate: true, deep: true });
+    chartOption.value.legend.selected = selected;
+};
+watch(selectedPaymentMethod, () => {
+    if (dashboardStore.hm_live.date.length) {
+        processData(dashboardStore.hm_live);
+    }
+}, { immediate: true });
 
 onMounted(() => {
     if (dashboardStore.hm_live.date.length) {
@@ -138,5 +157,4 @@ onMounted(() => {
 </script>
 
 <style>
-
 </style>
