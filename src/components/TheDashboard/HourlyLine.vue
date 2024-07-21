@@ -10,12 +10,21 @@ import { useDashboardStore } from '@/stores/TheDashboard/data.js';
 import 'echarts';
 
 const dashboardStore = useDashboardStore();
-
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 const chartRef = ref(null);
 const chartOption = ref({
     xAxis: {
         type: 'category',
         data: [],
+axisTick: {
+   show: false,
+   
+},
+axisLabel: {
+    interval: 1
+}
     },
     yAxis: {
         type: 'value',
@@ -32,6 +41,14 @@ const chartOption = ref({
         orient: 'vertical',
         left:'10%',
         top: '5%' 
+    },
+    tooltip: {
+        trigger: 'item',
+        formatter: function (params) {
+            const realValue = params.data;
+            return realValue;
+        
+        }
     },
     series: [],
 });
@@ -67,6 +84,7 @@ const processData = (data) => {
     }));
 
     chartOption.value.series = series;
+    console.log("HOURLY LINE between chartoption setting and dataloaded true ")
     isDataLoaded.value = true; // Set true after processing
 };
 
@@ -76,7 +94,7 @@ watch(() => dashboardStore.hm_live, (newData) => {
     }
 }, { immediate: true, deep: true });
 
-watch(selectedPaymentMethod, (newMethod) => {
+watch(selectedPaymentMethod, () => {
     if (dashboardStore.hm_live.date.length) {
         processData(dashboardStore.hm_live);
     }

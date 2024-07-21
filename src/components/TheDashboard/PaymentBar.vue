@@ -1,5 +1,6 @@
 <template>
     <div>
+
         <v-chart ref="chartRef" class="chart" v-if="isDataLoaded" :option="chartOption"></v-chart>
     </div>
 </template>
@@ -20,6 +21,10 @@ const chartOption = ref({
     xAxis: {
         type: 'category',
         data: [],
+        axisTick: {
+   show: false,
+   
+},
     },
     yAxis: {
         type: 'value',
@@ -71,10 +76,12 @@ const processData = (data) => {
         '#CC0000', '#990000', '#660000', '#330000', '#000000'
     ];
 
-    const grayShades = [
-        '#F5F5F5', '#E0E0E0', '#BDBDBD', '#9E9E9E', '#757575', 
-        '#616161', '#424242', '#212121', '#000000'
-    ];
+   const grayShades = [
+    'rgba(245, 245, 245, 0.7)', 'rgba(224, 224, 224, 0.7)', 'rgba(189, 189, 189, 0.7)', 
+    'rgba(158, 158, 158, 0.7)', 'rgba(117, 117, 117, 0.7)', 
+    'rgba(97, 97, 97, 0.7)', 'rgba(66, 66, 66, 0.7)', 'rgba(33, 33, 33, 0.7)', 
+    'rgba(0, 0, 0, 0.7)'
+];
 
     totalValues.value = dates.map(date => {
         return data.gmv.reduce((sum, gmv, index) => {
@@ -103,7 +110,7 @@ const processData = (data) => {
                     const realValue = methodData[params.dataIndex] * totalValues.value[params.dataIndex] / 100;
                     const percentage = methodData[params.dataIndex].toFixed(2);
                     if (percentage > 4) {
-                        return `${params.seriesName} (${percentage}%)`;
+                        return `${params.seriesName}`;
                     } else {
                         return "";
                     }
@@ -122,6 +129,8 @@ const processData = (data) => {
     });
 
     chartOption.value.series = series;
+    console.log(" PAYMENT BAR between chartoption setting and dataloaded true ")
+    isDataLoaded.value = true;
 
     // Deselect all except "klarna_opf"
     deselectAllExcept(selectedPaymentMethod);
@@ -142,6 +151,13 @@ const deselectAllExcept = (methodToKeep) => {
     }
     chartOption.value.legend.selected = selected;
 };
+
+watch(() => dashboardStore.hm_live, (newData) => {
+    if (newData && newData.date.length) {
+        processData(newData);
+    }
+}, { immediate: true, deep: true });
+
 watch(selectedPaymentMethod, () => {
     if (dashboardStore.hm_live.date.length) {
         processData(dashboardStore.hm_live);
@@ -151,7 +167,7 @@ watch(selectedPaymentMethod, () => {
 onMounted(() => {
     if (dashboardStore.hm_live.date.length) {
         processData(dashboardStore.hm_live);
-        isDataLoaded.value = true;
+       
     }
 });
 </script>
