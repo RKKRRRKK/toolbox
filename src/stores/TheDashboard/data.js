@@ -6,6 +6,7 @@ export const useDashboardStore = defineStore('dashboard', {
             hour: [],
             date: [],
             gmv: [],
+            provision: [],
             payment_provider_method: [],
             holiday: [],
             platform: []
@@ -19,6 +20,7 @@ export const useDashboardStore = defineStore('dashboard', {
             hour: []
         },
         selectedPaymentMethod: '',
+        selectedDate: '',
     }),
     actions: {
         setCSV0Data(data) {
@@ -33,6 +35,12 @@ export const useDashboardStore = defineStore('dashboard', {
         },
         setSelectedPaymentMethod(method) {
             this.selectedPaymentMethod = method;
+          },
+
+          setSelectedDate(date) {
+            console.log("date", date)
+            this.selectedDate = date;
+         
           },
     }
 })

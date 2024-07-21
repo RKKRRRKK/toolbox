@@ -73,17 +73,18 @@ function parseCSV0(text) {
     const hour = data.map(row => row.hour);
     const date = data.map(row => row.date);
     const gmv = data.map(row => parseFloat(row.gmv));
+    const provision = data.map(row => parseFloat(row.provision));
     const payment_provider_method = data.map(row => row.payment_provider_method);
     const holiday = data.map(row => row.holiday);
     const platform = data.map(row => row.platform);
 
-    dashboardStore.setCSV0Data({ hour, date, gmv, payment_provider_method, holiday, platform });
+    dashboardStore.setCSV0Data({ hour, date, gmv, provision, payment_provider_method, holiday, platform });
 }
 
 function parseCSV1(text) {
     console.log("parseCSV1")
     const data = parseCSV(text);
-    const sid_count = data.map(row => row.sid_count);
+    const sid_count = data.map(row => parseFloat(row.sid_count));
     const category = data.map(row => row.category);
     const operating_system = data.map(row => row.operating_system);
     const browser = data.map(row => row.browser);
