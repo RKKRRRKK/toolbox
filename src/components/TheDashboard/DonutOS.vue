@@ -1,6 +1,6 @@
 <template>
     <div>
-      <v-chart ref="chartRef" class="c" v-if="isDataLoaded" :option="chartOption"></v-chart>
+      <v-chart ref="chartRef"  v-if="isDataLoaded" :option="chartOption"></v-chart>
     </div>
   </template>
   
@@ -19,30 +19,27 @@ const calculateTotal = () => {
 };
 
   
-  // Define a color map for browsers
-  const browserColors = {
-    Chrome: '#4285F4', // Blue, Google's Chrome color
-    Firefox: '#FF7139', // Fiery Orange, Firefox brand color
-    Edge: '#0078D7', // Microsoft's blue for Edge
-    Safari: '#00A9E0', // Lighter blue, distinct from Edge
-    Opera: '#FF1B2D', // Red, Opera's brand color
-    'Samsung Internet': '#1428A0', // Dark blue, Samsung's brand color
-    'Safari (in-app)': '#A3CEF1', // Lighter shade of Safari blue
-    'Android Webview': '#3DDC84', // Green, Android brand color
-    Other: '#D3D3D3' // Gray for unspecified browsers
+  // Define a color map for operating_systems
+  const operating_systemColors = {
+    iOS: '#4285F4', // Blue, Google's Chrome color
+    Windows: '#FF7139', // Fiery Orange, Firefox brand color
+    Android: '#0078D7', // Microsoft's blue for Edge
+    Macintosh: '#00A9E0', // Lighter blue, distinct from Edge
+    Linux: '#FF1B2D', // Red, Opera's brand color
+    Other: '#D3D3D3' // Gray for unspecified operating_systems
 };
   
 const chartOption = ref({
 
   title: {
-        text: 'Sessions',
+        text: 'Operating System',
         left: 'center'
     },
 
  
   series: [
     {
-      name: 'Browser Usage',
+      name: 'operating_system Usage',
       type: 'pie',
       radius: ['40%', '70%'],
       avoidLabelOverlap: false,
@@ -79,38 +76,38 @@ const chartOption = ref({
   const updateDonutChart = () => {
   const selectedDate = dashboardStore.selectedDate;
   const data = dashboardStore.ga4;
-  const browserCounts = {};
+  const operating_systemCounts = {};
 
-  // Create an array to hold the browser data with their corresponding sidCount
-  const browserData = [];
+  // Create an array to hold the operating_system data with their corresponding sidCount
+  const operating_systemData = [];
 
-  // Iterate over the data and collect browser and sidCount information
+  // Iterate over the data and collect operating_system and sidCount information
   data.date.forEach((date, index) => {
     if (!selectedDate || date === selectedDate) {
-      const browser = data.browser[index];
+      const operating_system = data.operating_system[index];
       const sidCount = data.sid_count[index];
-      // Add the browser and sidCount to the array
-      browserData.push({ browser, sidCount });
+      // Add the operating_system and sidCount to the array
+      operating_systemData.push({ operating_system, sidCount });
     }
   });
 
   // Sort the array in descending order of sidCount
-  browserData.sort((a, b) => b.sidCount - a.sidCount);
+  operating_systemData.sort((a, b) => b.sidCount - a.sidCount);
 
-  // Aggregate the sidCount for each browser
-  browserData.forEach(({ browser, sidCount }) => {
-    if (browserCounts[browser]) {
-      browserCounts[browser] += sidCount;
+  // Aggregate the sidCount for each operating_system
+  operating_systemData.forEach(({ operating_system, sidCount }) => {
+    if (operating_systemCounts[operating_system]) {
+      operating_systemCounts[operating_system] += sidCount;
     } else {
-      browserCounts[browser] = sidCount;
+      operating_systemCounts[operating_system] = sidCount;
     }
   });
 
-  chartOption.value.series[0].data = Object.keys(browserCounts).map(browser => ({
-    value: browserCounts[browser],
-    name: browser,
+  chartOption.value.series[0].data = Object.keys(operating_systemCounts).map(operating_system => ({
+    value: operating_systemCounts[operating_system],
+    name: operating_system,
     itemStyle: {
-      color: browserColors[browser] || browserColors['Other'] // Default color for unspecified browsers
+      color: operating_systemColors[operating_system] || operating_systemColors['Other'] // Default color for unspecified operating_systems
     }
   }));
   calculateTotal();
@@ -137,7 +134,6 @@ watch(() => dashboardStore.ga4, (newData) => {
   </script>
   
   <style scoped>
- 
 
   </style>
   

@@ -13,8 +13,15 @@
             </div>
             <PaymentBar class="two"></PaymentBar>
             <HealthMetrics class="three"></HealthMetrics>
-            <DonutGMV class="four"></DonutGMV>
-            <DonutSID class="five"></DonutSID>
+            <div class="four">
+            <DonutGMV class="fourdiv"></DonutGMV>
+            <DonutSID class="fourdiv"></DonutSID>
+            <DonutOS class="fourdiv"></DonutOS>
+            <DonutCAT class="fourdiv"></DonutCAT>
+            <DonutOS class="fourdiv"></DonutOS>
+            <DonutCAT class="fourdiv"></DonutCAT>
+            </div>
+            <div class="five"></div>
             <div class="six"></div>
         </div>
     </template>
@@ -30,6 +37,8 @@ import DateFilter from "../components/TheDashboard/DateFilter.vue"
 import DonutGMV from "../components/TheDashboard/DonutGMV.vue"
 import DonutSID from "../components/TheDashboard/DonutSID.vue"
 import HourlySIDLine from "../components/TheDashboard/HourlySIDLine.vue"
+import DonutOS from "../components/TheDashboard/DonutOS.vue"
+import DonutCAT from "../components/TheDashboard/DonutCAT.vue"
 
 const sidline = ref(false);
 
@@ -85,4 +94,27 @@ const toggleView = () => {
   position: absolute;
   z-index: 1;
 }
+
+.four {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.fourdiv {
+    width: 33%;
+    height: 50%;
+}
+
+.fourdiv div {
+    background-color: red;
+}
+
+
+.segments {
+    position: absolute;
+    margin-left: 21rem;
+    transform: translateY(-1.5rem)
+}
+
+
 </style>

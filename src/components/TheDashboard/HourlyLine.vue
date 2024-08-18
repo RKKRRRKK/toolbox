@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-chart ref="chartRef" class="chart" v-if="isDataLoaded" :option="chartOption"></v-chart>
+        <v-chart ref="chartRef"  v-if="isDataLoaded" :option="chartOption"></v-chart>
     </div>
 </template>
 
@@ -43,11 +43,12 @@ axisLabel: {
         top: '5%' 
     },
     tooltip: {
-        trigger: 'item',
+        trigger: 'axis',
         formatter: function (params) {
-            const realValue = params.data;
-            return realValue;
-        
+            return params.map(param => {
+                const realValue = numberWithCommas(Math.round(param.data));
+                return `${param.marker} ${param.seriesName}: ${realValue}`;
+            }).join('<br>');
         }
     },
     series: [],

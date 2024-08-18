@@ -1,6 +1,6 @@
 <template>
     <div>
-      <v-chart ref="chartRef" class="c" v-if="isDataLoaded" :option="chartOption"></v-chart>
+      <v-chart ref="chartRef"  v-if="isDataLoaded" :option="chartOption"></v-chart>
     </div>
   </template>
   
@@ -19,30 +19,26 @@ const calculateTotal = () => {
 };
 
   
-  // Define a color map for browsers
-  const browserColors = {
-    Chrome: '#4285F4', // Blue, Google's Chrome color
-    Firefox: '#FF7139', // Fiery Orange, Firefox brand color
-    Edge: '#0078D7', // Microsoft's blue for Edge
-    Safari: '#00A9E0', // Lighter blue, distinct from Edge
-    Opera: '#FF1B2D', // Red, Opera's brand color
-    'Samsung Internet': '#1428A0', // Dark blue, Samsung's brand color
-    'Safari (in-app)': '#A3CEF1', // Lighter shade of Safari blue
-    'Android Webview': '#3DDC84', // Green, Android brand color
-    Other: '#D3D3D3' // Gray for unspecified browsers
+  // Define a color map for categorys
+  const categoryColors = {
+    desktop: '#4285F4', // Blue, Google's Chrome color
+    mobile: '#FF7139', // Fiery Orange, Firefox brand color
+    tablet: '#0078D7', // Microsoft's blue for Edge
+    Other: '#D3D3D3' // Gray for unspecified categorys
 };
   
 const chartOption = ref({
 
+
   title: {
-        text: 'Sessions',
+        text: 'Device',
         left: 'center'
     },
 
  
   series: [
     {
-      name: 'Browser Usage',
+      name: 'category Usage',
       type: 'pie',
       radius: ['40%', '70%'],
       avoidLabelOverlap: false,
@@ -79,38 +75,38 @@ const chartOption = ref({
   const updateDonutChart = () => {
   const selectedDate = dashboardStore.selectedDate;
   const data = dashboardStore.ga4;
-  const browserCounts = {};
+  const categoryCounts = {};
 
-  // Create an array to hold the browser data with their corresponding sidCount
-  const browserData = [];
+  // Create an array to hold the category data with their corresponding sidCount
+  const categoryData = [];
 
-  // Iterate over the data and collect browser and sidCount information
+  // Iterate over the data and collect category and sidCount information
   data.date.forEach((date, index) => {
     if (!selectedDate || date === selectedDate) {
-      const browser = data.browser[index];
+      const category = data.category[index];
       const sidCount = data.sid_count[index];
-      // Add the browser and sidCount to the array
-      browserData.push({ browser, sidCount });
+      // Add the category and sidCount to the array
+      categoryData.push({ category, sidCount });
     }
   });
 
   // Sort the array in descending order of sidCount
-  browserData.sort((a, b) => b.sidCount - a.sidCount);
+  categoryData.sort((a, b) => b.sidCount - a.sidCount);
 
-  // Aggregate the sidCount for each browser
-  browserData.forEach(({ browser, sidCount }) => {
-    if (browserCounts[browser]) {
-      browserCounts[browser] += sidCount;
+  // Aggregate the sidCount for each category
+  categoryData.forEach(({ category, sidCount }) => {
+    if (categoryCounts[category]) {
+      categoryCounts[category] += sidCount;
     } else {
-      browserCounts[browser] = sidCount;
+      categoryCounts[category] = sidCount;
     }
   });
 
-  chartOption.value.series[0].data = Object.keys(browserCounts).map(browser => ({
-    value: browserCounts[browser],
-    name: browser,
+  chartOption.value.series[0].data = Object.keys(categoryCounts).map(category => ({
+    value: categoryCounts[category],
+    name: category,
     itemStyle: {
-      color: browserColors[browser] || browserColors['Other'] // Default color for unspecified browsers
+      color: categoryColors[category] || categoryColors['Other'] // Default color for unspecified categorys
     }
   }));
   calculateTotal();
@@ -137,7 +133,6 @@ watch(() => dashboardStore.ga4, (newData) => {
   </script>
   
   <style scoped>
- 
 
   </style>
   

@@ -1,6 +1,6 @@
 <template>
     <div>
-      <v-chart ref="chartRef" class="chart" v-if="isDataLoaded" :option="chartOption"></v-chart>
+      <v-chart ref="chartRef" v-if="isDataLoaded" :option="chartOption"></v-chart>
     </div>
   </template>
   
@@ -12,16 +12,21 @@
   const dashboardStore = useDashboardStore();
   const chartRef = ref(null);
   const isDataLoaded = ref(false);
-  
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+
+
   const chartOption = ref({
-    tooltip: {
-      trigger: 'item',
-      formatter: '{a} <br/>{b}: {c} ({d}%)'
+ 
+    title: {
+        text: 'GMV',
+        left: 'center'
     },
-    legend: {
-      top: '5%',
-      left: 'center'
-    },
+
+
+
     series: [
       {
         name: 'GMV Composition',
@@ -38,12 +43,16 @@
           position: 'center'
         },
         emphasis: {
-          label: {
-            show: true,
-            fontSize: '20',
-            fontWeight: 'bold'
+        label: {
+          show: true,
+          fontSize: '15',
+          fontWeight: 'bold',
+          formatter: function(params) {
+            // Using the calculated total to compute the percentage
+            return `${params.name} \n ${(params.value / 1000000).toFixed(2)} million`;
           }
-        },
+        }
+      },
         labelLine: {
           show: false
         },
@@ -97,9 +106,6 @@
   </script>
   
   <style scoped>
-  .chart {
-    width: 100%;
-    height: 500px; /* Adjust size as needed */
-  }
+
   </style>
   
